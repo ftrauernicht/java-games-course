@@ -88,6 +88,15 @@ screen on its own. Home of the most instructive bug in this repository.
 |---|---|---|
 | 1 | [Conway's Game of Life](courses/04-game-of-life/en/01-game-of-life.md) | Counting neighbours with offset loops, bounds checks, why the next generation needs a new grid, `Thread.sleep` and checked exceptions, and wrapping an index with `%` |
 
+### Course 5 – 2048 (`courses/05-2048/`)
+
+Slide, merge, repeat. Four directions that turn out to be one operation on a
+turned board, and the merge rule nearly everybody gets wrong first time.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 1 | [2048](courses/05-2048/en/01-2048.md) | Compacting and merging a row, rotating a board so one operation serves four directions, a `switch` used as a value, copying a board instead of renaming it, and why a terminal cannot read a single keypress |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in

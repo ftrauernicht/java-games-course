@@ -15,7 +15,7 @@ das ein Spiel verlangt, nicht die Zahl der Zeilen.
 | 2 | Tic-Tac-Toe -- zwei Spieler, ein Feld, neun Kästchen | ein Spielfeld als zweidimensionales Array, verschachtelte Schleifen, ein Array an eine Methode übergeben | ⭐ | ✅ [Gebaut](courses/02-tic-tac-toe/de/01-tic-tac-toe.md) |
 | 3 | Türme von Hanoi -- das Rätsel löst sich selbst | Rekursion, der Basisfall, einen Aufrufstapel lesen | ⭐⭐ | ✅ [Gebaut](courses/03-towers-of-hanoi/de/01-tuerme-von-hanoi.md) |
 | 4 | Conways Game of Life -- Zellen leben und sterben von allein | den nächsten Zustand in ein zweites Gitter rechnen, Nachbarn am Rand zählen, zwischen den Bildern warten | ⭐⭐ | ✅ [Gebaut](courses/04-game-of-life/de/01-spiel-des-lebens.md) |
-| 5 | 2048 -- schieben, verschmelzen, von vorn | ein Gitter umformen, vier Richtungen auf eine Operation zurückführen, die Verschmelzungsregel, die alle falsch machen | ⭐⭐⭐ | Geplant |
+| 5 | 2048 -- schieben, verschmelzen, von vorn | ein Gitter umformen, vier Richtungen auf eine Operation zurückführen, die Verschmelzungsregel, die alle falsch machen | ⭐⭐⭐ | ✅ [Gebaut](courses/05-2048/de/01-2048.md) |
 | 6 | Snake -- das erste im Fenster | Swing, auf eine Fläche zeichnen, ein Timer als Spielschleife, Tasten im Moment des Drucks lesen | ⭐⭐⭐ | Geplant |
 | 7 | Flappy Bird -- Schwerkraft, Röhren, eine Taste | Bewegung als Geschwindigkeit, eine Klasse, die Daten hält, Kollision über Rechtecke | ⭐⭐⭐⭐ | Geplant |
 | 8 | Pong -- zwei Schläger und ein Winkel | einen Ball an einer Fläche spiegeln, ein zweiter Spieler an derselben Tastatur | ⭐⭐⭐ | Idee |

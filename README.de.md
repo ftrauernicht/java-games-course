@@ -90,6 +90,16 @@ Ein Spiel ohne Spieler: vier Regeln, ein Gitter, und ein Muster, das von allein
 |---|---|---|
 | 1 | [Conways Game of Life](courses/04-game-of-life/de/01-spiel-des-lebens.md) | Nachbarn mit Versatzschleifen zählen, Grenzprüfungen, warum die nächste Generation ein neues Gitter braucht, `Thread.sleep` und geprüfte Ausnahmen, und einen Index mit `%` umlaufen lassen |
 
+### Kurs 5 – 2048 (`courses/05-2048/`)
+
+Schieben, verschmelzen, von vorn. Vier Richtungen, die sich als eine Operation auf
+einem gedrehten Feld entpuppen, und die Verschmelzungsregel, die fast jeder im
+ersten Anlauf falsch macht.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 1 | [2048](courses/05-2048/de/01-2048.md) | Eine Zeile zusammenschieben und verschmelzen, ein Feld drehen, damit eine Operation vier Richtungen bedient, ein `switch` als Wert, ein Feld kopieren statt umbenennen, und warum ein Terminal keinen einzelnen Tastendruck lesen kann |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in
