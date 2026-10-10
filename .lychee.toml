@@ -1,0 +1,21 @@
+# lychee link checker config -- https://lychee.cli.rs
+#
+# Only markdown files are scanned. Anchors/fragments on external pages (e.g.
+# Javadoc headings) are not verified -- only that each URL and each relative
+# file link (chapter cross-links, images) resolves.
+
+extensions = ["md"]
+max_retries = 3
+retry_wait_time = 5
+timeout = 20
+
+# Treat rate-limited responses as passing rather than failing CI -- a 429
+# means the host is alive and throttling us, not that the link is dead.
+# The Javadoc at docs.oracle.com throttles CI runners in particular.
+accept = ["200..=299", "429"]
+
+# Compiled output. Readers compile in place, so `out/` and stray .class
+# files can exist locally -- not this repo's content to check.
+exclude_path = [
+  "out",
+]

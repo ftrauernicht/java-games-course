@@ -1,0 +1,4 @@
+# Shell scripts run on the Ubuntu CI runner. Without this, a checkout on
+# Windows can commit them with CRLF, and bash then fails with
+# `bash: $'\r': command not found` -- an obscure failure for a one-line fix.
+* text=auto eol=lf

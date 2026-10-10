@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Compile course code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up the JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Compile every course on its own
+        shell: bash
+        run: |
+          # One javac call per course, with only that course's own sources on
+          # the sourcepath. That turns "no course depends on a sibling" from a
+          # documented intention into something the build enforces.
+          #
+          # No `set -e`: a pull request should report every broken course, not
+          # just the first one.
+          set -uo pipefail
+          shopt -s nullglob
+          status=0
+          for dir in courses/*/code; do
+            sources=("$dir"/*.java)
+            if [ ${#sources[@]} -eq 0 ]; then
+              echo "No .java files in $dir -- nothing to compile."
+              continue
+            fi
+            out="$(mktemp -d)"
+            echo "::group::javac $dir"
+            # -serial: every JPanel subclass is Serializable without a
+            #   serialVersionUID, and adding one would be noise in a beginner's
+            #   first window.
+            # -this-escape: a backstop. The panels are final and all Swing
+            #   wiring happens in main, so the pattern it warns about is
+            #   already avoided.
+            if ! javac --release 21 \
+                       -Xlint:all,-serial,-this-escape \
+                       -Werror \
+                       -sourcepath "$dir" \
+                       -d "$out" \
+                       "${sources[@]}"; then
+              echo "::error::$dir failed to compile"
+              status=1
+            fi
+            echo "::endgroup::"
+            rm -rf "$out"
+          done
+          exit "$status"
+
+      - name: Smoke-run Towers of Hanoi
+        shell: bash
+        run: |
+          # The only course program that needs no input and ends by itself,
+          # so it is the one place where CI can check that something actually
+          # runs rather than merely compiles.
+          set -euo pipefail
+          dir=courses/03-towers-of-hanoi/code
+          if [ ! -d "$dir" ]; then
+            echo "$dir does not exist yet -- skipping."
+            exit 0
+          fi
+          out="$(mktemp -d)"
+          javac --release 21 -d "$out" "$dir"/*.java
+          java -cp "$out" TowersOfHanoi | head -20
+          rm -rf "$out"
+
+  link-check:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --config .lychee.toml --no-progress .
+          token: ${{ secrets.GITHUB_TOKEN }}
+          jobSummary: true
+
+  bilingual-sync:
+    name: Check bilingual file pairs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check en/de sync
+        run: bash scripts/check-bilingual-sync.sh
+
+  chapter-style:
+    name: Check chapter style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check chapter style
+        run: bash scripts/check-chapter-style.sh
