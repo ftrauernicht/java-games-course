@@ -11,7 +11,7 @@ das ein Spiel verlangt, nicht die Zahl der Zeilen.
 
 | # | Kurs | Was neu dazukommt | Schwierigkeit | Stand |
 |---|---|---|---|---|
-| 1 | Grundlagen -- die Sprache selbst, noch ohne Spiel | Typen, Operatoren, Verzweigungen und Schleifen, Methoden, Arrays, Tastatureingabe | ⭐ | Geplant |
+| 1 | Grundlagen -- die Sprache selbst, noch ohne Spiel | Typen, Operatoren, Verzweigungen und Schleifen, Methoden, Arrays, Tastatureingabe | ⭐ | ✅ [Gebaut](courses/01-basics/de/00-einfuehrung.md) |
 | 2 | Tic-Tac-Toe -- zwei Spieler, ein Feld, neun Kästchen | ein Spielfeld als zweidimensionales Array, verschachtelte Schleifen, ein Array an eine Methode übergeben | ⭐ | Geplant |
 | 3 | Türme von Hanoi -- das Rätsel löst sich selbst | Rekursion, der Basisfall, einen Aufrufstapel lesen | ⭐⭐ | Geplant |
 | 4 | Conways Game of Life -- Zellen leben und sterben von allein | den nächsten Zustand in ein zweites Gitter rechnen, Nachbarn am Rand zählen, zwischen den Bildern warten | ⭐⭐ | Geplant |

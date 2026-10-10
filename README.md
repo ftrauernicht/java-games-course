@@ -49,6 +49,18 @@ assume Course 4, and Course 7 does not assume Course 6. Where a game needs somet
 Course 1 did not cover, that chapter explains it again in a few paragraphs and tells
 you to skip ahead if you already know it.
 
+### Course 1 – Basics (`courses/01-basics/`)
+
+The language itself, in three chapters and without a game. It is the only course
+the others require, so it covers everything they lean on: types and control flow,
+your own methods, arrays, and reading what somebody types.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 0 | [Introduction & Tools](courses/01-basics/en/00-introduction.md) | Installing the JDK and an editor, compiling and running, what every word of `public static void main` means, reading a compiler error |
+| 1 | [Java Basics](courses/01-basics/en/01-java-basics.md) | Types, arithmetic and the surprise of `7 / 2`, casting and random numbers, `.equals` for text, `if`, `switch`, `for`, `while` |
+| 2 | [Methods, Arrays and Input](courses/01-basics/en/02-methods-arrays-input.md) | Your own methods, arrays and why they behave differently from an `int`, `Scanner`, and a number-guessing game |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in

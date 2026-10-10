@@ -50,6 +50,19 @@ etwas braucht, das Kurs 1 nicht behandelt hat, erklärt das Kapitel es in ein pa
 Absätzen noch einmal und sagt dir, dass du weiterspringen kannst, wenn du es schon
 kennst.
 
+### Kurs 1 – Grundlagen (`courses/01-basics/`)
+
+Die Sprache selbst, in drei Kapiteln und ohne Spiel. Er ist der einzige Kurs, den
+die anderen voraussetzen, und deckt deshalb alles ab, worauf sie sich stützen:
+Typen und Ablaufsteuerung, eigene Methoden, Arrays, und das Lesen dessen, was
+jemand tippt.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 0 | [Einführung & Werkzeuge](courses/01-basics/de/00-einfuehrung.md) | JDK und Editor installieren, übersetzen und ausführen, was jedes Wort von `public static void main` bedeutet, einen Compilerfehler lesen |
+| 1 | [Java-Grundlagen](courses/01-basics/de/01-java-grundlagen.md) | Typen, Rechnen und die Überraschung bei `7 / 2`, Casting und Zufallszahlen, `.equals` für Text, `if`, `switch`, `for`, `while` |
+| 2 | [Methoden, Arrays und Eingaben](courses/01-basics/de/02-methoden-arrays-eingaben.md) | Eigene Methoden, Arrays und warum sie sich anders verhalten als ein `int`, `Scanner`, und ein Zahlenratespiel |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in
