@@ -100,6 +100,15 @@ ersten Anlauf falsch macht.
 |---|---|---|
 | 1 | [2048](courses/05-2048/de/01-2048.md) | Eine Zeile zusammenschieben und verschmelzen, ein Feld drehen, damit eine Operation vier Richtungen bedient, ein `switch` als Wert, ein Feld kopieren statt umbenennen, und warum ein Terminal keinen einzelnen Tastendruck lesen kann |
 
+### Kurs 6 – Snake (`courses/06-snake/`)
+
+Das erste Spiel im Fenster, und die Antwort auf die Enter-Taste: Hier kommt eine
+Taste im Moment des Drucks an.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 1 | [Snake](courses/06-snake/de/01-snake.md) | Klassen mit Feldern und Konstruktor, `JFrame` und `JPanel`, `paintComponent` und `repaint`, ein Timer als Spielschleife, Tastaturfokus, und einen Körper vom Schwanz nach vorn bewegen |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in

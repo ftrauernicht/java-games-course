@@ -5,8 +5,9 @@
 # Course 4 – Conway's Game of Life
 
 **Goal:** a game with no players. You place a few cells, four rules take over, and
-a pattern walks across the screen on its own. By the end you will have the most
-instructive bug in this repository, and you will have avoided it.
+a pattern walks across the screen on its own. On the way you will meet a mistake
+whose cause is invisible in the code and obvious on the screen, and you will have
+avoided it.
 
 Assumes [Course 1](../../01-basics/en/00-introduction.md) and nothing else. A
 finished version lives in [`code/GameOfLife.java`](../code/GameOfLife.java).
@@ -58,10 +59,17 @@ for (int row = 0; row < ROWS; row++) {
 ```
 
 Handing the grid to a method hands over the grid itself and not a copy, so a method
-can change it. Course 1 covered that under "arrays are references", and this
-chapter leans on it twice.
+can change it. Course 1 covered that under "arrays are references". This chapter
+mostly avoids using it: every method below reads a grid and returns a new one
+rather than changing what it was given. The one place it matters is the mistake
+the chapter warns about, further down.
 
-Set up your file:
+Set up your file. The three sizes go in the class, next to `main` rather than
+inside it, because `print` and `countNeighbours` need them too. They are `static`
+for the same reason every method here is `static`: they belong to the class, and
+nothing has been created yet. Write `final int ROWS = 10;` inside `main` instead
+and you get `non-static variable ROWS cannot be referenced from a static context`,
+eleven times over.
 
 ```java
 public class GameOfLife {
@@ -125,6 +133,9 @@ Generation 0
 ....................
 ```
 
+That is the first five of ten rows. The rest are empty and are left out here to
+keep the page short, so do not count lines against your own output.
+
 ## 🟢 Core exercise — Counting neighbours
 
 Every rule needs the same number: how many of the eight squares around this one
@@ -175,11 +186,15 @@ rows 0 to 4 already hold next-generation values, so row 5 counts the wrong
 neighbours. Every square after the first is then deciding against a mixture of two
 different moments in time.
 
-The result still looks like Life. Cells appear and disappear, patterns grow and
-shrink, and nothing obviously breaks. That is what makes it the most instructive
-bug here: it is wrong and it looks fine. The glider is how you catch it. A correct
-glider keeps exactly five cells and repeats its shape every four generations, one
-square down and one to the right. A broken one smears.
+Build it the wrong way once and watch what happens. The glider does not drift or
+smear; it falls apart. Five cells, then three, then four, and from generation 2 on
+a frozen two-by-two block that never changes again. The r-pentomino further down,
+which should stay busy for over a thousand generations, is finished after four.
+
+So the symptom is loud, which is lucky. What is quiet is the cause: nothing about
+the code looks wrong, every rule is implemented correctly, and the mistake is
+entirely in when the writing happens relative to the reading. That is why this is
+worth meeting on purpose rather than reading about.
 
 Now the loop in `main`:
 
@@ -207,8 +222,16 @@ Three hundred milliseconds. Put it between the `print` and the `nextGeneration`,
 and the compiler refuses to build your program:
 
 ```
-GameOfLife.java:28: error: unreported exception InterruptedException; must be caught or declared to be thrown
+GameOfLife.java:17: error: unreported exception InterruptedException; must be caught or declared to be thrown
+            Thread.sleep(300);
+                       ^
+1 error
 ```
+
+The line number depends on where you put it. Note also that `Thread` needed no
+`import`: a handful of classes, the ones in `java.lang`, are always available, and
+`Thread`, `String`, `Math` and `System` are among them. Everything else needs the
+import line you met with `Scanner`.
 
 This is a new kind of complaint, and it is worth understanding rather than working
 around. Some methods warn in their signature that something can go wrong while they
@@ -252,7 +275,15 @@ of the left-hand side, so `-1 % 10` is `-1` and not `9`. Adding `ROWS` first mak
 the number positive before the remainder is taken, and it cannot push anything past
 the top because `dRow` is never more than 1.
 
-Run the glider for forty generations and watch it come back around.
+Run the glider for forty generations -- raise `GENERATIONS` -- and watch it come
+back around.
+
+One thing to be careful of afterwards: the check value from the core exercise,
+`countNeighbours(grid, 0, 0)` being 0, is still 0 with wrapping, but no longer for
+the reason it was. Corner cells now have eight neighbours like everybody else, and
+the answer is 0 only because the glider happens to live nowhere near them. Reusing
+an old check after changing what it tests is how a green result stops meaning
+anything.
 
 ## 🟡 Optional — Other patterns
 
@@ -264,9 +295,17 @@ forever, which makes it the smallest thing that repeats.
 A **block** is a two by two square. Every cell in it has exactly three neighbours,
 so it sits there unchanged.
 
-An **r-pentomino** is five cells arranged in a small zigzag, and it stays
-interesting for over a thousand generations from almost nothing. Look it up, place
-it in the middle of a bigger grid, and raise `GENERATIONS`.
+An **r-pentomino** is five cells in a small zigzag. Relative to some row `r` and
+column `c` in the middle of the grid, it is `(r, c)`, `(r, c+1)`, `(r+1, c-1)`,
+`(r+1, c)` and `(r+2, c)`.
+
+It is famous for staying busy for a very long time from almost nothing, but how
+long depends sharply on how much room it has, because the walls kill what reaches
+them. Measured here, counting generations until it settles or starts repeating:
+135 on a 20 by 40 grid, 435 on 30 by 60, 653 on 60 by 120, and 1104 on 80 by 160,
+after which more room changes nothing. So "over a thousand" needs roughly 80 by
+160, and a grid that size does not fit in a terminal window -- count live cells
+per generation instead of drawing it.
 
 ## 🟡 Optional — Animating in place
 
@@ -299,6 +338,12 @@ static boolean same(boolean[][] a, boolean[][] b) {
 }
 ```
 
+`same` is the easy half. The work is the loop in `main`, which currently has
+nowhere to put the comparison: `grid = nextGeneration(grid)` overwrites the old
+grid in the same breath as making the new one, so there is nothing left to compare
+against. Take it apart -- hold the new grid in a local variable, compare, `break`
+if nothing changed, and only then assign.
+
 Comparing with `==` will not do what you want: Course 1 explained that for text,
 and the same reason applies here. `a == b` asks whether they are the same grid, not
 whether they hold the same thing. You have to walk both and compare square by
@@ -309,9 +354,19 @@ blinker, which alternates between two pictures and never settles. Try it on a
 blinker and watch it run to the end.
 
 To catch that too, keep the generation before last as well and compare against
-both. Then ask yourself what a pattern with a period of three would do to your
-program, and decide whether you care. Knowing exactly which cases your check misses
-is worth more than a check that claims to catch everything.
+both.
+
+That brings its own trap. In generation 0 there is no generation before last, so
+the variable holding it is still `null`, and handing `null` to `same` gives you
+`NullPointerException: Cannot load from object array`. Course 1 met `null` for
+text, where the fix was to put the known value first; that trick does not exist
+for arrays. Here you check before you ask: `if (twoAgo != null && same(next, twoAgo))`.
+The `&&` stops as soon as the left half is false, so `same` is never reached with
+nothing in hand.
+
+Then ask yourself what a pattern with a period of three would do to your program,
+and decide whether you care. Knowing exactly which cases your check misses is worth
+more than a check that claims to catch everything.
 
 ## What you learned
 
@@ -327,6 +382,7 @@ is worth more than a check that claims to catch everything.
 - *(optional)* Why terminal escape codes are not portable
 - *(optional)* Comparing two grids square by square, and knowing what the check
   misses
+- *(optional)* `null` in an array variable, and guarding with `&&` before asking
 
 ## Next
 

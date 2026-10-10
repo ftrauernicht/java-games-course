@@ -5,8 +5,9 @@
 # Kurs 4 – Conways Game of Life
 
 **Ziel:** ein Spiel ohne Spieler. Du setzt ein paar Zellen, vier Regeln übernehmen,
-und ein Muster wandert von allein über den Bildschirm. Am Ende hast du den
-lehrreichsten Fehler dieses Repositorys kennengelernt und vermieden.
+und ein Muster wandert von allein über den Bildschirm. Unterwegs begegnest du einem
+Fehler, dessen Ursache im Code unsichtbar und auf dem Bildschirm offensichtlich
+ist, und du wirst ihn vermieden haben.
 
 Setzt [Kurs 1](../../01-basics/de/00-einfuehrung.md) voraus und sonst nichts. Eine
 fertige Fassung liegt in [`code/GameOfLife.java`](../code/GameOfLife.java).
@@ -60,9 +61,16 @@ for (int row = 0; row < ROWS; row++) {
 
 Übergibst du das Gitter an eine Methode, übergibst du das Gitter selbst und keine
 Kopie, die Methode kann es also ändern. Kurs 1 hat das unter „Arrays sind Verweise"
-behandelt, und dieses Kapitel stützt sich zweimal darauf.
+behandelt. Dieses Kapitel nutzt es überwiegend nicht: Jede Methode unten liest ein
+Gitter und gibt ein neues zurück, statt das übergebene zu ändern. Die eine Stelle,
+an der es zählt, ist der Fehler, vor dem das Kapitel weiter unten warnt.
 
-Richte deine Datei ein:
+Richte deine Datei ein. Die drei Größen kommen in die Klasse, neben `main` statt
+hinein, denn `print` und `countNeighbours` brauchen sie auch. Sie sind `static` aus
+demselben Grund, aus dem hier jede Methode `static` ist: Sie gehören zur Klasse,
+und erzeugt wurde noch nichts. Schreib stattdessen `final int ROWS = 10;` in `main`,
+und du bekommst `non-static variable ROWS cannot be referenced from a static
+context`, elf Mal hintereinander.
 
 ```java
 public class GameOfLife {
@@ -128,6 +136,9 @@ Generation 0
 ....................
 ```
 
+Das sind die ersten fünf von zehn Zeilen. Der Rest ist leer und hier weggelassen,
+damit die Seite kurz bleibt, zähl also nicht deine eigene Ausgabe dagegen.
+
 ## 🟢 Kernübung — Nachbarn zählen
 
 Jede Regel braucht dieselbe Zahl: Wie viele der acht Felder rundherum leben?
@@ -177,12 +188,16 @@ der nächsten Generation, wenn du bei Zeile 5 ankommst, und Zeile 5 zählt die
 falschen Nachbarn. Jedes Feld nach dem ersten entscheidet dann gegen eine Mischung
 aus zwei verschiedenen Zeitpunkten.
 
-Das Ergebnis sieht trotzdem nach Life aus. Zellen erscheinen und verschwinden,
-Muster wachsen und schrumpfen, und offensichtlich kaputt ist nichts. Genau das
-macht es zum lehrreichsten Fehler hier: Er ist falsch und sieht gut aus. Der
-Gleiter ist der Weg, ihn zu fangen. Ein korrekter Gleiter behält genau fünf Zellen
-und wiederholt seine Form alle vier Generationen, ein Feld tiefer und eines weiter
-rechts. Ein kaputter verschmiert.
+Bau es einmal falsch und schau zu, was passiert. Der Gleiter wandert nicht und
+verschmiert nicht; er zerfällt. Fünf Zellen, dann drei, dann vier, und ab
+Generation 2 ein erstarrter Zweier-Block, der sich nie wieder ändert. Das
+R-Pentomino weiter unten, das über tausend Generationen in Bewegung bleiben
+sollte, ist nach vier Generationen fertig.
+
+Das Symptom ist also laut, und das ist ein Glück. Leise ist die Ursache: Am Code
+sieht nichts falsch aus, jede Regel ist richtig umgesetzt, und der Fehler steckt
+allein darin, wann geschrieben wird im Verhältnis zum Lesen. Deshalb lohnt es sich,
+ihm absichtlich zu begegnen, statt darüber zu lesen.
 
 Jetzt die Schleife in `main`:
 
@@ -210,8 +225,16 @@ Dreihundert Millisekunden. Setz das zwischen `print` und `nextGeneration`, und d
 Compiler weigert sich, dein Programm zu bauen:
 
 ```
-GameOfLife.java:28: error: unreported exception InterruptedException; must be caught or declared to be thrown
+GameOfLife.java:17: error: unreported exception InterruptedException; must be caught or declared to be thrown
+            Thread.sleep(300);
+                       ^
+1 error
 ```
+
+Die Zeilennummer hängt davon ab, wohin du es setzt. Beachte außerdem, dass `Thread`
+kein `import` gebraucht hat: Eine Handvoll Klassen, die aus `java.lang`, sind immer
+verfügbar, und `Thread`, `String`, `Math` und `System` gehören dazu. Alles andere
+braucht die Importzeile, die du beim `Scanner` kennengelernt hast.
 
 Das ist eine neue Art von Beschwerde, und es lohnt sich, sie zu verstehen statt sie
 zu umgehen. Manche Methoden warnen in ihrer Signatur, dass während ihrer Arbeit
@@ -254,8 +277,15 @@ der linken Seite, `-1 % 10` ist also `-1` und nicht `9`. Das `ROWS` vorher dazu 
 addieren macht die Zahl positiv, bevor der Rest gebildet wird, und über den oberen
 Rand schieben kann es nichts, weil `dRow` nie größer als 1 ist.
 
-Lass den Gleiter vierzig Generationen laufen und schau zu, wie er wieder
-hereinkommt.
+Lass den Gleiter vierzig Generationen laufen -- erhöh dafür `GENERATIONS` -- und
+schau zu, wie er wieder hereinkommt.
+
+Eine Sache, bei der du danach aufpassen musst: Der Prüfwert aus der Kernübung,
+`countNeighbours(grid, 0, 0)` gleich 0, ist mit Umlaufen weiterhin 0, aber nicht
+mehr aus demselben Grund. Eckzellen haben jetzt acht Nachbarn wie alle anderen,
+und die Antwort ist nur deshalb 0, weil der Gleiter zufällig weit weg von ihnen
+lebt. Eine alte Prüfung weiterzuverwenden, nachdem sich geändert hat, was sie
+prüft, ist der Weg, auf dem ein grünes Ergebnis aufhört, etwas zu bedeuten.
 
 ## 🟡 Optional — Andere Muster
 
@@ -267,9 +297,17 @@ und senkrecht und ist damit das kleinste Ding, das sich wiederholt.
 Ein **Block** ist ein Quadrat aus zwei mal zwei Zellen. Jede Zelle darin hat genau
 drei Nachbarn, also bleibt er unverändert liegen.
 
-Ein **R-Pentomino** sind fünf Zellen in einem kleinen Zickzack, und es bleibt aus
-fast nichts über tausend Generationen lang interessant. Schlag es nach, setz es in
-die Mitte eines größeren Gitters, und erhöh `GENERATIONS`.
+Ein **R-Pentomino** sind fünf Zellen in einem kleinen Zickzack. Bezogen auf eine
+Zeile `r` und eine Spalte `c` in der Mitte des Gitters sind das `(r, c)`,
+`(r, c+1)`, `(r+1, c-1)`, `(r+1, c)` und `(r+2, c)`.
+
+Es ist berühmt dafür, aus fast nichts sehr lange in Bewegung zu bleiben, aber wie
+lange, hängt stark davon ab, wie viel Platz es hat, denn die Wände töten, was sie
+erreicht. Hier gemessen, gezählt bis zur Ruhe oder bis es sich wiederholt: 135 auf
+einem Gitter von 20 mal 40, 435 auf 30 mal 60, 653 auf 60 mal 120, und 1104 auf 80
+mal 160, worüber hinaus mehr Platz nichts mehr ändert. „Über tausend" braucht also
+ungefähr 80 mal 160, und ein Gitter dieser Größe passt in kein Terminalfenster --
+zähl lieber die lebenden Zellen pro Generation, statt es zu zeichnen.
 
 ## 🟡 Optional — An Ort und Stelle animieren
 
@@ -299,9 +337,15 @@ Hör früher auf, wenn eine Generation mit der vorherigen übereinstimmt.
 
 ```java
 static boolean same(boolean[][] a, boolean[][] b) {
-    // dein Code hier -- antworte, ob jedes Feld uebereinstimmt
+    // dein Code hier -- antworte, ob jedes Feld übereinstimmt
 }
 ```
+
+`same` ist die leichte Hälfte. Die Arbeit ist die Schleife in `main`, die derzeit
+keinen Platz für den Vergleich hat: `grid = nextGeneration(grid)` überschreibt das
+alte Gitter im selben Atemzug, in dem es das neue baut, es bleibt also nichts zum
+Vergleichen übrig. Nimm sie auseinander -- halt das neue Gitter in einer lokalen
+Variablen, vergleich, `break` wenn sich nichts geändert hat, und weis erst dann zu.
 
 Ein Vergleich mit `==` tut nicht, was du willst: Kurs 1 hat das für Text erklärt,
 und hier gilt derselbe Grund. `a == b` fragt, ob es dasselbe Gitter ist, nicht ob
@@ -312,10 +356,19 @@ keinen Blinker, der zwischen zwei Bildern wechselt und nie zur Ruhe kommt. Probi
 es an einem Blinker aus und sieh zu, wie er bis zum Ende läuft.
 
 Um das auch zu fangen, heb zusätzlich die vorletzte Generation auf und vergleich
-gegen beide. Überleg dir danach, was ein Muster mit Periode drei mit deinem
-Programm machen würde, und entscheide, ob dich das stört. Genau zu wissen, welche
-Fälle deine Prüfung verfehlt, ist mehr wert als eine Prüfung, die behauptet, alles
-zu fangen.
+gegen beide.
+
+Das bringt seine eigene Falle mit. In Generation 0 gibt es keine vorletzte, die
+Variable dafür enthält also noch `null`, und `null` an `same` zu übergeben liefert
+dir `NullPointerException: Cannot load from object array`. Kurs 1 hat `null` bei
+Text getroffen, wo der bekannte Wert nach vorn gestellt wurde; diesen Trick gibt es
+für Arrays nicht. Hier prüfst du, bevor du fragst:
+`if (twoAgo != null && same(next, twoAgo))`. Das `&&` hört auf, sobald die linke
+Hälfte falsch ist, `same` wird also nie mit leeren Händen erreicht.
+
+Überleg dir danach, was ein Muster mit Periode drei mit deinem Programm machen
+würde, und entscheide, ob dich das stört. Genau zu wissen, welche Fälle deine
+Prüfung verfehlt, ist mehr wert als eine Prüfung, die behauptet, alles zu fangen.
 
 ## Was du gelernt hast
 
@@ -333,6 +386,8 @@ zu fangen.
 - *(optional)* Warum Terminal-Steuerzeichen nicht portabel sind
 - *(optional)* Zwei Gitter Feld für Feld vergleichen, und wissen, was die Prüfung
   verfehlt
+- *(optional)* `null` in einer Array-Variablen, und mit `&&` absichern, bevor man
+  fragt
 
 ## Weiter
 

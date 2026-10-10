@@ -97,6 +97,15 @@ turned board, and the merge rule nearly everybody gets wrong first time.
 |---|---|---|
 | 1 | [2048](courses/05-2048/en/01-2048.md) | Compacting and merging a row, rotating a board so one operation serves four directions, a `switch` used as a value, copying a board instead of renaming it, and why a terminal cannot read a single keypress |
 
+### Course 6 – Snake (`courses/06-snake/`)
+
+The first game in a window, and the answer to the Enter key: here a key arrives the
+moment it is pressed.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 1 | [Snake](courses/06-snake/en/01-snake.md) | Classes with fields and a constructor, `JFrame` and `JPanel`, `paintComponent` and `repaint`, a timer as the game loop, keyboard focus, and moving a body from the tail forwards |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in
