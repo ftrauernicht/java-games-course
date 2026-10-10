@@ -1,9 +1,9 @@
 // Course 7 - Flappy Bird, the game itself.
 //
-// final, like the panel in Course 6 and for the same reason: a public panel
-// that can be extended makes the compiler warn about handing `this` out
-// before the object is finished, and this repository builds with warnings
-// treated as errors.
+// final, like the panel in Course 6 and for the same reason: the constructor
+// calls setBackground, an inherited method, and on a public class that can be
+// extended that makes the compiler warn about handing `this` out before a
+// subclass is finished. This repository builds warnings as errors.
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -26,9 +26,10 @@ public final class FlappyPanel extends JPanel {
     static final double GRAVITY = 0.5;
     static final double FLAP = -8.0;
 
-    // Both double, so that `birdY += velocity` does not quietly lose the
-    // fraction. Mixing an int and a double here is a compiler warning under
-    // the flags this repository builds with, and a jerky bird besides.
+    // Both double. With an int birdY, `birdY = birdY + velocity` does not
+    // compile at all, and `birdY += velocity` compiles but throws the
+    // fraction away every frame -- a warning here, and this repository
+    // builds warnings as errors.
     private double birdY = HEIGHT / 2.0;
     private double velocity;
 
@@ -39,6 +40,13 @@ public final class FlappyPanel extends JPanel {
 
     FlappyPanel() {
         setBackground(new Color(120, 190, 230));
+
+        // The three pipe objects are made once, here. reset() only moves
+        // them back to their starting places; it never creates any.
+        for (int i = 0; i < pipes.length; i++) {
+            pipes[i] = new Pipe(WIDTH + i * PIPE_SPACING);
+        }
+
         reset();
     }
 
@@ -49,7 +57,6 @@ public final class FlappyPanel extends JPanel {
         gameOver = false;
         started = false;
         for (int i = 0; i < pipes.length; i++) {
-            pipes[i] = new Pipe(WIDTH + i * PIPE_SPACING, 0);
             pipes[i].recycle(WIDTH + i * PIPE_SPACING);
         }
     }

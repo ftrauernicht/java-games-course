@@ -12,13 +12,14 @@ public final class Pipe {
     int gapY;
     boolean passed;
 
-    Pipe(int x, int gapY) {
-        this.x = x;
-        this.gapY = gapY;
+    // There is only one way to place a pipe, so the constructor uses it too.
+    // Calling an own method from a constructor is safe here because the class
+    // is final: nobody can override recycle underneath us.
+    Pipe(int x) {
+        recycle(x);
     }
 
-    // Puts this pipe back on the right with a fresh gap, ready to come round
-    // again.
+    // Puts this pipe at x with a fresh gap, ready to come round again.
     void recycle(int x) {
         this.x = x;
         this.gapY = FlappyPanel.MARGIN
