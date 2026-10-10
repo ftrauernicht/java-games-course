@@ -17,13 +17,12 @@ drei Dateien.
 
 ## 🟢 Kern — Klassen und Objekte, kurz erklärt
 
-*(Wenn du Kurs 6 gemacht hast, überspring das und lies beim nächsten Abschnitt
-weiter.)*
+*(Kommst du aus Kurs 6, kennst du das schon und kannst weiterblättern.)*
 
-Kurs 1 nannte eine Klasse „eine Schachtel mit Namen". Die vollständige Antwort ist,
-dass eine Klasse an einer Stelle beschreibt, was etwas **ist** und was es **kann**:
-die Werte, die es enthält, genannt **Felder**, und die Methoden, die damit
-arbeiten. `new` baut ein echtes daraus, ein **Objekt**, und jedes Objekt hat seine
+Kurs 1 ließ es bei „eine Schachtel mit Namen" bewenden. Vollständig ist die
+Antwort erst so: Eine Klasse hält an einer Stelle fest, woraus etwas besteht und
+was man damit tun kann. Das eine sind ihre **Felder**, das andere ihre Methoden.
+`new` baut ein echtes Exemplar daraus, ein **Objekt**, und jedes Objekt hat seine
 eigenen Felder.
 
 Dieses Spiel braucht das gleich zweimal, aus zwei verschiedenen Gründen.
@@ -37,34 +36,33 @@ anderen Zahlen darin sind. Ohne Klasse würdest du mit `pipeX1`, `pipeX2`, `pipe
 `pipeGapY1` und so weiter jonglieren, und jedes Stück Code, das eine Röhre anfasst,
 müsste dreimal sagen, welche gemeint ist.
 
-Vier Wörter kommen unten vor, die Kurs 1 nicht gezeigt hat.
+Vier Wörter aus dem Code unten hat Kurs 1 noch nicht gebraucht.
 
-`extends` heißt „fang bei dieser Klasse an und ändere eine Sache". `FlappyPanel`
-hat deshalb von der ersten Zeile an alles, was ein `JPanel` kann, und du schreibst
-nur, was daran anders sein soll.
+`extends` setzt deine Klasse auf eine bestehende obendrauf. `FlappyPanel` kann
+deshalb ab seiner ersten Zeile alles, was ein `JPanel` kann, und im Rumpf steht
+nur noch der Unterschied.
 
-`@Override` ist eine Zusage an den Compiler: „diese Methode gibt es oben schon, ich
-ersetze sie". Sie ist freiwillig, aber nützlich. Verschreibst du sich im Namen —
-`paintComponent` mit kleinem C — ist das ohne `@Override` eine neue Methode, die
-niemand ruft, und dein Fenster bleibt leer. Mit `@Override` ist es ein Fehler, der
-dir sagt, was los ist.
+`@Override` sagt dem Compiler, dass die Methode darunter eine geerbte ersetzt und
+keine neue ist. Freiwillig, aber nützlich: Schreibst du den Namen falsch
+(`paintcomponent` mit kleinem C), legst du ohne `@Override` stillschweigend eine
+zweite Methode an, die niemand ruft, und dein Fenster bleibt leer. Mit `@Override`
+bricht der Compiler ab und sagt dir, warum.
 
-`private` an einem Feld heißt, dass nur diese Klasse es anfassen darf. Und `final`
-an einer Klasse heißt, dass niemand eine Abwandlung darauf aufbauen darf; warum das
-hier so ist, steht im nächsten Abschnitt an der Stelle, an der es auffällt.
+`private` an einem Feld sperrt es für alles außerhalb dieser Klasse. `final` an
+einer Klasse verbietet, von ihr zu erben; weshalb es hier steht, kommt im nächsten
+Abschnitt an der Stelle, an der es auffällt.
 
 ## 🟢 Kern — Die vier Swing-Tatsachen, die dieses Spiel braucht
 
-*(Wenn du Kurs 6 gemacht hast, überspring das und lies beim nächsten Abschnitt
-weiter.)*
+*(Auch das stand schon in Kurs 6; wer es kennt, springt zum nächsten Abschnitt.)*
 
 Swing ist Javas Werkzeugkasten für Fenster, und er sitzt auf dem älteren AWT auf.
 Aus Swing selbst kommen hier drei Klassen: `JFrame`, `JPanel` und `Timer`. Alles,
 was zeichnet oder Tasten liest, stammt aus AWT. Deshalb stehen unten
 `java.awt`-Importe neben `javax.swing`-Importen, und das ist kein Versehen.
 
-**Etwas, worauf man zeichnet.** Ein `JFrame` ist das Fenster, und darauf zeichnest
-du nicht. Du setzt ein `JPanel` hinein, und dein eigenes baust du mit
+**Etwas, worauf man zeichnet.** Das Fenster selbst, ein `JFrame`, nimmt keine
+Zeichenbefehle. Es nimmt ein `JPanel` auf, und dein eigenes entsteht aus
 `extends JPanel` und einer überschriebenen Methode:
 
 ```java
@@ -86,28 +84,28 @@ public final class FlappyPanel extends JPanel {
 }
 ```
 
-Das ist eine vollständige Datei. Tipp sie ab, speicher sie als `FlappyPanel.java`
-und lass `javac FlappyPanel.java` darüber laufen: sie übersetzt. Starten kannst du
-sie noch nicht, es gibt kein `main` und kein Fenster.
+Mehr braucht die Datei nicht. Tipp sie ab, speicher sie als `FlappyPanel.java`
+und lass `javac FlappyPanel.java` darüber laufen: sie übersetzt. Zum Starten fehlt
+ihr `main`, und ein Fenster öffnet sie auch noch nicht.
 
 `super.paintComponent(g)` lässt das Original zuerst den Hintergrund löschen.
 `Graphics g` zeichnet: `fillRect` für die Röhren, `fillOval` für den Vogel,
-`drawString` für den Punktestand. Die Koordinaten sind Pixel von links oben, und
-**y wächst nach unten**, was hier mehr zählt als in jedem anderen Kurs, denn das
-ist die Richtung, in die die Schwerkraft zieht.
+`drawString` für den Punktestand. Gezählt wird in Pixeln ab der linken oberen
+Ecke, und **y wächst nach unten**, was hier mehr zählt als in jedem anderen Kurs,
+denn das ist die Richtung, in die die Schwerkraft zieht.
 
 `protected` vor `paintComponent` heißt „für mich und für jeden, der von mir erbt,
 aber nicht für die Allgemeinheit". Das ist nicht deine Entscheidung, sondern die
-von `JPanel`: Beim Überschreiben darfst du eine Methode zugänglicher machen, aber
-nie verschlossener, und `protected` ist die bequemste Antwort.
+von `JPanel`: Eine überschriebene Methode darf sich weiter öffnen als das
+Original, aber nicht enger werden, und `protected` ist die bequemste Antwort.
 
-Die Klasse ist `final`, und zwar aus Vorsicht und nicht aus Zwang. Ihr Konstruktor
-ruft weiter unten `setBackground` auf, eine von `JPanel` geerbte Methode. Eine
-Unterklasse könnte `setBackground` überschreiben, und ihre Fassung liefe dann,
-bevor ihre eigenen Felder existieren. Der Compiler erkennt diese Gefahr, aber er
-warnt erst, wenn sie wirklich besteht, und dazu gehören zwei Dinge: eine Klasse
-ohne `final` **und** ein Konstruktor, den jemand von außerhalb erreichen kann.
-Probier beides nach:
+Das `final` vor der Klasse ist Vorsicht, kein Muss. Weiter unten ruft der
+Konstruktor `setBackground`, und diese Methode stammt von `JPanel`. Erbte jemand
+von `FlappyPanel` und ersetzte `setBackground`, liefe seine Fassung zu einem
+Zeitpunkt, an dem seine eigenen Felder noch gar nicht angelegt sind. Der Compiler
+sieht das, hält den Mund aber so lange, wie es nicht eintreten kann; nötig sind
+dafür zwei Dinge auf einmal: keine `final`-Klasse **und** ein Konstruktor, der von
+außerhalb erreichbar ist. Probier beides nach:
 
 ```
 nimm das final weg                            -> still, keine Warnung
@@ -115,17 +113,17 @@ nimm es weg und schreib public vor FlappyPanel() ->
 warning: [this-escape] possible 'this' escape before subclass is fully initialized
 ```
 
-Der Konstruktor hier hat kein Sichtbarkeitswort, ist also nur im eigenen Paket
-erreichbar, und deshalb bliebe es auch ohne `final` still. Das `final` steht
-trotzdem da, weil es die Gefahr für immer ausschließt — auch für den Tag, an dem
-jemand `public` davorschreibt, um das Panel von anderswo zu erzeugen. Dieses
-Repository übersetzt mit Warnungen als Fehlern, und eine Warnung, die erst durch
-eine spätere, harmlos aussehende Änderung auftaucht, kostet mehr Zeit als das eine
-Wort.
+Vor dem Konstruktor steht hier kein Sichtbarkeitswort, er bleibt also im eigenen
+Paket, und damit schweigt der Compiler selbst ohne `final`. Trotzdem steht es da:
+Es räumt die Gefahr dauerhaft ab, selbst gegen den Fall, dass später jemand ein
+`public` davorsetzt, um das Panel von anderswo zu erzeugen. Dieses Repository
+übersetzt mit Warnungen als Fehlern, und eine Warnung, die erst eine spätere,
+harmlos aussehende Änderung hervorholt, kostet mehr Zeit als das eine Wort.
 
-**Etwas, das neu zeichnet.** `paintComponent` rufst du nie. Du rufst `repaint()`,
-und Swing ruft `paintComponent`, wenn es dazu kommt. Die Regel lautet also: erst
-die Zahlen ändern, dann um ein neues Bild bitten.
+**Etwas, das neu zeichnet.** Der Aufruf von `paintComponent` ist nicht deine
+Sache. Deine Seite ist `repaint()`; `paintComponent` holt Swing sich selbst, wenn
+es dazu kommt. Die Regel lautet also: erst die Zahlen ändern, dann um ein neues
+Bild bitten.
 
 **Etwas, das antreibt.** Ein Spiel, in dem etwas fällt, braucht einen gleichmäßigen
 Herzschlag. Das ist ein `javax.swing.Timer`, der dich in festem Abstand zurückruft:
@@ -141,11 +139,11 @@ ActionListener step = event -> {
 new Timer(16, step).start();
 ```
 
-Die Pfeilschreibweise ist eine Methode ohne Namen. `event -> { ... }` heißt „nimm
-einen Parameter, nenn ihn `event`, und führ das hier aus". Erlaubt ist das, weil
-`ActionListener` genau eine Methode verlangt; es gibt also nichts zu verwechseln,
-und Java lässt den Namen weg. Ausgeschrieben wäre es eine eigene Klasse, die
-`ActionListener` implementiert, und zehn Zeilen für dieselbe Sache.
+Die Pfeilschreibweise ist eine namenlose Methode. `event -> { ... }` heißt „nimm
+einen Parameter, nenn ihn `event`, und führ das hier aus". Dass der Name fehlen
+darf, liegt an `ActionListener`: Die Schnittstelle schreibt genau eine Methode
+vor, eine Verwechslung ist also ausgeschlossen. Als eigene Klasse, die
+`ActionListener` implementiert, wären daraus zehn Zeilen geworden.
 
 Die 16 Millisekunden sind eine Bitte, keine Zusage. Rechnerisch wären sie 62 Bilder
 pro Sekunde; gemessen unter Windows kommen etwa 32 heraus, weil die Systemuhr dort
@@ -155,11 +153,12 @@ wird. Das Spiel läuft damit gut, aber es verschiebt die Zahlen: `GRAVITY` und
 Miss sie einmal, wenn dir die Steuerung zäh vorkommt. Ein Zähler, der bei jedem
 Tick hochgeht, und eine Ausgabe jede Sekunde genügen dafür.
 
-Eine `while`-Schleife mit `Thread.sleep` täte es nicht: Swing zeichnet auf
-demselben Thread neu, ein schlafendes Spiel ist also ein eingefrorenes Fenster.
+Eine `while`-Schleife mit `Thread.sleep` täte es nicht: Der Thread, auf dem du
+schläfst, ist derselbe, der das Bild erneuert, und ein schlafendes Spiel ist damit
+ein eingefrorenes Fenster.
 
-Importier `javax.swing.Timer` namentlich. Es gibt auch `java.util.Timer`, und beide
-mit Stern zu importieren macht den Namen mehrdeutig.
+Schreib `javax.swing.Timer` im Import voll aus. Neben ihm existiert
+`java.util.Timer`, und holt ein Stern beide herein, ist der kurze Name mehrdeutig.
 
 **Etwas, das Tasten liest.** Ein Fenster bekommt die Taste im Moment des Drucks,
 und genau das kann die Konsole nicht. Drei Dinge gehören dazu:
@@ -183,14 +182,14 @@ panel.addKeyListener(new KeyAdapter() {
 `setFocusable(true)` erlaubt dem Panel, Tasten zu bekommen. Bei einem `JPanel` ist
 das schon von sich aus erlaubt, die Zeile ändert hier also nichts; sie steht da,
 weil es bei anderen Komponenten nicht so ist und man es dann lange sucht.
-`addKeyListener` hängt den Horcher an, und ohne den kommt wirklich nichts an.
+`addKeyListener` hängt den Horcher an, und ohne ihn kommt nichts an.
 
-`KeyAdapter` ist eine Klasse mit drei leeren Methoden, von denen du die eine
-überschreibst, die dich interessiert. `new KeyAdapter() { ... }` erzeugt eine
-Abwandlung davon an Ort und Stelle, ohne ihr einen Namen zu geben — dieselbe
-Abkürzung wie beim `event ->` oben, nur für eine Klasse mit mehreren Methoden. Der
-Rumpf in geschweiften Klammern hinter dem `new` ist das, was `extends KeyAdapter`
-wäre, wenn du dafür eine eigene Datei anlegen würdest.
+In `KeyAdapter` stehen drei Methoden ohne Inhalt; du besetzt davon die eine, die
+dich interessiert. `new KeyAdapter() { ... }` zieht an Ort und Stelle eine
+Abwandlung daraus, ohne ihr einen Namen zu geben: dieselbe Abkürzung wie beim
+`event ->` oben, nur für eine Klasse mit mehreren Methoden. Der Rumpf in
+geschweiften Klammern hinter dem `new` ist das, was `extends KeyAdapter` wäre,
+wenn du dafür eine eigene Datei anlegen würdest.
 
 `keyPressed` und nicht `keyTyped`. `keyTyped` gibt es nur für Tasten, die ein
 Zeichen erzeugen, und es liefert kein `getKeyCode`. Die Leertaste erzeugt zwar
@@ -219,21 +218,21 @@ static final double GRAVITY = 0.5;
 static final double FLAP = -8.0;
 ```
 
-Sie stehen innerhalb der Klasse und außerhalb jeder Methode, und damit kommt jede
-Methode der Klasse an sie heran. Das ist der Unterschied zu dem `final int` aus
-Kurs 1, das in einer Methode stand und nur dort galt. `static` heißt „gehört der
-Klasse, nicht einem einzelnen Objekt", `final` heißt „ändert sich nie".
+Ihr Platz ist die Klasse selbst, nicht eine ihrer Methoden, und daraus folgt, dass
+jede Methode sie lesen kann. Das `final int` aus Kurs 1 saß dagegen in einer
+Methode und endete mit ihr. `static` heißt „gehört der Klasse, nicht einem
+einzelnen Objekt", `final` heißt „ändert sich nie".
 
 **Kein `private` davor.** Das ist keine Geschmacksfrage: `Pipe` aus dem Abschnitt
 weiter unten liest `MARGIN`, `HEIGHT` und `GAP`, und mit `private` bekommst du
-`MARGIN has private access in FlappyPanel`. Felder, die wirklich nur das Panel
-braucht — `birdY`, `score`, `gameOver` —, dürfen und sollen `private` sein.
+`MARGIN has private access in FlappyPanel`. Felder, die nur das Panel braucht —
+`birdY`, `score`, `gameOver` —, dürfen und sollen `private` sein.
 
 **Und lass keine der ersten beiden weg.** Vergisst du `HEIGHT`, sagt der Compiler
 nichts. `JPanel` erbt über eine Schnittstelle namens `ImageObserver` selbst ein
 `HEIGHT`, und das ist `2`; `WIDTH` ist dort `1`. Dein Spielfeld wäre also zwei
 Pixel hoch, die Rechnung für die Lücke ergäbe -74, und ein Rechteck mit negativer
-Höhe zeichnet `fillRect` einfach nicht. Das Fenster bliebe leer, ohne eine einzige
+Höhe zeichnet `fillRect` nicht. Das Fenster bliebe leer, ohne eine einzige
 Warnung. Diese Sorte Fehler findet man nur, wenn man weiß, dass es sie gibt.
 
 ## 🟢 Kern — Bewegung als Geschwindigkeit, nicht als Schritt
@@ -343,8 +342,8 @@ lässt und nicht `random()`.
 
 `this.x = x` sieht beim ersten Mal seltsam aus. Parameter und Feld heißen gleich,
 also sagt `this.` „das Feld, nicht der Parameter". Du könntest sie unterschiedlich
-benennen und darauf verzichten; die Konvention gibt es, weil die beiden wirklich
-dasselbe unter zwei Hüten sind.
+benennen und darauf verzichten; die Konvention gibt es, weil die beiden dasselbe
+unter zwei Hüten sind.
 
 Die Felder und `recycle` haben kein Sichtbarkeitswort. Das ist nicht Nachlässigkeit:
 `FlappyPanel` liest `pipe.x` und ruft `pipe.recycle(...)`, mit `private` ginge
@@ -458,8 +457,8 @@ if (bird.intersects(upper)) {
 `Rectangle` sind vier Zahlen: links, oben, Breite, Höhe. `intersects` beantwortet,
 ob zwei davon sich irgendwo überschneiden.
 
-Es lohnt sich zu wissen, was dabei passiert, statt es für Magie zu halten. Zwei
-Rechtecke überschneiden sich, wenn sie sich waagerecht **und** senkrecht
+`intersects` ist kein Zauber, und was es tut, sollte man einmal gesehen haben.
+Zwei Rechtecke überschneiden sich, wenn sie sich waagerecht **und** senkrecht
 überschneiden, und waagerecht überschneiden sie sich, wenn die linke Kante jedes
 Rechtecks links von der rechten Kante des anderen liegt. Das sind vier Vergleiche
 mit `&&` verbunden, und du könntest sie selbst schreiben. Die Bibliotheksfassung
@@ -520,8 +519,8 @@ Swing die Farbe, und `super.paintComponent(g)` in der ersten Zeile füllt damit 
 Fläche. Lass diese erste Zeile einmal weg, und du siehst, was sie tut: Der Vogel
 zieht Schlieren, weil nichts mehr das alte Bild löscht, und der Himmel ist weg.
 
-Die Reihenfolge entscheidet, was oben liegt. Röhren, dann Vogel, dann Schrift —
-umgedreht verschwände der Vogel hinter einer Röhre.
+Die Reihenfolge entscheidet, was oben liegt: Röhren, dann Vogel, dann Schrift.
+Umgedreht verschwände der Vogel hinter einer Röhre.
 
 `drawString` setzt die Grundlinie der Schrift, nicht die Oberkante. Deshalb steht
 beim Punktestand `40` und nicht `0`; bei `0` wäre er über dem Bildrand.
@@ -637,9 +636,9 @@ public class FlappyBird {
 
 Vier Stellen daraus verdienen einen Satz.
 
-`FlappyPanel.WIDTH` steht hier qualifiziert, mit dem Klassennamen davor. Innerhalb
-von `FlappyPanel` genügt `WIDTH`, hier nicht: `FlappyBird` ist eine andere Klasse,
-und ohne das Präfix bekommst du `cannot find symbol`.
+`FlappyPanel.WIDTH` trägt hier den Klassennamen vor sich her. Im Panel selbst
+reicht `WIDTH`; `FlappyBird` ist eine Klasse weiter, und für sie ist der kurze
+Name ohne Präfix ein `cannot find symbol`.
 
 `SwingUtilities.invokeLater` baut das Fenster auf Swings eigenem Thread statt auf
 dem, auf dem `main` läuft. Swing verlangt das, und `FlappyBird::start` ist die
@@ -648,14 +647,14 @@ Parameter.
 
 `setPreferredSize` plus `pack()` statt `setSize`: Das Panel sagt, wie groß es sein
 will, und das Fenster legt sich darum. Mit `setSize` am Fenster bekäme das Panel
-den Platz minus Titelleiste und Rahmen — gemessen 14 Pixel schmaler und 37
-Pixel niedriger als verlangt. Deine Todeslinie unten wäre dann nicht dort, wo du
-sie vermutest, und die rechte Röhrenspalte ragte aus dem Bild.
+den Platz minus Titelleiste und Rahmen: gemessen 14 Pixel schmaler und 37 Pixel
+niedriger als verlangt. Deine Todeslinie unten wäre dann nicht dort, wo du sie
+vermutest, und die rechte Röhrenspalte ragte aus dem Bild.
 
 `requestFocusInWindow()` steht **nach** `setVisible(true)`. Davor gibt es kein
-Fenster, das den Fokus vergeben könnte. Auf einem frisch geöffneten Fenster
-funktioniert es meistens auch davor, weil das System es ohnehin aktiviert; die
-Reihenfolge ist die, auf die man sich verlassen kann, und sie kostet nichts.
+Fenster, das den Fokus vergeben könnte. Meistens klappt es auch vorher, weil das
+System ein neues Fenster von sich aus in den Vordergrund holt; verlassen kann man
+sich aber nur auf diese Reihenfolge.
 
 ```
 javac *.java
@@ -663,15 +662,16 @@ java FlappyBird
 ```
 
 Diesmal drei Dateien, also wieder `javac *.java`, und wieder nicht
-`java FlappyBird.java` — der Einzeldatei-Start übersetzt nur diese eine Datei und
-findet `FlappyPanel` dann nicht.
+`java FlappyBird.java`. Der Einzeldatei-Start nimmt nur die genannte Datei mit;
+`FlappyPanel` bleibt dabei ungesehen.
 
 ![Game over, der Vogel an einer Röhre gestoppt, Punktestand 12](../assets/game-over.png)
 
-Wenn du mit den echten Schaltern dieses Repositories übersetzen willst, nimm
-`javac --release 21 -Xlint:all,-serial -Werror *.java`. Das `-serial` muss mit:
-Jede `JPanel`-Ableitung ist von Haus aus serialisierbar und hat kein
-`serialVersionUID`, und ohne die Ausnahme scheiterst du daran statt an deinem Code.
+Für die echten Schalter dieses Repositories lautet der Aufruf
+`javac --release 21 -Xlint:all,-serial -Werror *.java`. Ohne `-serial` kommst du
+nicht durch: Wer von `JPanel` erbt, erbt dessen Serialisierbarkeit und schuldet
+damit ein `serialVersionUID`. `FlappyPanel` hat keines, und die Warnung darüber
+hält dich auf, bevor dein eigener Code überhaupt dran ist.
 
 ## 🟡 Optional — Röhren, die kommen und gehen
 
@@ -694,7 +694,7 @@ sagen, was darin liegt, der Compiler weiß also, dass eine `Pipe` herauskommt.
 Eine Falle, und sie ist der Grund, warum das optional ist und nicht der Hauptweg:
 Aus einer Liste zu entfernen, während eine `for`-Schleife darüber läuft, wirft
 meistens `ConcurrentModificationException`. Meistens, nicht immer. Erwischst du das
-vorletzte Element, endet die Schleife danach von selbst und merkt nichts — die
+vorletzte Element, endet die Schleife danach von selbst und merkt nichts: die
 nächste Prüfung vergleicht Position und Länge und findet sie zufällig gleich. Ein
 Fehler, der bei drei von vier Elementen auffällt und beim vierten schweigt, ist
 schlimmer als einer, der immer knallt. Sammle, was weg soll, und entferne es
@@ -816,8 +816,8 @@ Das ist die eigentliche Arbeit an dieser Aufgabe, nicht der Streifen.
   Bedeutungen
 - Eine `reset`-Methode, die aus dem Konstruktor und aus dem Neustart gerufen wird,
   und warum trotzdem nur der Konstruktor `new` sagt
-- `extends`, `@Override`, `protected`, und was es heißt, wenn vor einer Methode gar
-  kein Sichtbarkeitswort steht
+- `extends`, `@Override`, `protected`, und das fehlende Sichtbarkeitswort als
+  eigene Stufe
 - Eine Methode ohne Namen hinter `->` und eine Klasse ohne Namen hinter `new`
 - Tasten über `addKeyListener` und `keyPressed`, und warum der Fokus erst nach
   `setVisible` angefordert wird

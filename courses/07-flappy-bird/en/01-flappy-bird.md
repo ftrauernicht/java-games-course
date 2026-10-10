@@ -16,12 +16,12 @@ them. A finished version is in [`code/`](../code/), in three files.
 
 ## 🟢 Core — Classes and objects, in short
 
-*(If you have done Course 6, skip this and carry on at the next section.)*
+*(Coming from Course 6, you know this already and can page on.)*
 
-Course 1 called a class "a box with a name". The full answer is that a class
-describes in one place what something **is** and what it **can do**: the values it
-holds, called **fields**, and the methods that work on them. `new` builds a real
-one out of it, an **object**, and every object has its own fields.
+Course 1 left it at "a box with a name". The complete answer goes like this: a
+class records in one place what something consists of and what can be done with
+it. The first of those are its **fields**, the second its methods. `new` builds a
+real instance from it, an **object**, and every object has its own fields.
 
 This game needs that twice, for two different reasons.
 
@@ -34,33 +34,33 @@ of thing with different numbers inside. Without a class you would be juggling
 `pipeX1`, `pipeX2`, `pipeX3`, `pipeGapY1` and so on, and every piece of code that
 touches a pipe would have to say three times which one it means.
 
-Four words appear below that Course 1 never showed.
+Four words in the code below did not come up in Course 1.
 
-`extends` means "start from this class and change one thing". `FlappyPanel`
-therefore has everything a `JPanel` can do from its first line, and you only write
-what should be different about it.
+`extends` stacks your class on top of an existing one. `FlappyPanel` can therefore
+do everything a `JPanel` can from its first line, and its body holds nothing but
+the difference.
 
-`@Override` is a promise to the compiler: "this method already exists above me, I
-am replacing it". It is optional but useful. Misspell the name — `paintcomponent`
-with a small c — and without `@Override` that is a new method nobody calls, and
-your window stays empty. With `@Override` it is an error that tells you what is
-wrong.
+`@Override` tells the compiler that the method underneath it replaces an inherited
+one rather than adding a new one. Optional, but useful: get the name wrong
+(`paintcomponent` with a small c) and without `@Override` you have quietly declared
+a second method that nobody calls, and your window stays empty. With `@Override`
+the compiler stops and tells you why.
 
-`private` on a field means only this class may touch it. And `final` on a class
-means nobody may build a variation on top of it; why it is here is explained in the
-next section, at the point where it shows.
+`private` on a field locks it away from everything outside this class. `final` on a
+class forbids inheriting from it; why that is here comes in the next section, at
+the point where it shows.
 
 ## 🟢 Core — The four Swing facts this game needs
 
-*(If you have done Course 6, skip this and carry on at the next section.)*
+*(This was in Course 6 as well; if you know it, jump to the next section.)*
 
 Swing is Java's toolbox for windows, and it sits on top of the older AWT. Three
 classes here come from Swing itself: `JFrame`, `JPanel` and `Timer`. Everything
 that draws or reads keys comes from AWT. That is why `java.awt` imports sit next to
 `javax.swing` imports below, and it is not a mistake.
 
-**Something to draw on.** A `JFrame` is the window, and you do not draw on it. You
-put a `JPanel` inside it, and you build your own with `extends JPanel` and one
+**Something to draw on.** The window itself, a `JFrame`, takes no drawing
+commands. It holds a `JPanel`, and your own comes out of `extends JPanel` plus one
 overridden method:
 
 ```java
@@ -82,27 +82,28 @@ public final class FlappyPanel extends JPanel {
 }
 ```
 
-That is a complete file. Type it out, save it as `FlappyPanel.java` and run
-`javac FlappyPanel.java` over it: it compiles. You cannot run it yet, there is no
-`main` and no window.
+The file needs nothing more than that. Type it out, save it as `FlappyPanel.java`
+and run `javac FlappyPanel.java` over it: it compiles. Running it is out of reach
+until it has a `main`, and it opens no window yet either.
 
 `super.paintComponent(g)` lets the original clear the background first.
 `Graphics g` does the drawing: `fillRect` for the pipes, `fillOval` for the bird,
-`drawString` for the score. The coordinates are pixels from the top left, and
+`drawString` for the score. Counting runs in pixels from the top left corner, and
 **y grows downwards**, which matters more here than in any other course, because
 that is the direction gravity pulls in.
 
 `protected` in front of `paintComponent` means "for me and for anyone who inherits
-from me, but not for the public". That is not your decision, it is `JPanel`'s: when
-overriding you may make a method more accessible but never less, and `protected` is
-the comfortable answer.
+from me, but not for the public". That is not your decision, it is `JPanel`'s: an
+override may open a method wider than the original but never narrow it, and
+`protected` is the comfortable answer.
 
-The class is `final`, out of caution rather than necessity. Its constructor calls
-`setBackground` further down, a method inherited from `JPanel`. A subclass could
-override `setBackground`, and its version would then run before its own fields
-exist. The compiler sees that danger, but it only warns when the danger is real,
-and that takes two things: a class without `final` **and** a constructor somebody
-outside can reach. Try both:
+The `final` in front of the class is caution, not an obligation. Further down the
+constructor calls `setBackground`, and that method comes from `JPanel`. If somebody
+inherited from `FlappyPanel` and replaced `setBackground`, their version would run
+at a point where their own fields have not been created yet. The compiler sees
+this, but it keeps quiet for as long as that cannot happen; two things have to come
+together for it: no `final` on the class **and** a constructor reachable from
+outside. Try it both ways:
 
 ```
 remove the final                               -> silence, no warning
@@ -110,17 +111,16 @@ remove it and write public before FlappyPanel() ->
 warning: [this-escape] possible 'this' escape before subclass is fully initialized
 ```
 
-The constructor here has no visibility keyword, so it can only be reached from
-inside its own package, which is why it would stay silent without `final` too. The
-`final` is there anyway because it rules the danger out for good — including on the
-day somebody writes `public` in front of the constructor to create the panel from
+There is no visibility keyword in front of the constructor here, so it stays
+within its own package, and that alone silences the compiler even without `final`.
+The word is there regardless: it clears the danger away permanently, even against
+the case that somebody later puts a `public` in front to create the panel from
 elsewhere. This repository compiles with warnings as errors, and a warning that
-only appears through a later, harmless-looking change costs more time than the one
-word.
+only a later, harmless-looking change brings out costs more time than the one word.
 
-**Something that redraws.** You never call `paintComponent`. You call `repaint()`,
-and Swing calls `paintComponent` when it gets round to it. So the rule is: change
-the numbers first, then ask for a new picture.
+**Something that redraws.** Calling `paintComponent` is not your job. Your side of
+it is `repaint()`; Swing fetches `paintComponent` itself when it gets round to it.
+So the rule is: change the numbers first, then ask for a new picture.
 
 **Something that drives.** A game where something falls needs a steady heartbeat.
 That is a `javax.swing.Timer`, which calls you back at a fixed interval:
@@ -136,11 +136,11 @@ ActionListener step = event -> {
 new Timer(16, step).start();
 ```
 
-The arrow notation is a method without a name. `event -> { ... }` means "take one
-parameter, call it `event`, and run this". It is allowed because `ActionListener`
-demands exactly one method; there is nothing to confuse, so Java lets the name go.
-Written out it would be a class of its own implementing `ActionListener`, and ten
-lines for the same thing.
+The arrow notation is a nameless method. `event -> { ... }` means "take one
+parameter, call it `event`, and run this". The name may go missing because of
+`ActionListener`: the interface prescribes exactly one method, so nothing can be
+mixed up. As a class of its own implementing `ActionListener` this would have come
+to ten lines.
 
 The 16 milliseconds are a request, not a promise. On paper they would be 62 frames
 per second; measured on Windows you get about 32, because the system clock there
@@ -150,11 +150,11 @@ over 31. The game plays fine at that, but it shifts the numbers: `GRAVITY` and
 once if the controls feel sluggish. A counter that goes up on every tick and a
 print every second are enough.
 
-A `while` loop with `Thread.sleep` would not do: Swing redraws on the same thread,
-so a sleeping game is a frozen window.
+A `while` loop with `Thread.sleep` would not do: the thread you sleep on is the one
+that refreshes the picture, so a sleeping game is a frozen window.
 
-Import `javax.swing.Timer` by name. There is also a `java.util.Timer`, and
-importing both with a star makes the name ambiguous.
+Spell `javax.swing.Timer` out in the import. A `java.util.Timer` exists alongside
+it, and if a star pulls both in, the short name is ambiguous.
 
 **Something that reads keys.** A window gets the key at the moment it is pressed,
 and that is exactly what the console cannot do. Three things belong together here:
@@ -178,13 +178,13 @@ panel.addKeyListener(new KeyAdapter() {
 `setFocusable(true)` allows the panel to receive keys. On a `JPanel` that is
 allowed to begin with, so the line changes nothing here; it is there because other
 components are not like that, and then you spend a long time looking.
-`addKeyListener` attaches the listener, and without it nothing arrives at all.
+`addKeyListener` attaches the listener, and without it nothing arrives.
 
-`KeyAdapter` is a class with three empty methods, of which you override the one you
-care about. `new KeyAdapter() { ... }` creates a variation of it on the spot,
-without giving it a name — the same shortcut as the `event ->` above, only for a
-class with several methods. The body in braces after the `new` is what
-`extends KeyAdapter` would be if you gave it a file of its own.
+`KeyAdapter` holds three methods with nothing in them; you fill in the one you care
+about. `new KeyAdapter() { ... }` pulls a variation out of it on the spot, without
+giving it a name: the same shortcut as the `event ->` above, only for a class with
+several methods. The body in braces after the `new` is what `extends KeyAdapter`
+would be if you gave it a file of its own.
 
 `keyPressed` and not `keyTyped`. `keyTyped` only exists for keys that produce a
 character, and it gives you no `getKeyCode`. The space bar does produce one, arrow
@@ -213,23 +213,22 @@ static final double GRAVITY = 0.5;
 static final double FLAP = -8.0;
 ```
 
-They sit inside the class and outside every method, and that is what lets every
-method of the class reach them. It is the difference from the `final int` in
-Course 1, which sat inside a method and only counted there. `static` means
-"belongs to the class, not to a single object", `final` means "never changes".
+Their home is the class itself, not one of its methods, and it follows that every
+method can read them. The `final int` in Course 1 sat inside a method instead and
+ended with it. `static` means "belongs to the class, not to a single object",
+`final` means "never changes".
 
 **No `private` in front of them.** That is not a matter of taste: `Pipe` from the
 section below reads `MARGIN`, `HEIGHT` and `GAP`, and with `private` you get
-`MARGIN has private access in FlappyPanel`. Fields only the panel really needs —
+`MARGIN has private access in FlappyPanel`. Fields only the panel needs —
 `birdY`, `score`, `gameOver` — may and should be `private`.
 
 **And do not leave out either of the first two.** Forget `HEIGHT` and the compiler
 says nothing. `JPanel` inherits a `HEIGHT` of its own through an interface called
 `ImageObserver`, and that one is `2`; `WIDTH` there is `1`. Your playing field
-would be two pixels high, the sum for the gap would come to -74, and a rectangle
-with a negative height is simply not drawn by `fillRect`. The window would stay
-empty, without a single warning. You only find this kind of bug if you know it
-exists.
+would be two pixels high, the sum for the gap would come to -74, and `fillRect`
+does not draw a rectangle with a negative height. The window would stay empty,
+without a single warning. You only find this kind of bug if you know it exists.
 
 ## 🟢 Core — Movement as a speed, not as a step
 
@@ -336,8 +335,8 @@ is the same rule that makes you write `Math.random()` and not `random()`.
 
 `this.x = x` looks odd the first time. Parameter and field have the same name, so
 `this.` says "the field, not the parameter". You could name them differently and do
-without it; the convention exists because the two really are the same thing wearing
-two hats.
+without it; the convention exists because the two are the same thing wearing two
+hats.
 
 The fields and `recycle` have no visibility keyword. That is not sloppiness:
 `FlappyPanel` reads `pipe.x` and calls `pipe.recycle(...)`, and with `private`
@@ -446,7 +445,7 @@ if (bird.intersects(upper)) {
 A `Rectangle` is four numbers: left, top, width, height. `intersects` answers
 whether two of them overlap anywhere.
 
-It is worth knowing what happens in there instead of treating it as magic. Two
+`intersects` is no magic trick, and what it does is worth seeing once. Two
 rectangles overlap if they overlap horizontally **and** vertically, and they overlap
 horizontally if each one's left edge is left of the other's right edge. That is four
 comparisons joined with `&&`, and you could write them yourself. Taking the library
@@ -507,7 +506,7 @@ colour, and `super.paintComponent(g)` in the first line fills the area with it.
 Leave that first line out once and you will see what it does: the bird smears,
 because nothing clears the old picture any more, and the sky is gone.
 
-The order decides what sits on top. Pipes, then bird, then text — the other way
+The order decides what sits on top: pipes, then bird, then text. The other way
 round and the bird would disappear behind a pipe.
 
 `drawString` sets the baseline of the text, not its top edge. That is why the score
@@ -624,9 +623,9 @@ public class FlappyBird {
 
 Four places in there deserve a sentence.
 
-`FlappyPanel.WIDTH` is qualified here, with the class name in front. Inside
-`FlappyPanel` a plain `WIDTH` is enough; here it is not. `FlappyBird` is a different
-class, and without the prefix you get `cannot find symbol`.
+`FlappyPanel.WIDTH` wears the class name in front of it here. Inside the panel
+`WIDTH` on its own does the job; `FlappyBird` is one class over, and for it the
+short name without a prefix is a `cannot find symbol`.
 
 `SwingUtilities.invokeLater` builds the window on Swing's own thread rather than on
 the one `main` runs on. Swing requires that, and `FlappyBird::start` is the short
@@ -634,15 +633,15 @@ form for "call this method", like the `event ->` further up but without a parame
 
 `setPreferredSize` plus `pack()` instead of `setSize`: the panel says how big it
 wants to be and the window lays itself around it. With `setSize` on the window, the
-panel would get that space minus the title bar and border — measured, 14
-pixels narrower and 37 pixels shorter than asked for. Your death line at the bottom
-would then not be where you think it is, and the rightmost column of pipe would
-stick out of the picture.
+panel would get that space minus the title bar and border: measured, 14 pixels
+narrower and 37 pixels shorter than asked for. Your death line at the bottom would
+then not be where you think it is, and the rightmost column of pipe would stick out
+of the picture.
 
 `requestFocusInWindow()` comes **after** `setVisible(true)`. Before that there is no
-window to hand out the focus. On a freshly opened window it usually works before it
-too, because the system activates it anyway; this order is the one you can rely on,
-and it costs nothing.
+window to hand out the focus. It usually works earlier too, because the system
+brings a new window to the front by itself; the order you can rely on, though, is
+this one.
 
 ```
 javac *.java
@@ -650,16 +649,16 @@ java FlappyBird
 ```
 
 Three files this time, so `javac *.java` again, and again not
-`java FlappyBird.java` — single-file launching compiles only that one file and then
-does not find `FlappyPanel`.
+`java FlappyBird.java`. Single-file launching takes along only the file you name;
+`FlappyPanel` goes unseen.
 
 ![Game over, the bird stopped at a pipe, score 12](../assets/game-over.png)
 
-If you want to compile with this repository's real flags, use
-`javac --release 21 -Xlint:all,-serial -Werror *.java`. The `-serial` has to be
-there: every subclass of `JPanel` is serializable by default and has no
-`serialVersionUID`, and without that exception you fail on it rather than on your
-own code.
+For this repository's real flags the call reads
+`javac --release 21 -Xlint:all,-serial -Werror *.java`. Without `-serial` you do
+not get through: inherit from `JPanel` and you inherit its serializability, which
+owes a `serialVersionUID`. `FlappyPanel` has none, and the warning about it stops
+you before your own code is even looked at.
 
 ## 🟡 Optional — Pipes that come and go
 
@@ -682,7 +681,7 @@ the compiler knows a `Pipe` comes out.
 One trap, and it is the reason this is optional rather than the main path: removing
 from a list while a `for` loop runs over it usually throws
 `ConcurrentModificationException`. Usually, not always. Catch the second-to-last
-element and the loop ends by itself afterwards and notices nothing — the next check
+element and the loop ends by itself afterwards and notices nothing: the next check
 compares position against length and happens to find them equal. A bug that shows up
 on three out of four elements and keeps quiet on the fourth is worse than one that
 always bangs. Collect what should go and remove it afterwards, or walk the indices
@@ -794,8 +793,8 @@ work in this exercise, not the strip.
 - Two booleans for "not started" and "over", and one key with three meanings
 - A `reset` method called from the constructor and from the restart, and why only
   the constructor says `new` even so
-- `extends`, `@Override`, `protected`, and what it means when a method has no
-  visibility keyword at all
+- `extends`, `@Override`, `protected`, and the missing visibility keyword as a
+  level of its own
 - A method without a name after `->` and a class without a name after `new`
 - Keys through `addKeyListener` and `keyPressed`, and why the focus is requested
   after `setVisible`

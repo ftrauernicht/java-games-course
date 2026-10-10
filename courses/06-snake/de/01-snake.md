@@ -458,7 +458,7 @@ public class Snake {
 `SnakePanel.COLS` steht hier mit dem Klassennamen davor. Innerhalb von `SnakePanel`
 genügt `COLS`; hier nicht, denn `Snake` ist eine andere Klasse, und ohne das Präfix
 bekommst du `cannot find symbol`. Leg die Zahl auf keinen Fall ein zweites Mal in
-`Snake.java` an — zwei Wahrheiten für dieselbe Größe sind genau die Sorte Fehler,
+`Snake.java` an: zwei Wahrheiten für dieselbe Größe sind genau die Sorte Fehler,
 die man erst drei Änderungen später bemerkt.
 
 Drei Schreibweisen in dieser Datei hat Kurs 1 nicht gezeigt, und alle drei sind
@@ -585,7 +585,7 @@ deine Reparatur von Glück unterscheiden kannst.
 Eine zweite, kleinere Herausforderung: Pause auf P. Stopp den Timer, schreib das
 Wort auf den Bildschirm, und starte ihn beim nächsten P wieder. Dafür muss das
 Panel an den Timer herankommen, also braucht es ein Feld dafür und einen Setzer,
-der aus `start` gerufen wird — dieselbe Verdrahtung wie beim Tempo weiter oben.
+der aus `start` gerufen wird: dieselbe Verdrahtung wie beim Tempo weiter oben.
 
 ## Was du gelernt hast
 

@@ -448,7 +448,7 @@ public class Snake {
 `SnakePanel.COLS` carries the class name here. Inside `SnakePanel` a plain `COLS` is
 enough; here it is not, because `Snake` is a different class, and without the prefix
 you get `cannot find symbol`. Do not declare the number a second time in
-`Snake.java` — two truths for the same size are exactly the kind of bug you notice
+`Snake.java`: two truths for the same size are exactly the kind of bug you notice
 three changes later.
 
 Three notations in this file were not in Course 1, and all three are the same theme:
@@ -569,7 +569,7 @@ your fix apart from luck.
 
 A second, smaller challenge: pause on P. Stop the timer, write the word on the
 screen, and start it again on the next P. For that the panel has to reach the timer,
-so it needs a field for it and a setter called from `start` — the same wiring as for
+so it needs a field for it and a setter called from `start`: the same wiring as for
 the speed above.
 
 ## What you learned
