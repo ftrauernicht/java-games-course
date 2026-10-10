@@ -40,14 +40,15 @@ jobs:
             fi
             out="$(mktemp -d)"
             echo "::group::javac $dir"
-            # -serial: every JPanel subclass is Serializable without a
-            #   serialVersionUID, and adding one would be noise in a beginner's
-            #   first window.
-            # -this-escape: a backstop. The panels are final and all Swing
-            #   wiring happens in main, so the pattern it warns about is
-            #   already avoided.
+            # -serial is the one unavoidable exclusion: every JPanel subclass
+            # is Serializable without a serialVersionUID, and adding one
+            # would be noise in a beginner's first window. Everything else
+            # stays on. In particular this-escape stays on, which is what
+            # keeps the panels declared final -- verified: a public,
+            # non-final panel that wires itself up in its constructor fails
+            # the build, a final one compiles clean.
             if ! javac --release 21 \
-                       -Xlint:all,-serial,-this-escape \
+                       -Xlint:all,-serial \
                        -Werror \
                        -sourcepath "$dir" \
                        -d "$out" \
