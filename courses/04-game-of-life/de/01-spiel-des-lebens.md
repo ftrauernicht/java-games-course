@@ -9,6 +9,8 @@ und ein Muster wandert von allein über den Bildschirm. Unterwegs begegnest du e
 Fehler, dessen Ursache im Code unsichtbar und auf dem Bildschirm offensichtlich
 ist, und du wirst ihn vermieden haben.
 
+![Ein Gleiter, sechs Generationen auseinander: dieselben fünf Zellen, ein Feld tiefer und eines weiter rechts](../assets/glider.png)
+
 Setzt [Kurs 1](../../01-basics/de/00-einfuehrung.md) voraus und sonst nichts. Eine
 fertige Fassung liegt in [`code/GameOfLife.java`](../code/GameOfLife.java).
 

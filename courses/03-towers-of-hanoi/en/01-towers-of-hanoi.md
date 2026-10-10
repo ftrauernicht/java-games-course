@@ -8,6 +8,8 @@
 believe. Three pegs, a stack of discs, and a solution whose body is three lines
 plus a stopping condition, because it asks itself for help.
 
+![The pegs drawn after every move, which the optional challenge at the end of this chapter builds](../assets/towers.png)
+
 This is the first chapter that does not hand you the finished method. The idea
 behind it is explained in full; writing it is yours. That is how every course from
 here on works.

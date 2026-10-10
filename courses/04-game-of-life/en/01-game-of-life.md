@@ -9,6 +9,8 @@ a pattern walks across the screen on its own. On the way you will meet a mistake
 whose cause is invisible in the code and obvious on the screen, and you will have
 avoided it.
 
+![A glider, six generations apart: the same five cells, one square down and one to the right](../assets/glider.png)
+
 Assumes [Course 1](../../01-basics/en/00-introduction.md) and nothing else. A
 finished version lives in [`code/GameOfLife.java`](../code/GameOfLife.java).
 

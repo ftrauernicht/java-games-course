@@ -55,6 +55,8 @@ The language itself, in three chapters and without a game. It is the only course
 the others require, so it covers everything they lean on: types and control flow,
 your own methods, arrays, and reading what somebody types.
 
+<img src="courses/01-basics/assets/guess-the-number.png" width="400" alt="A finished session of the number-guessing game" />
+
 | # | Chapter | What you'll learn |
 |---|---|---|
 | 0 | [Introduction & Tools](courses/01-basics/en/00-introduction.md) | Installing the JDK and an editor, compiling and running, what every word of `public static void main` means, reading a compiler error |
@@ -66,6 +68,8 @@ your own methods, arrays, and reading what somebody types.
 Two players at one keyboard, on a board that prints its own controls. The first
 game, so it hands you every line of code.
 
+<img src="courses/02-tic-tac-toe/assets/gameplay.png" width="260" alt="Tic-Tac-Toe, won along the diagonal" />
+
 | # | Chapter | What you'll learn |
 |---|---|---|
 | 1 | [Tic-Tac-Toe](courses/02-tic-tac-toe/en/01-tic-tac-toe.md) | A grid as `char[][]`, a loop inside a loop, turning one digit into a row and a column, rejecting bad moves without ending the game, checking eight win lines, and the order a game loop has to use |
@@ -74,6 +78,8 @@ game, so it hands you every line of code.
 
 Three pegs, a stack of discs, and a solution three lines long. The first chapter
 that explains the idea in full and leaves the writing to you.
+
+<img src="courses/03-towers-of-hanoi/assets/towers.png" width="270" alt="The three pegs drawn after every move" />
 
 | # | Chapter | What you'll learn |
 |---|---|---|
@@ -84,6 +90,8 @@ that explains the idea in full and leaves the writing to you.
 A game with no players: four rules, a grid, and a pattern that walks across the
 screen on its own. Home of the most instructive bug in this repository.
 
+<img src="courses/04-game-of-life/assets/glider.png" width="300" alt="A glider six generations apart" />
+
 | # | Chapter | What you'll learn |
 |---|---|---|
 | 1 | [Conway's Game of Life](courses/04-game-of-life/en/01-game-of-life.md) | Counting neighbours with offset loops, bounds checks, why the next generation needs a new grid, `Thread.sleep` and checked exceptions, and wrapping an index with `%` |
@@ -92,6 +100,8 @@ screen on its own. Home of the most instructive bug in this repository.
 
 Slide, merge, repeat. Four directions that turn out to be one operation on a
 turned board, and the merge rule nearly everybody gets wrong first time.
+
+<img src="courses/05-2048/assets/gameplay.png" width="280" alt="A 2048 board with a 128 tile" />
 
 | # | Chapter | What you'll learn |
 |---|---|---|
@@ -102,6 +112,8 @@ turned board, and the merge rule nearly everybody gets wrong first time.
 The first game in a window, and the answer to the Enter key: here a key arrives the
 moment it is pressed.
 
+<img src="courses/06-snake/assets/gameplay.png" width="300" alt="Snake in its window" />
+
 | # | Chapter | What you'll learn |
 |---|---|---|
 | 1 | [Snake](courses/06-snake/en/01-snake.md) | Classes with fields and a constructor, `JFrame` and `JPanel`, `paintComponent` and `repaint`, a timer as the game loop, keyboard focus, and moving a body from the tail forwards |
@@ -110,6 +122,8 @@ moment it is pressed.
 
 Gravity, three recycled pipes and one button. The last course here, and the first
 where movement is a speed rather than a step.
+
+<img src="courses/07-flappy-bird/assets/gameplay.png" width="240" alt="Flappy Bird between two pipes" />
 
 | # | Chapter | What you'll learn |
 |---|---|---|

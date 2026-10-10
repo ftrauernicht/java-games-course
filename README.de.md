@@ -57,6 +57,8 @@ die anderen voraussetzen, und deckt deshalb alles ab, worauf sie sich stützen:
 Typen und Ablaufsteuerung, eigene Methoden, Arrays, und das Lesen dessen, was
 jemand tippt.
 
+<img src="courses/01-basics/assets/guess-the-number.png" width="400" alt="Eine fertige Partie Zahlenraten" />
+
 | # | Kapitel | Was du lernst |
 |---|---|---|
 | 0 | [Einführung & Werkzeuge](courses/01-basics/de/00-einfuehrung.md) | JDK und Editor installieren, übersetzen und ausführen, was jedes Wort von `public static void main` bedeutet, einen Compilerfehler lesen |
@@ -68,6 +70,8 @@ jemand tippt.
 Zwei Spieler an einer Tastatur, auf einem Feld, das seine eigene Bedienung
 ausgibt. Das erste Spiel, deshalb bekommst du jede Zeile Code.
 
+<img src="courses/02-tic-tac-toe/assets/gameplay.png" width="260" alt="Tic-Tac-Toe, über die Diagonale gewonnen" />
+
 | # | Kapitel | Was du lernst |
 |---|---|---|
 | 1 | [Tic-Tac-Toe](courses/02-tic-tac-toe/de/01-tic-tac-toe.md) | Ein Gitter als `char[][]`, eine Schleife in einer Schleife, aus einer Ziffer Zeile und Spalte machen, schlechte Züge ablehnen ohne das Spiel zu beenden, acht Gewinnlinien prüfen, und die Reihenfolge, die eine Spielschleife braucht |
@@ -77,6 +81,8 @@ ausgibt. Das erste Spiel, deshalb bekommst du jede Zeile Code.
 Drei Stäbe, ein Stapel Scheiben, und eine Lösung aus drei Zeilen. Das erste
 Kapitel, das die Idee vollständig erklärt und dir das Schreiben überlässt.
 
+<img src="courses/03-towers-of-hanoi/assets/towers.png" width="270" alt="Die drei Stäbe nach jedem Zug gezeichnet" />
+
 | # | Kapitel | Was du lernst |
 |---|---|---|
 | 1 | [Türme von Hanoi](courses/03-towers-of-hanoi/de/01-tuerme-von-hanoi.md) | Rekursion, der Basisfall, warum Aufrufe sich stapeln und warten, einem Aufruf an eine noch unfertige Methode vertrauen, und zwei Arrays als Stapel |
@@ -85,6 +91,8 @@ Kapitel, das die Idee vollständig erklärt und dir das Schreiben überlässt.
 
 Ein Spiel ohne Spieler: vier Regeln, ein Gitter, und ein Muster, das von allein
 über den Bildschirm wandert. Heimat des lehrreichsten Fehlers in diesem Repository.
+
+<img src="courses/04-game-of-life/assets/glider.png" width="300" alt="Ein Gleiter sechs Generationen auseinander" />
 
 | # | Kapitel | Was du lernst |
 |---|---|---|
@@ -96,6 +104,8 @@ Schieben, verschmelzen, von vorn. Vier Richtungen, die sich als eine Operation a
 einem gedrehten Feld entpuppen, und die Verschmelzungsregel, die fast jeder im
 ersten Anlauf falsch macht.
 
+<img src="courses/05-2048/assets/gameplay.png" width="280" alt="Ein 2048-Feld mit einem 128er-Plättchen" />
+
 | # | Kapitel | Was du lernst |
 |---|---|---|
 | 1 | [2048](courses/05-2048/de/01-2048.md) | Eine Zeile zusammenschieben und verschmelzen, ein Feld drehen, damit eine Operation vier Richtungen bedient, ein `switch` als Wert, ein Feld kopieren statt umbenennen, und warum ein Terminal keinen einzelnen Tastendruck lesen kann |
@@ -105,6 +115,8 @@ ersten Anlauf falsch macht.
 Das erste Spiel im Fenster, und die Antwort auf die Enter-Taste: Hier kommt eine
 Taste im Moment des Drucks an.
 
+<img src="courses/06-snake/assets/gameplay.png" width="300" alt="Snake in seinem Fenster" />
+
 | # | Kapitel | Was du lernst |
 |---|---|---|
 | 1 | [Snake](courses/06-snake/de/01-snake.md) | Klassen mit Feldern und Konstruktor, `JFrame` und `JPanel`, `paintComponent` und `repaint`, ein Timer als Spielschleife, Tastaturfokus, und einen Körper vom Schwanz nach vorn bewegen |
@@ -113,6 +125,8 @@ Taste im Moment des Drucks an.
 
 Schwerkraft, drei recycelte Röhren und eine Taste. Der letzte Kurs hier, und der
 erste, in dem Bewegung eine Geschwindigkeit ist statt eines Schrittes.
+
+<img src="courses/07-flappy-bird/assets/gameplay.png" width="240" alt="Flappy Bird zwischen zwei Röhren" />
 
 | # | Kapitel | Was du lernst |
 |---|---|---|

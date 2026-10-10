@@ -8,6 +8,8 @@
 draws itself, moves that are checked before they are accepted, a winner that is
 actually detected, and a scoreline across several rounds.
 
+![A finished round: X has won along the diagonal, and the scoreline is kept](../assets/gameplay.png)
+
 This is the first game, so you get all the code. Type it in piece by piece and run
 it after every section. From Course 3 on you will get less, on purpose.
 

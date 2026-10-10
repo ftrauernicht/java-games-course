@@ -406,15 +406,7 @@ player to guess. After each guess it gives the player an instruction: `Higher.`
 when the secret is above the guess, `Lower.` when it is below. When the guess is
 right it says so and reports how many tries it took.
 
-```
-I am thinking of a number between 1 and 100.
-Your guess: 50
-Lower.
-Your guess: 25
-Higher.
-Your guess: 37
-That's it. You needed 3 tries.
-```
+![A finished session: the program thinks of a number, three guesses find it](../assets/guess-the-number.png)
 
 The pieces are all in Chapters 1 and 2:
 

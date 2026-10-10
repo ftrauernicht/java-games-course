@@ -8,6 +8,8 @@
 Spielfeld, das sich selbst zeichnet, Züge, die geprüft werden, bevor sie zählen,
 ein Sieger, der auch erkannt wird, und ein Punktestand über mehrere Runden.
 
+![Eine fertige Runde: X hat über die Diagonale gewonnen, und der Punktestand wird mitgeführt](../assets/gameplay.png)
+
 Das ist das erste Spiel, deshalb bekommst du den ganzen Code. Tipp ihn Stück für
 Stück ab und führ ihn nach jedem Abschnitt aus. Ab Kurs 3 bekommst du weniger, mit
 Absicht.

@@ -417,15 +417,7 @@ lässt den Spieler raten. Nach jedem Versuch gibt es dem Spieler eine Anweisung:
 `Higher.`, wenn das Geheimnis über dem Tipp liegt, `Lower.`, wenn es darunter
 liegt. Stimmt der Tipp, sagt es das und nennt die Zahl der Versuche.
 
-```
-I am thinking of a number between 1 and 100.
-Your guess: 50
-Lower.
-Your guess: 25
-Higher.
-Your guess: 37
-That's it. You needed 3 tries.
-```
+![Eine fertige Partie: Das Programm denkt sich eine Zahl aus, drei Tipps finden sie](../assets/guess-the-number.png)
 
 Die Bausteine stehen alle in Kapitel 1 und 2:
 

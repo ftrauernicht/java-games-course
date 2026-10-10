@@ -9,6 +9,8 @@ schwersten zu glauben ist. Drei Stäbe, ein Stapel Scheiben, und eine Lösung, d
 Rumpf aus drei Zeilen plus einer Abbruchbedingung besteht, weil sie sich selbst um
 Hilfe bittet.
 
+![Die Stäbe nach jedem Zug gezeichnet, gebaut von der Herausforderung am Ende dieses Kapitels](../assets/towers.png)
+
 Das ist das erste Kapitel, das dir die fertige Methode nicht in die Hand gibt. Die
 Idee dahinter wird vollständig erklärt; das Schreiben gehört dir. So funktioniert
 jeder Kurs ab hier.
