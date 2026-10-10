@@ -75,7 +75,8 @@ jobs:
           fi
           out="$(mktemp -d)"
           javac --release 21 -d "$out" "$dir"/*.java
-          java -cp "$out" TowersOfHanoi | head -20
+          java -cp "$out" TowersOfHanoi > "$out/run.txt"
+          head -20 "$out/run.txt"
           rm -rf "$out"
 
   link-check:

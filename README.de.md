@@ -72,6 +72,15 @@ ausgibt. Das erste Spiel, deshalb bekommst du jede Zeile Code.
 |---|---|---|
 | 1 | [Tic-Tac-Toe](courses/02-tic-tac-toe/de/01-tic-tac-toe.md) | Ein Gitter als `char[][]`, eine Schleife in einer Schleife, aus einer Ziffer Zeile und Spalte machen, schlechte Züge ablehnen ohne das Spiel zu beenden, acht Gewinnlinien prüfen, und die Reihenfolge, die eine Spielschleife braucht |
 
+### Kurs 3 – Türme von Hanoi (`courses/03-towers-of-hanoi/`)
+
+Drei Stäbe, ein Stapel Scheiben, und eine Lösung aus drei Zeilen. Das erste
+Kapitel, das die Idee vollständig erklärt und dir das Schreiben überlässt.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 1 | [Türme von Hanoi](courses/03-towers-of-hanoi/de/01-tuerme-von-hanoi.md) | Rekursion, der Basisfall, warum Aufrufe sich stapeln und warten, einem Aufruf an eine noch unfertige Methode vertrauen, und zwei Arrays als Stapel |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in

@@ -70,6 +70,15 @@ game, so it hands you every line of code.
 |---|---|---|
 | 1 | [Tic-Tac-Toe](courses/02-tic-tac-toe/en/01-tic-tac-toe.md) | A grid as `char[][]`, a loop inside a loop, turning one digit into a row and a column, rejecting bad moves without ending the game, checking eight win lines, and the order a game loop has to use |
 
+### Course 3 – Towers of Hanoi (`courses/03-towers-of-hanoi/`)
+
+Three pegs, a stack of discs, and a solution three lines long. The first chapter
+that explains the idea in full and leaves the writing to you.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 1 | [Towers of Hanoi](courses/03-towers-of-hanoi/en/01-towers-of-hanoi.md) | Recursion, the base case, why calls pile up and wait, trusting a call to a method that is not finished yet, and two arrays used as a stack |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in
