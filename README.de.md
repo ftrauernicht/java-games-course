@@ -81,6 +81,15 @@ Kapitel, das die Idee vollständig erklärt und dir das Schreiben überlässt.
 |---|---|---|
 | 1 | [Türme von Hanoi](courses/03-towers-of-hanoi/de/01-tuerme-von-hanoi.md) | Rekursion, der Basisfall, warum Aufrufe sich stapeln und warten, einem Aufruf an eine noch unfertige Methode vertrauen, und zwei Arrays als Stapel |
 
+### Kurs 4 – Conways Game of Life (`courses/04-game-of-life/`)
+
+Ein Spiel ohne Spieler: vier Regeln, ein Gitter, und ein Muster, das von allein
+über den Bildschirm wandert. Heimat des lehrreichsten Fehlers in diesem Repository.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 1 | [Conways Game of Life](courses/04-game-of-life/de/01-spiel-des-lebens.md) | Nachbarn mit Versatzschleifen zählen, Grenzprüfungen, warum die nächste Generation ein neues Gitter braucht, `Thread.sleep` und geprüfte Ausnahmen, und einen Index mit `%` umlaufen lassen |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in

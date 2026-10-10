@@ -79,6 +79,15 @@ that explains the idea in full and leaves the writing to you.
 |---|---|---|
 | 1 | [Towers of Hanoi](courses/03-towers-of-hanoi/en/01-towers-of-hanoi.md) | Recursion, the base case, why calls pile up and wait, trusting a call to a method that is not finished yet, and two arrays used as a stack |
 
+### Course 4 – Conway's Game of Life (`courses/04-game-of-life/`)
+
+A game with no players: four rules, a grid, and a pattern that walks across the
+screen on its own. Home of the most instructive bug in this repository.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 1 | [Conway's Game of Life](courses/04-game-of-life/en/01-game-of-life.md) | Counting neighbours with offset loops, bounds checks, why the next generation needs a new grid, `Thread.sleep` and checked exceptions, and wrapping an index with `%` |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in

@@ -14,7 +14,7 @@ lines it takes.
 | 1 | Basics -- the language itself, no game yet | types, operators, control flow, methods, arrays, keyboard input | ⭐ | ✅ [Built](courses/01-basics/en/00-introduction.md) |
 | 2 | Tic-Tac-Toe -- two players, one board, nine squares | a board as a two-dimensional array, nested loops, passing an array to a method | ⭐ | ✅ [Built](courses/02-tic-tac-toe/en/01-tic-tac-toe.md) |
 | 3 | Towers of Hanoi -- the puzzle solves itself | recursion, the base case, reading a call stack | ⭐⭐ | ✅ [Built](courses/03-towers-of-hanoi/en/01-towers-of-hanoi.md) |
-| 4 | Conway's Game of Life -- cells live and die on their own | computing the next state into a second grid, counting neighbours at the edges, pausing between frames | ⭐⭐ | Planned |
+| 4 | Conway's Game of Life -- cells live and die on their own | computing the next state into a second grid, counting neighbours at the edges, pausing between frames | ⭐⭐ | ✅ [Built](courses/04-game-of-life/en/01-game-of-life.md) |
 | 5 | 2048 -- slide, merge, repeat | transforming a grid, reducing four directions to one operation, the merge rule everyone gets wrong | ⭐⭐⭐ | Planned |
 | 6 | Snake -- the first one in a window | Swing, drawing on a panel, a timer as the game loop, reading keys as they are pressed | ⭐⭐⭐ | Planned |
 | 7 | Flappy Bird -- gravity, pipes, one button | movement as velocity, a class that holds data, rectangle collision | ⭐⭐⭐⭐ | Planned |
