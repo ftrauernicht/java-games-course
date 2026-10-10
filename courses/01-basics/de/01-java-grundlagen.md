@@ -9,9 +9,21 @@ ihnen rechnen, sie vergleichen, und ein Programm entscheiden und wiederholen
 lassen. Mehr steckt in den Spielen dieses Repositorys nicht drin. Nichts davon ist
 spielespezifisch, und alles kommt in jedem folgenden Kurs wieder.
 
-Arbeite in einer Datei namens `Basics.java` und häng beim Durchgehen immer mehr an
-`main` an. Eine fertige Fassung jedes Abschnitts liegt in
-[`code/Basics.java`](../code/Basics.java), in derselben Reihenfolge wie unten.
+Arbeite in einer Datei namens `Basics.java`. Fang sie mit demselben Rahmen an wie
+in Kapitel 0, nur mit der Klasse passend zum Dateinamen:
+
+```java
+public class Basics {
+    public static void main(String[] args) {
+
+    }
+}
+```
+
+Alles aus diesem Kapitel kommt in `main`, zwischen die innersten geschweiften
+Klammern, und du hängst beim Durchgehen immer mehr an. Eine fertige Fassung des
+grünen Pfads liegt in [`code/Basics.java`](../code/Basics.java), in derselben
+Reihenfolge wie unten. Der gelbe Abschnitt ist Übung und steht deshalb nicht dort.
 
 ## 🟢 Kern — Etwas auf den Bildschirm bringen
 
@@ -89,8 +101,14 @@ whole = "forty-two";
 ```
 
 ```
-Basics.java:12: error: incompatible types: String cannot be converted to int
+Basics.java:14: error: incompatible types: String cannot be converted to int
+        whole = "forty-two";
+                ^
+1 error
 ```
+
+Die Zeilennummer hängt davon ab, wo in der Datei die Zeile steht; der Rest der
+Meldung ist überall gleich.
 
 In einer Sprache ohne diese Prüfung wäre die Zeile in Ordnung, bis irgendwann etwas
 damit rechnen will. Lösch sie wieder.
@@ -241,15 +259,41 @@ und derselbe Vergleich sagt `false`, obwohl auf beiden Seiten sichtbar `yes` ste
 Jedes Spiel in diesem Repository vergleicht Text, den jemand getippt hat. Diese
 Regel trägt also ab Kurs 2 mit: **für Text immer `.equals`.**
 
-Dasselbe gilt auch andersherum, mit einer Ergänzung, die später Ärger spart. Falls
-der Text ganz fehlen könnte, stell den bekannten Wert nach vorn:
+Eine Ergänzung spart später Ärger. Eine `String`-Variable kann auch **überhaupt
+nichts** enthalten, und das nennt Java `null`. Das ist etwas anderes als leerer
+Text: `""` ist Text, der zufällig keine Zeichen hat, während `null` heißt, dass da
+gar kein Text ist, den man fragen könnte. Nichts etwas zu fragen beendet das
+Programm:
 
 ```java
-if ("yes".equals(typed)) {
+String missing = null;
+System.out.println(missing.equals("yes"));
 ```
 
-So funktioniert der Vergleich auch dann noch, wenn in `typed` überhaupt nichts
-steht.
+```
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke
+"String.equals(Object)" because "<local1>" is null
+```
+
+Der Teil in Anführungszeichen ist Javas Versuch, die Variable zu benennen. Aus
+einem Editor übersetzt steht dort meist `"missing"`, aus einem blanken `javac`
+ein Platzhalter wie `<local1>`, weil der Name nicht mitgespeichert wurde.
+
+Stell den Wert, den du kennst, nach vorn, und das Problem verschwindet. Dann
+fragt nämlich der bekannte Text, und der ist mit Sicherheit da:
+
+```java
+String missing = null;
+System.out.println("yes".equals(missing));
+```
+
+```
+false
+```
+
+Nichts in diesem Kurs drückt dir absichtlich ein `null` in die Hand. Die
+Angewohnheit kostet eine Umstellung und nimmt eine ganze Fehlerklasse weg, sie
+lohnt sich also jetzt schon.
 
 ## 🟢 Kern — Eine Entscheidung treffen
 
@@ -301,8 +345,8 @@ dieser Kurs nutzt keine andere. Es gibt eine ältere Form mit Doppelpunkten, die
 nach jedem Fall ein `break` braucht, und das ist eine berühmte Fehlerquelle. Du
 wirst ihr im Code anderer Leute begegnen; schreiben musst du sie nicht.
 
-Die Kurse 2 und 5 lesen beide einen Buchstaben und entscheiden, was damit zu tun
-ist. Genau diese Form hat dort die Eingabebehandlung.
+Kurs 5 liest einen Buchstaben und entscheidet, was damit zu tun ist. Genau diese
+Form hat dort die Eingabebehandlung.
 
 ## 🟢 Kern — Eine feste Anzahl von Malen wiederholen
 
@@ -326,6 +370,13 @@ weil Listen dort anfangen:
 
 ```java
 for (int i = 0; i < 5; i++) {
+    System.out.print(i + " ");
+}
+System.out.println();
+```
+
+```
+0 1 2 3 4 
 ```
 
 Wieder fünf Durchläufe, mit `i` als 0, 1, 2, 3, 4. Beachte `<` statt `<=`.
@@ -356,9 +407,33 @@ Irgendetwas in der Schleife muss die Bedingung Richtung falsch bewegen. Vergiss 
 Terminal, um es zu beenden. Es wird dir mindestens einmal passieren, und es ist
 kein Drama.
 
-`while` ist die Form, die jede Spielschleife in diesem Repository hat: weiterspielen,
-solange niemand gewonnen hat. `break` verlässt eine Schleife sofort, und `continue`
-überspringt den Rest des aktuellen Durchlaufs und beginnt den nächsten.
+`while` ist die Form, die jede Spielschleife in diesem Repository hat:
+weiterspielen, solange niemand gewonnen hat.
+
+Zwei Wörter steuern eine Schleife von innen. `break` verlässt sie sofort, und
+`continue` bricht den aktuellen Durchlauf ab und beginnt den nächsten:
+
+```java
+for (int i = 1; i <= 10; i++) {
+    if (i % 2 == 0) {
+        continue;
+    }
+    if (i > 7) {
+        break;
+    }
+    System.out.print(i + " ");
+}
+System.out.println();
+```
+
+```
+1 3 5 7 
+```
+
+Die geraden Zahlen überspringt `continue`, und bei 9 beendet `break` die ganze
+Schleife. Beide kommen in jedem Spiel hier wieder vor: `break` beendet eine Runde,
+die jemand gewonnen hat, und `continue` wirft eine unsinnige Eingabe weg und fragt
+noch einmal.
 
 ## 🟡 Optional — Notizen an dich selbst, unverrückbare Werte, saubere Ausgabe
 

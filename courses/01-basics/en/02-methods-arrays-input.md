@@ -9,8 +9,10 @@ split a program into named pieces, you need to hold many values instead of one,
 and you need to read what somebody types. By the end of this chapter you will have
 all three, and you will have written a game with them.
 
-Work in a file called `MethodsArraysInput.java`. A finished version of every
-section lives in [`code/MethodsArraysInput.java`](../code/MethodsArraysInput.java).
+Work in a file called `MethodsArraysInput.java`, with the same class frame as
+before and the class renamed to match. A finished version of the green path lives
+in [`code/MethodsArraysInput.java`](../code/MethodsArraysInput.java); the yellow
+section is practice, so it is not repeated there.
 
 ## 🟢 Core — Your own methods
 
@@ -110,6 +112,10 @@ scores[1] = 20;
 scores[2] = 30;
 ```
 
+`new` is the word for "make me one of these". It turns up wherever something has
+to be built rather than just written down, and you will meet it again with
+`Scanner` at the end of this chapter.
+
 Or list the values straight away:
 
 ```java
@@ -185,6 +191,12 @@ Read the colon as "in". It hands you each value in turn, and it cannot run off t
 end, because it never deals in positions at all. Use it when you only need the
 values; use the counting form when you need to know where you are, or when you
 want to change what is stored.
+
+This also settles the promise from Chapter 0. `String[] args` is an array like any
+other, holding text instead of numbers, so `args.length` is how many words were
+typed after the program name and `args[0]` is the first of them. `Greet.java`
+checked `args.length == 0` for exactly the reason you now know: asking for
+`args[0]` when nothing was typed is reaching past the end.
 
 ## 🟢 Core — Arrays are references, single values are not
 
@@ -303,6 +315,11 @@ static boolean isWholeNumber(String text) {
 }
 ```
 
+`text.isEmpty()` answers whether there are no characters at all, which has to be
+rejected separately: an empty line is not a number, but the loop below would never
+notice, because it would have nothing to look at and fall straight through to
+`true`.
+
 `text.length()` is how many characters, and `text.charAt(i)` is the one at that
 position, which is a `char` and so can be compared with `<` and `>`. Any character
 outside `'0'` to `'9'` and the answer is no. (Digits only, so a minus sign counts
@@ -365,7 +382,14 @@ H
 every case twice. Combined with `.equals` from Chapter 1:
 
 ```java
+String answer = "  YES  ";
 if ("yes".equals(answer.trim().toLowerCase())) {
+    System.out.println("Accepted.");
+}
+```
+
+```
+Accepted.
 ```
 
 Reading from the inside out: trim the spaces, lower the case, compare. That one
@@ -378,8 +402,9 @@ the result, assign it to something.
 ## 🔴 Optional, genuine challenge — Guess the number
 
 Write a game. The program picks a secret whole number from 1 to 100 and asks the
-player to guess. After each guess it says `Higher.` or `Lower.`, and when the
-guess is right it says so and reports how many tries it took.
+player to guess. After each guess it gives the player an instruction: `Higher.`
+when the secret is above the guess, `Lower.` when it is below. When the guess is
+right it says so and reports how many tries it took.
 
 ```
 I am thinking of a number between 1 and 100.
@@ -426,7 +451,10 @@ way to write it.
 
 That is the whole language this course needs. Everything from here on is a game.
 
-Course 2 builds Tic-Tac-Toe: a board, two players, and a check for three in a row.
-It assumes this course and nothing else, and so does every course after it, so you
-can take them in whatever order appeals to you. The full list is in
+[Course 2 - Tic-Tac-Toe](../../02-tic-tac-toe/en/01-tic-tac-toe.md) builds a
+board, two players, and a check for three in a row. It assumes this course and
+nothing else, and so does every course after it, so you can take them in whatever
+order appeals to you. The full list is in
 [PROJECT-IDEAS.md](../../../PROJECT-IDEAS.md).
+
+**Next:** [Course 2 - Tic-Tac-Toe](../../02-tic-tac-toe/en/01-tic-tac-toe.md)

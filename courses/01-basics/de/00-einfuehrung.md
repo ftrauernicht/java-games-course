@@ -65,6 +65,19 @@ zwischen dich und den Compiler schieben.
 
 Die Installation dauert. Ein guter Moment für einen Kaffee.
 
+Zwei Dinge zum Arbeiten darin, denn der Rest dieses Kapitels benutzt ein Terminal.
+IntelliJ legt deine `.java`-Dateien in einem Ordner namens `src` im Projekt ab,
+und genau dort müssen die beiden Befehle unten laufen. Ein eigenes Terminalfenster
+brauchst du dafür nicht: IntelliJ hat eines eingebaut, unter **Ansicht**,
+**Werkzeugfenster**, **Terminal**, und es öffnet im Projektordner, `cd src` bringt
+dich also den Rest des Weges.
+
+IntelliJ kann eine Datei auch selbst übersetzen und starten, mit dem grünen Pfeil
+neben `main`. Nimm ihn, sobald du dich sicher fühlst. Die Kapitel bleiben bei den
+zwei Befehlen, weil sie zeigen, was der Pfeil für dich erledigt, und weil sich aus
+einem Fehler, den du selbst ausgelöst hast, leichter lernen lässt als aus einem,
+den ein Knopf vor dir versteckt hat.
+
 ## Dein erstes Programm
 
 Leg eine Datei namens `Hello.java` an und tipp das hier hinein. Tippen, nicht

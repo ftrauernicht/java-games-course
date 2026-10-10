@@ -99,8 +99,21 @@ Java-Punkte.
   lässt.
 - An jeder Stelle, die sich auf zwei Arten lesen lässt, noch einmal sagen, wohin der
   Code gehört.
-- Jeden Kurs geht ein frischer Leser durch, der nur Kurs 1 kennt, tippt jedes Snippet
-  ab und führt es aus. Wo er hängenbleibt, liegen die Fehler des Kapitels.
+- **Jedes Snippet muss für sich übersetzen.** Ein Fragment, das mit einer
+  öffnenden Klammer endet, liefert `reached end of file while parsing`, und das
+  zeigt auf die letzte Zeile der Datei statt auf die Ursache. Braucht ein Snippet
+  eine umgebende Variable oder Methode, zeig sie.
+- **Ein Kapitel, das sagt „arbeite in einer Datei namens X", zeigt den
+  Klassenrahmen einmal**, oben, vor dem ersten Snippet. „Wohin gehört das" ist die
+  Frage, die ein Anfänger allein nicht beantworten kann.
+- **Jedes Schlüsselwort und jede Methode wird dort erklärt, wo sie zuerst
+  auftaucht**, auch die kleinen, die man übersieht: `new`, `null`, `isEmpty`.
+- **Die Datei in `code/` folgt dem Kapitel**: gleiche Reihenfolge, gleiche Werte,
+  gleiche Variablennamen. Wer feststeckt, legt beides nebeneinander.
+- **Druck keine Zeilennummer ab, die der Leser nicht reproduzieren kann.** Entweder
+  die Meldung ohne sie zeigen, oder dazusagen, dass sie von der Position abhängt.
+- Jeden Kurs geht ein frischer Leser durch, der nur Kurs 1 kennt, tippt jedes
+  Snippet ab und führt es aus. Wo er hängenbleibt, liegen die Fehler des Kapitels.
 
 **Wie viel Code man zeigt**
 

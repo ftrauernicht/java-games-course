@@ -94,6 +94,19 @@ additions.
   that calls `Thread.sleep` will not compile outside a method that declares the
   exception, and that is the kind of thing only running it catches.
 - Restate where code goes at every point the chapter could be read two ways.
+- **Every snippet must compile on its own.** A fragment that ends in an opening
+  brace gives `reached end of file while parsing`, which points at the last line
+  of the file instead of the cause. If a snippet needs a surrounding variable or
+  method, show it.
+- **A chapter that says "work in a file called X" shows the class frame once**, at
+  the top, before the first snippet. "Where does this go" is the question a
+  beginner cannot answer alone.
+- **Every keyword and method is explained where it first appears**, including the
+  small ones that feel invisible: `new`, `null`, `isEmpty`.
+- **The file in `code/` follows the chapter**: same order, same values, same
+  variable names. Somebody who is stuck reads them side by side.
+- **Do not print a line number the reader cannot reproduce.** Either show the
+  message without one, or say that it depends on where the line sits.
 - Each course is walked by a fresh reader who knows only Course 1, who types every
   snippet and runs it. Their sticking points are the chapter's bugs.
 

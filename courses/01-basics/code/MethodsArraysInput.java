@@ -1,5 +1,7 @@
-// Course 1, Chapter 2 - a finished version of everything the chapter builds.
+// Course 1, Chapter 2 - a finished version of the green path.
 // Each section below matches a section of the chapter, in the same order.
+// The yellow section is extra practice rather than part of the path, so it
+// is not repeated here.
 //
 // Compile with:  javac MethodsArraysInput.java
 // Run with:      java MethodsArraysInput
@@ -9,34 +11,40 @@ public class MethodsArraysInput {
 
     public static void main(String[] args) {
 
-        // --- Methods ---
-        System.out.println(add(2, 3));
+        // --- Your own methods ---
         greet("Frank");
-        System.out.println(larger(9, 4));
+        greet("Ada");
 
-        // --- Arrays ---
+        // --- Methods that hand something back ---
+        System.out.println(add(2, 3));
+        System.out.println(larger(9, 4));
+        System.out.println(isEven(10));   // the "try it yourself" in that section
+
+        // --- Arrays, many values under one name ---
         int[] scores = new int[3];
         scores[0] = 10;
         scores[1] = 20;
         scores[2] = 30;
-        System.out.println(scores.length);
-        System.out.println(scores[0]);
 
         int[] primes = {2, 3, 5, 7, 11};
+        System.out.println(primes.length);
+        System.out.println(primes[0]);
+        System.out.println(primes[4]);
+
+        // Asking for a position that does not exist stops the program. Try it:
+        // System.out.println(primes[5]);
+
+        // --- Walking an array ---
         for (int i = 0; i < primes.length; i++) {
             System.out.print(primes[i] + " ");
         }
         System.out.println();
 
-        // The enhanced for, when you want every value and not the positions.
         int total = 0;
         for (int prime : primes) {
             total += prime;
         }
         System.out.println("Sum: " + total);
-
-        // Asking for a position that does not exist stops the program. Try it:
-        // System.out.println(primes[5]);
 
         // --- Arrays are references, single values are not ---
         int number = 1;
@@ -64,14 +72,14 @@ public class MethodsArraysInput {
         System.out.println("In ten years you will be " + (age + 10) + ".");
     }
 
-    // Takes two numbers, hands one back.
-    static int add(int first, int second) {
-        return first + second;
-    }
-
     // Takes something, hands nothing back. That is what void means.
     static void greet(String who) {
         System.out.println("Hello, " + who + "!");
+    }
+
+    // Takes two numbers, hands one back.
+    static int add(int first, int second) {
+        return first + second;
     }
 
     static int larger(int first, int second) {
@@ -79,6 +87,10 @@ public class MethodsArraysInput {
             return first;
         }
         return second;
+    }
+
+    static boolean isEven(int number) {
+        return number % 2 == 0;
     }
 
     static void tryToChange(int value) {

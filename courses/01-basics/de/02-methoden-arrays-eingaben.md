@@ -9,9 +9,11 @@ ein Programm in benannte Teile zerlegen können, du musst viele Werte statt eine
 halten können, und du musst lesen können, was jemand tippt. Am Ende dieses Kapitels
 hast du alle drei, und du hast damit ein Spiel geschrieben.
 
-Arbeite in einer Datei namens `MethodsArraysInput.java`. Eine fertige Fassung jedes
-Abschnitts liegt in
-[`code/MethodsArraysInput.java`](../code/MethodsArraysInput.java).
+Arbeite in einer Datei namens `MethodsArraysInput.java`, mit demselben
+Klassenrahmen wie vorher und der Klasse passend zum Dateinamen. Eine fertige
+Fassung des grünen Pfads liegt in
+[`code/MethodsArraysInput.java`](../code/MethodsArraysInput.java); der gelbe
+Abschnitt ist Übung und steht deshalb nicht dort.
 
 ## 🟢 Kern — Eigene Methoden
 
@@ -119,6 +121,10 @@ Oder du zählst die Werte gleich auf:
 int[] primes = {2, 3, 5, 7, 11};
 ```
 
+`new` ist das Wort für „bau mir eins davon". Es taucht überall dort auf, wo etwas
+gebaut statt nur hingeschrieben werden muss, und du begegnest ihm am Ende dieses
+Kapitels beim `Scanner` wieder.
+
 Die eckigen Klammern hinter dem Typ heißen „ein Array davon". Die Stellen sind
 **ab 0** nummeriert, die fünf Primzahlen sitzen also auf 0, 1, 2, 3 und 4. Die
 letzte Stelle ist immer eins weniger als die Anzahl, und `primes.length` nennt dir
@@ -187,8 +193,15 @@ Sum: 28
 
 Lies den Doppelpunkt als „in". Sie reicht dir jeden Wert der Reihe nach, und sie
 kann nicht über das Ende hinauslaufen, weil sie mit Stellen überhaupt nicht
-hantiert. Nimm sie, wenn du nur die Werte brauchst; nimm die zählende Form, wenn du
-wissen musst, wo du bist, oder wenn du ändern willst, was gespeichert ist.
+hantiert. Nimm sie, wenn du nur die Werte brauchst; nimm die zählende Form, wenn
+du wissen musst, wo du bist, oder wenn du ändern willst, was gespeichert ist.
+
+Damit ist auch das Versprechen aus Kapitel 0 eingelöst. `String[] args` ist ein
+Array wie jedes andere, nur mit Text statt Zahlen. `args.length` ist also die Zahl
+der Wörter hinter dem Programmnamen, und `args[0]` ist das erste davon.
+`Greet.java` hat `args.length == 0` genau aus dem Grund geprüft, den du jetzt
+kennst: Nach `args[0]` zu fragen, wenn nichts getippt wurde, greift über das Ende
+hinaus.
 
 ## 🟢 Kern — Arrays sind Verweise, einzelne Werte nicht
 
@@ -310,6 +323,11 @@ static boolean isWholeNumber(String text) {
 }
 ```
 
+`text.isEmpty()` beantwortet, ob überhaupt keine Zeichen da sind, und das muss
+separat abgelehnt werden: Eine leere Zeile ist keine Zahl, aber die Schleife
+darunter würde das nie merken, weil sie nichts anzuschauen hätte und direkt bis
+zum `true` durchfiele.
+
 `text.length()` ist die Anzahl der Zeichen, und `text.charAt(i)` ist das an dieser
 Stelle, ein `char`, der sich also mit `<` und `>` vergleichen lässt. Jedes Zeichen
 außerhalb von `'0'` bis `'9'`, und die Antwort ist nein. (Nur Ziffern, ein
@@ -375,7 +393,14 @@ H
 doppelt zu schreiben. Zusammen mit `.equals` aus Kapitel 1:
 
 ```java
+String answer = "  YES  ";
 if ("yes".equals(answer.trim().toLowerCase())) {
+    System.out.println("Accepted.");
+}
+```
+
+```
+Accepted.
 ```
 
 Von innen nach außen gelesen: Leerzeichen weg, kleinschreiben, vergleichen. Diese
@@ -388,8 +413,9 @@ Ergebnis behalten, weis es etwas zu.
 ## 🔴 Optional, echte Herausforderung — Zahlenraten
 
 Schreib ein Spiel. Das Programm wählt eine geheime ganze Zahl von 1 bis 100 und
-lässt den Spieler raten. Nach jedem Versuch sagt es `Higher.` oder `Lower.`, und
-wenn der Tipp stimmt, sagt es das und nennt die Zahl der Versuche.
+lässt den Spieler raten. Nach jedem Versuch gibt es dem Spieler eine Anweisung:
+`Higher.`, wenn das Geheimnis über dem Tipp liegt, `Lower.`, wenn es darunter
+liegt. Stimmt der Tipp, sagt es das und nennt die Zahl der Versuche.
 
 ```
 I am thinking of a number between 1 and 100.
@@ -439,8 +465,10 @@ schreiben.
 
 Das ist die ganze Sprache, die dieser Kurs braucht. Alles ab hier ist ein Spiel.
 
-Kurs 2 baut Tic-Tac-Toe: ein Spielfeld, zwei Spieler, und eine Prüfung auf drei in
-einer Reihe. Er setzt diesen Kurs voraus und sonst nichts, und das gilt für jeden
-Kurs danach genauso. Du kannst sie also in der Reihenfolge nehmen, die dich reizt.
-Die vollständige Liste steht in
-[PROJECT-IDEAS.de.md](../../../PROJECT-IDEAS.de.md).
+[Kurs 2 - Tic-Tac-Toe](../../02-tic-tac-toe/de/01-tic-tac-toe.md) baut ein
+Spielfeld, zwei Spieler, und eine Prüfung auf drei in einer Reihe. Er setzt diesen
+Kurs voraus und sonst nichts, und das gilt für jeden Kurs danach genauso. Du
+kannst sie also in der Reihenfolge nehmen, die dich reizt. Die vollständige Liste
+steht in [PROJECT-IDEAS.de.md](../../../PROJECT-IDEAS.de.md).
+
+**Weiter:** [Kurs 2 - Tic-Tac-Toe](../../02-tic-tac-toe/de/01-tic-tac-toe.md)

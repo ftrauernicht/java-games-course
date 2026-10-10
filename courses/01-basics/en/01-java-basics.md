@@ -9,9 +9,21 @@ values, calculate with them, compare them, and make a program decide and repeat.
 That is everything the games in this repository are built from. Nothing here is
 specific to games, and all of it comes back in every course that follows.
 
-Work in one file called `Basics.java` and keep adding to `main` as you go. A
-finished version of every section lives in [`code/Basics.java`](../code/Basics.java),
-in the same order as the sections below.
+Work in one file called `Basics.java`. Start it with the same frame as Chapter 0,
+with the class renamed to match the filename:
+
+```java
+public class Basics {
+    public static void main(String[] args) {
+
+    }
+}
+```
+
+Everything in this chapter goes inside `main`, between those innermost braces, and
+you keep adding to it as you go. A finished version of the green path lives in
+[`code/Basics.java`](../code/Basics.java), in the same order as the sections below.
+The yellow section is practice, so it is not repeated there.
 
 ## 🟢 Core — Putting something on the screen
 
@@ -87,8 +99,14 @@ whole = "forty-two";
 ```
 
 ```
-Basics.java:12: error: incompatible types: String cannot be converted to int
+Basics.java:14: error: incompatible types: String cannot be converted to int
+        whole = "forty-two";
+                ^
+1 error
 ```
+
+The line number depends on where in the file you put it; the rest of the message
+is the same wherever it lands.
 
 In a language without this check, that line would be fine right up until something
 tried to calculate with it. Delete the line again.
@@ -236,14 +254,39 @@ the same comparison says `false` while both sides clearly read `yes`.
 Every game in this repository compares text that someone typed, so this rule will
 be load-bearing from Course 2 onwards: **for text, always `.equals`.**
 
-The same applies to `.equals` the other way round, with one addition that saves
-trouble later. If the text might be missing entirely, put the known value first:
+One addition saves trouble later. A `String` variable can also hold **nothing at
+all**, which Java calls `null`. That is different from empty text: `""` is a piece
+of text that happens to have no characters, while `null` means there is no text
+there to ask. Calling `.equals` on nothing stops the program:
 
 ```java
-if ("yes".equals(typed)) {
+String missing = null;
+System.out.println(missing.equals("yes"));
 ```
 
-That way the comparison still works even when `typed` holds nothing at all.
+```
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke
+"String.equals(Object)" because "<local1>" is null
+```
+
+The part in quotes is Java trying to name the variable. Compiled from an editor it
+usually says `"missing"`; from a bare `javac` it falls back to a placeholder like
+`<local1>`, because the name was not kept.
+
+Put the value you know first and the problem disappears, because then it is the
+known text doing the asking, and that is certainly there:
+
+```java
+String missing = null;
+System.out.println("yes".equals(missing));
+```
+
+```
+false
+```
+
+Nothing in this course hands you a `null` on purpose. The habit costs one
+reordering and removes a whole category of crash, so it is worth having now.
 
 ## 🟢 Core — Making a decision
 
@@ -294,8 +337,8 @@ one, and this course uses nothing else. An older form with colons exists and nee
 a `break` after every case, which is a famous source of bugs. You will meet it in
 other people's code; you do not need to write it.
 
-Courses 2 and 5 both read a letter and decide what to do with it, so this is the
-shape their input handling has.
+Course 5 reads a letter and decides what to do with it, so that is the shape its
+input handling has.
 
 ## 🟢 Core — Repeating a fixed number of times
 
@@ -319,6 +362,13 @@ one, because that is where lists start:
 
 ```java
 for (int i = 0; i < 5; i++) {
+    System.out.print(i + " ");
+}
+System.out.println();
+```
+
+```
+0 1 2 3 4 
 ```
 
 Five passes again, with `i` taking 0, 1, 2, 3, 4. Note `<` rather than `<=`.
@@ -350,8 +400,31 @@ the terminal to stop it. It will happen to you at least once, and it is not a
 disaster.
 
 `while` is the shape every game loop in this repository has: keep playing while
-nobody has won. `break` leaves a loop immediately, and `continue` skips the rest of
-the current pass and starts the next one.
+nobody has won.
+
+Two words steer a loop from the inside. `break` leaves it immediately, and
+`continue` abandons the current pass and starts the next one:
+
+```java
+for (int i = 1; i <= 10; i++) {
+    if (i % 2 == 0) {
+        continue;
+    }
+    if (i > 7) {
+        break;
+    }
+    System.out.print(i + " ");
+}
+System.out.println();
+```
+
+```
+1 3 5 7 
+```
+
+Even numbers are skipped by `continue`, and `break` ends the whole loop at 9. Both
+turn up again in every game here: `break` ends a round that somebody has won, and
+`continue` throws away an input that made no sense and asks again.
 
 ## 🟡 Optional — Notes to yourself, values that cannot move, neater output
 

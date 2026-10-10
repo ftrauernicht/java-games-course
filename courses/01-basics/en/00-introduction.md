@@ -64,6 +64,18 @@ between you and the compiler.
 
 The install takes a while. A good moment to get a coffee.
 
+Two things about working in it, because the rest of this chapter uses a terminal.
+IntelliJ puts your `.java` files in a folder called `src` inside the project, and
+that is where the two commands below have to run. You do not need a separate
+terminal window for that: IntelliJ has one built in, under **View**, **Tool
+Windows**, **Terminal**, and it opens in the project folder, so `cd src` gets you
+the rest of the way.
+
+IntelliJ can also compile and run a file by itself, with the green arrow next to
+`main`. Use it once you are comfortable. The chapters stay with the two commands
+because they show what the arrow is doing on your behalf, and because an error you
+triggered yourself is easier to learn from than one a button hid from you.
+
 ## Your first program
 
 Create a file called `Hello.java` and type this into it. Type it, do not paste it.
