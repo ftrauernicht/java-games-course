@@ -61,6 +61,15 @@ your own methods, arrays, and reading what somebody types.
 | 1 | [Java Basics](courses/01-basics/en/01-java-basics.md) | Types, arithmetic and the surprise of `7 / 2`, casting and random numbers, `.equals` for text, `if`, `switch`, `for`, `while` |
 | 2 | [Methods, Arrays and Input](courses/01-basics/en/02-methods-arrays-input.md) | Your own methods, arrays and why they behave differently from an `int`, `Scanner`, and a number-guessing game |
 
+### Course 2 – Tic-Tac-Toe (`courses/02-tic-tac-toe/`)
+
+Two players at one keyboard, on a board that prints its own controls. The first
+game, so it hands you every line of code.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 1 | [Tic-Tac-Toe](courses/02-tic-tac-toe/en/01-tic-tac-toe.md) | A grid as `char[][]`, a loop inside a loop, turning one digit into a row and a column, rejecting bad moves without ending the game, checking eight win lines, and the order a game loop has to use |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in

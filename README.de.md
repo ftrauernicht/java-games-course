@@ -63,6 +63,15 @@ jemand tippt.
 | 1 | [Java-Grundlagen](courses/01-basics/de/01-java-grundlagen.md) | Typen, Rechnen und die Überraschung bei `7 / 2`, Casting und Zufallszahlen, `.equals` für Text, `if`, `switch`, `for`, `while` |
 | 2 | [Methoden, Arrays und Eingaben](courses/01-basics/de/02-methoden-arrays-eingaben.md) | Eigene Methoden, Arrays und warum sie sich anders verhalten als ein `int`, `Scanner`, und ein Zahlenratespiel |
 
+### Kurs 2 – Tic-Tac-Toe (`courses/02-tic-tac-toe/`)
+
+Zwei Spieler an einer Tastatur, auf einem Feld, das seine eigene Bedienung
+ausgibt. Das erste Spiel, deshalb bekommst du jede Zeile Code.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 1 | [Tic-Tac-Toe](courses/02-tic-tac-toe/de/01-tic-tac-toe.md) | Ein Gitter als `char[][]`, eine Schleife in einer Schleife, aus einer Ziffer Zeile und Spalte machen, schlechte Züge ablehnen ohne das Spiel zu beenden, acht Gewinnlinien prüfen, und die Reihenfolge, die eine Spielschleife braucht |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in

@@ -12,7 +12,7 @@ lines it takes.
 | # | Course | New skills, on top of what you already have | Difficulty | Status |
 |---|---|---|---|---|
 | 1 | Basics -- the language itself, no game yet | types, operators, control flow, methods, arrays, keyboard input | ⭐ | ✅ [Built](courses/01-basics/en/00-introduction.md) |
-| 2 | Tic-Tac-Toe -- two players, one board, nine squares | a board as a two-dimensional array, nested loops, passing an array to a method | ⭐ | Planned |
+| 2 | Tic-Tac-Toe -- two players, one board, nine squares | a board as a two-dimensional array, nested loops, passing an array to a method | ⭐ | ✅ [Built](courses/02-tic-tac-toe/en/01-tic-tac-toe.md) |
 | 3 | Towers of Hanoi -- the puzzle solves itself | recursion, the base case, reading a call stack | ⭐⭐ | Planned |
 | 4 | Conway's Game of Life -- cells live and die on their own | computing the next state into a second grid, counting neighbours at the edges, pausing between frames | ⭐⭐ | Planned |
 | 5 | 2048 -- slide, merge, repeat | transforming a grid, reducing four directions to one operation, the merge rule everyone gets wrong | ⭐⭐⭐ | Planned |
