@@ -92,8 +92,11 @@ public class Game2048 {
             }
         }
 
-        // Each tile may merge at most once per move, which is why i jumps
-        // by two after a merge: 2 2 2 2 becomes 4 4, not 8.
+        // Each tile may merge at most once per move. The test for 0 is what
+        // enforces that: a merged partner is set to 0, so the next step
+        // cannot pick it up again. The extra i++ only skips a comparison
+        // that could never match anyway -- measured over every row of
+        // {0,2,4,8,16}, leaving it out changes nothing.
         for (int i = 0; i < SIZE - 1; i++) {
             if (packed[i] != 0 && packed[i] == packed[i + 1]) {
                 packed[i] = packed[i] * 2;
