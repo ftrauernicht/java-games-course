@@ -17,7 +17,7 @@ lines it takes.
 | 4 | Conway's Game of Life -- cells live and die on their own | computing the next state into a second grid, counting neighbours at the edges, pausing between frames | ⭐⭐ | ✅ [Built](courses/04-game-of-life/en/01-game-of-life.md) |
 | 5 | 2048 -- slide, merge, repeat | transforming a grid, reducing four directions to one operation, the merge rule everyone gets wrong | ⭐⭐⭐ | ✅ [Built](courses/05-2048/en/01-2048.md) |
 | 6 | Snake -- the first one in a window | Swing, drawing on a panel, a timer as the game loop, reading keys as they are pressed | ⭐⭐⭐ | ✅ [Built](courses/06-snake/en/01-snake.md) |
-| 7 | Flappy Bird -- gravity, pipes, one button | movement as velocity, a class that holds data, rectangle collision | ⭐⭐⭐⭐ | Planned |
+| 7 | Flappy Bird -- gravity, pipes, one button | movement as velocity, a class that holds data, rectangle collision | ⭐⭐⭐⭐ | ✅ [Built](courses/07-flappy-bird/en/01-flappy-bird.md) |
 | 8 | Pong -- two paddles and an angle | reflecting a ball off a surface, a second player on the same keyboard | ⭐⭐⭐ | Idea |
 | 9 | Minesweeper -- counting what you cannot see | mouse input, flood fill from a single click, a second grid that hides the first | ⭐⭐⭐⭐ | Idea |
 | 10 | Breakout -- Pong with consequences | a grid of destructible bricks, levels, scoring that survives a round | ⭐⭐⭐⭐ | Idea |

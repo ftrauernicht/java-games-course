@@ -17,7 +17,7 @@ das ein Spiel verlangt, nicht die Zahl der Zeilen.
 | 4 | Conways Game of Life -- Zellen leben und sterben von allein | den nächsten Zustand in ein zweites Gitter rechnen, Nachbarn am Rand zählen, zwischen den Bildern warten | ⭐⭐ | ✅ [Gebaut](courses/04-game-of-life/de/01-spiel-des-lebens.md) |
 | 5 | 2048 -- schieben, verschmelzen, von vorn | ein Gitter umformen, vier Richtungen auf eine Operation zurückführen, die Verschmelzungsregel, die alle falsch machen | ⭐⭐⭐ | ✅ [Gebaut](courses/05-2048/de/01-2048.md) |
 | 6 | Snake -- das erste im Fenster | Swing, auf eine Fläche zeichnen, ein Timer als Spielschleife, Tasten im Moment des Drucks lesen | ⭐⭐⭐ | ✅ [Gebaut](courses/06-snake/de/01-snake.md) |
-| 7 | Flappy Bird -- Schwerkraft, Röhren, eine Taste | Bewegung als Geschwindigkeit, eine Klasse, die Daten hält, Kollision über Rechtecke | ⭐⭐⭐⭐ | Geplant |
+| 7 | Flappy Bird -- Schwerkraft, Röhren, eine Taste | Bewegung als Geschwindigkeit, eine Klasse, die Daten hält, Kollision über Rechtecke | ⭐⭐⭐⭐ | ✅ [Gebaut](courses/07-flappy-bird/de/01-flappy-bird.md) |
 | 8 | Pong -- zwei Schläger und ein Winkel | einen Ball an einer Fläche spiegeln, ein zweiter Spieler an derselben Tastatur | ⭐⭐⭐ | Idee |
 | 9 | Minesweeper -- zählen, was man nicht sieht | Mauseingaben, Flutfüllung ab einem Klick, ein zweites Gitter, das das erste verdeckt | ⭐⭐⭐⭐ | Idee |
 | 10 | Breakout -- Pong mit Folgen | ein Gitter zerstörbarer Steine, Level, ein Punktestand, der die Runde überlebt | ⭐⭐⭐⭐ | Idee |

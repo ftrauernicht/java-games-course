@@ -109,6 +109,15 @@ Taste im Moment des Drucks an.
 |---|---|---|
 | 1 | [Snake](courses/06-snake/de/01-snake.md) | Klassen mit Feldern und Konstruktor, `JFrame` und `JPanel`, `paintComponent` und `repaint`, ein Timer als Spielschleife, Tastaturfokus, und einen Körper vom Schwanz nach vorn bewegen |
 
+### Kurs 7 – Flappy Bird (`courses/07-flappy-bird/`)
+
+Schwerkraft, drei recycelte Röhren und eine Taste. Der letzte Kurs hier, und der
+erste, in dem Bewegung eine Geschwindigkeit ist statt eines Schrittes.
+
+| # | Kapitel | Was du lernst |
+|---|---|---|
+| 1 | [Flappy Bird](courses/07-flappy-bird/de/01-flappy-bird.md) | Geschwindigkeit und Schwerkraft als `double`, eine Klasse die nur Daten hält, ein Array von Objekten, Recyceln statt Wegwerfen, `Rectangle.intersects`, und eine Taste mit drei Bedeutungen |
+
 ## Projektideen
 
 Der vollständige Fahrplan, inklusive der noch nicht gebauten Spiele, steht in

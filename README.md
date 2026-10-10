@@ -106,6 +106,15 @@ moment it is pressed.
 |---|---|---|
 | 1 | [Snake](courses/06-snake/en/01-snake.md) | Classes with fields and a constructor, `JFrame` and `JPanel`, `paintComponent` and `repaint`, a timer as the game loop, keyboard focus, and moving a body from the tail forwards |
 
+### Course 7 – Flappy Bird (`courses/07-flappy-bird/`)
+
+Gravity, three recycled pipes and one button. The last course here, and the first
+where movement is a speed rather than a step.
+
+| # | Chapter | What you'll learn |
+|---|---|---|
+| 1 | [Flappy Bird](courses/07-flappy-bird/en/01-flappy-bird.md) | Velocity and gravity in `double`, a class that holds only data, an array of objects, recycling instead of discarding, `Rectangle.intersects`, and one key that means three things |
+
 ## Project ideas
 
 The full roadmap, including the games that are not built yet, lives in
