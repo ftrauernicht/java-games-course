@@ -49,6 +49,11 @@ remember both count from 0, so that is the middle row, right-hand column.
 `char` is the type because a square holds one of three things: an `X`, an `O`, or
 nothing. A space will stand for nothing.
 
+One thing Course 1 did not say outright: `char` is compared with `==`, not with
+`.equals`. The rule you learned there is about `String`, which is text of any
+length and behaves differently. A `char` is a single value like an `int`, so
+`mark == ' '` is exactly right and `.equals` is not available on it at all.
+
 A fresh `char` array is full of a character that prints as nothing at all and is
 not a space, so fill the board yourself. Add this method next to `main`:
 
@@ -114,6 +119,9 @@ Row 0 holds 1, 2, 3; row 1 holds 4, 5, 6. Each row down adds three, hence
 The two `if`s with `SIZE - 1` are why there is no trailing `|` on the right and no
 line of dashes under the bottom row. A separator goes *between* things, so there is
 always one fewer of them than of the things themselves.
+
+`%c` is a single character, the `char` counterpart of the `%d` and `%s` you met in
+Course 1.
 
 Only plain ASCII goes on screen here. Java can produce prettier box-drawing
 characters, but a Windows console will turn them into question marks, and a game
@@ -309,7 +317,7 @@ about the player who just moved.
 The method hands back who won, with a space meaning a draw. Returning a `char` is
 enough here; a space is not a player, so it cannot be confused with one.
 
-Now `main` can be three lines:
+Now `main` is two lines:
 
 ```java
 public static void main(String[] args) {
@@ -364,6 +372,11 @@ where `==` lies.
 `return` from `main` ends the program. The counters live outside the loop, which is
 why they survive from one round to the next.
 
+Note what the check actually does: anything that is not exactly `y` ends the game,
+including `yes` and a stray space-only line. That is a deliberate simplification
+and not a bug, but the prompt promises a choice it does not really offer. Widening
+it is one `||` away.
+
 That is the game. Play a few rounds.
 
 ## 🟡 Optional — A win check that does not care how big the board is
@@ -388,8 +401,22 @@ Then each of the eight lines is one call. Row `i` starts at `(i, 0)` and steps
 `(0, 1)`. The downward diagonal starts at `(0, 0)` and steps `(1, 1)`. Work out the
 other two shapes yourself, and mind that one of the diagonals steps backwards.
 
-Set `SIZE` to 4 afterwards and check that four in a row is what wins. The board
-printer and `place` already cope, which is what `SIZE` bought you.
+Set `SIZE` to 4 afterwards and check that four in a row is what wins. `place` and
+`isFree` cope without a change, which is what writing `SIZE` everywhere bought
+you.
+
+Two things do not cope, and knowing which is the point of the exercise.
+`printBoard` has `"---+---+---"` typed into it for exactly three columns, and
+`printf(" %d ", ...)` gives a two-digit number four characters instead of three,
+so the board comes out crooked. And `askForCell` accepts a single digit from 1 to
+9, so squares 10 to 16 cannot be reached at all: the board can never fill up, and
+after nine moves the game is stuck.
+
+So on a four-wide board you can only test the top row, squares 1 to 4. Do that,
+confirm that four wins and three no longer does, then decide how far you want to
+chase it. Fixing the printer means building the separator line from `SIZE` and
+widening the number field; fixing the input means accepting more than one
+character, which brings back `isWholeNumber` from Course 1.
 
 ## 🟡 Optional — Let the loser start
 
@@ -402,6 +429,12 @@ set `player` from it instead of always `'X'`.
 ## 🔴 Optional, genuine challenge — A computer opponent
 
 Replace player O with the program, so one person can play alone.
+
+This is a second program rather than a change to the first, so start a new file,
+`TicTacToeComputer.java`, and copy the board methods across. Keep one round and
+drop the scoreline; the point here is the opponent, not the bookkeeping. In the
+round loop, where `askForCell` is called, ask the program instead when it is O's
+turn, and print which square it took so the player can follow along.
 
 Start with the simplest opponent that is not broken: pick a free square at random.
 
@@ -430,15 +463,26 @@ static int findWinningCell(char[][] board, char mark) {
 }
 ```
 
+Taking the move back needs something the chapter has not given you. `place` writes
+whatever character it is handed, so `place(board, cell, ' ')` empties a square
+again -- or write a one-line `clear(board, cell)` next to it, which reads better
+at the call site.
+
 Trying a move and undoing it is the idea worth taking away from this challenge. You
 already have `hasWon`, so you do not need to reason about lines at all; you let the
 method you already trust answer a hypothetical question. Returning 0 for "none"
 works because squares are numbered from 1.
 
-Test it properly. Take squares 1 and 2, and check the program takes 3 before you
-can. Then give yourself two in a row while the program also has two in a row, and
-check it takes its own win rather than blocking you. Rule 1 before rule 2 is what
-decides that, and swapping them is the most common way to get this wrong.
+Test the first rule by playing: take squares 1 and 2, and check the program takes
+3 before you can. It will, unless its random opening already sat on 3.
+
+The second test cannot be played, and that is worth knowing rather than fighting.
+You would need the program to hold two in a row while you also hold two in a row,
+and its non-forced moves are random, so you cannot arrange that by playing. Build
+the position directly instead: in a scratch `main`, fill a board by hand with O on
+1 and 2 and X on 4 and 5, then call your chooser and check it answers 3, its own
+win, rather than 6, the block. Rule 1 before rule 2 is what decides that, and
+swapping them is the most common way to get this wrong.
 
 A program with these two rules cannot be beaten by accident, only by a plan. It can
 still be beaten: there is a third rule about forks, and beyond that an approach
@@ -464,8 +508,10 @@ has a working version.
 
 ## Next
 
-Course 3 is Towers of Hanoi, and it is the shortest program in this repository and
-one of the hardest to believe. It assumes Course 1 and nothing else, like every
-course here.
+[Course 3 - Towers of Hanoi](../../03-towers-of-hanoi/en/01-towers-of-hanoi.md)
+is the shortest program in this repository and one of the hardest to believe. It
+assumes Course 1 and nothing else, like every course here.
 
 The full list is in [PROJECT-IDEAS.md](../../../PROJECT-IDEAS.md).
+
+**Next:** [Course 3 - Towers of Hanoi](../../03-towers-of-hanoi/en/01-towers-of-hanoi.md)

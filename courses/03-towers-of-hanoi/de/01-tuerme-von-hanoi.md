@@ -5,8 +5,9 @@
 # Kurs 3 – Türme von Hanoi
 
 **Ziel:** das kürzeste Programm in diesem Repository, und das, welches am
-schwersten zu glauben ist. Drei Stäbe, ein Stapel Scheiben, und eine Lösung aus
-drei Zeilen, weil sie sich selbst um Hilfe bittet.
+schwersten zu glauben ist. Drei Stäbe, ein Stapel Scheiben, und eine Lösung, deren
+Rumpf aus drei Zeilen plus einer Abbruchbedingung besteht, weil sie sich selbst um
+Hilfe bittet.
 
 Das ist das erste Kapitel, das dir die fertige Methode nicht in die Hand gibt. Die
 Idee dahinter wird vollständig erklärt; das Schreiben gehört dir. So funktioniert
@@ -37,7 +38,9 @@ Mit vier Scheiben sind es fünfzehn Züge, mit zehn sind es 1023, und die allgem
 Antwort ist zwei hoch Anzahl der Scheiben, minus eins. Ein Programm, das jeden Zug
 durch Vorausplanen bestimmt, wäre ein ernsthaftes Stück Arbeit.
 
-Das Programm, das du gleich schreibst, hat drei Zeilen.
+Der arbeitende Teil des Programms, das du gleich schreibst, hat drei Zeilen. Er
+braucht eine vierte, um zu wissen, wann Schluss ist, und an dieser Zeile hängt
+dann alles.
 
 ## 🟢 Kern — Die Idee: lass eine kleinere Fassung die Arbeit machen
 
@@ -92,10 +95,43 @@ ihm der Platz für wartende Aufrufe ausgegangen ist.
 
 Die wartenden Aufrufe sind einen Satz wert. Wenn `move` sich selbst aufruft,
 verschwindet der äußere Aufruf nicht; er wartet, mitten in seiner Arbeit, bis der
-innere fertig ist. Bei drei Scheiben stehen an der tiefsten Stelle drei davon
-übereinander, jeder mit seinem eigenen `n`, `from`, `to` und `via`. Dieser Stapel
-ist der Grund, warum die Methode nach dem ersten rekursiven Aufruf „zurückkommen"
-und ihre zweite Hälfte erledigen kann.
+innere fertig ist. Bei drei Scheiben stehen an der tiefsten Stelle drei Aufrufe
+übereinander, die noch Arbeit vor sich haben, jeder mit seinem eigenen `n`,
+`from`, `to` und `via`. (Zählt man die `n == 0`-Aufrufe mit, sind es vier, aber
+die kehren zurück, ohne etwas zu tun.) Dieser Stapel ist der Grund, warum die
+Methode nach dem ersten rekursiven Aufruf „zurückkommen" und ihre zweite Hälfte
+erledigen kann.
+
+Falls sich das noch nach einem Trick anfühlt: Am deutlichsten sieht man es, wenn
+man die Aufrufe selbst ausgibt. So sieht es für drei Scheiben aus, nach Tiefe
+eingerückt, und jeder Aufruf zeigt die vier Werte, die er bekommen hat:
+
+```
+move(n=3, from=A, to=C, via=B)
+  move(n=2, from=A, to=B, via=C)
+    move(n=1, from=A, to=C, via=B)
+      -> Move disc 1 from A to C
+    -> Move disc 2 from A to B
+    move(n=1, from=C, to=B, via=A)
+      -> Move disc 1 from C to B
+  -> Move disc 3 from A to C
+  move(n=2, from=B, to=C, via=A)
+    move(n=1, from=B, to=A, via=C)
+      -> Move disc 1 from B to A
+    -> Move disc 2 from B to C
+    move(n=1, from=A, to=C, via=B)
+      -> Move disc 1 from A to C
+```
+
+Folge der zweiten Zeile. Der äußere Aufruf wollte nach C, aber dieser innere hat
+`to=B` bekommen, und deshalb druckt er B. Zwischen den Aufrufen wird nichts
+geteilt: Jeder hat seine eigenen vier Werte, überreicht von dem, der ihn aufgerufen
+hat. Das ist die Antwort auf die Frage, die die Erklärung oben offen lässt, und die
+lautet nicht „warum wird es kleiner", sondern „woher weiß der innere Aufruf, wohin
+er soll".
+
+Bau dir diese Ausgabe selbst, sobald deine Methode läuft. Reich einen zusätzlichen
+Parameter `depth` durch, rück danach ein, und gib den Aufruf vor der Rekursion aus.
 
 ## 🟢 Kernübung — Schreib move
 
@@ -108,6 +144,12 @@ Drei Zeilen, in dieser Reihenfolge:
    denn der ist gerade leer geworden.
 
 Und über allen dreien der Basisfall: Wenn `n` gleich 0 ist, kehr sofort zurück.
+
+Kurs 1 hat `return` immer nur mit einem Wert dahinter benutzt, weil dort jede
+Methode etwas zurückgab. `move` gibt nichts zurück, hier heißt es also `return;`
+allein, ohne Wert und mit Semikolon direkt dahinter. Es bedeutet „hör jetzt auf"
+und sonst nichts. Wer in einer `void`-Methode `return 0;` schreibt, bekommt
+`incompatible types: unexpected return value`.
 
 ```java
 static void move(int n, char from, char to, char via) {
@@ -179,10 +221,14 @@ Aufrufe melden.
 
 ```java
 static int move(int n, char from, char to, char via) {
-    // dein Code hier -- dieselben drei Schritte, aber zaehl zusammen, was die
-    // beiden rekursiven Aufrufe zurueckgeben, und gib die Summe zurueck
+    // dein Code hier -- dieselben drei Schritte, aber zähl zusammen, was die
+    // beiden rekursiven Aufrufe zurückgeben, und gib die Summe zurück
 }
 ```
+
+Der Basisfall ändert sich mit. Eine Methode, die ein `int` verspricht, muss auf
+jedem Weg eines liefern, aus `return;` wird also `return 0;` -- keine Scheiben,
+keine Züge. Lass ihn, wie er war, und der Compiler sagt `missing return value`.
 
 Für die Formel ist `(1 << n) - 1` zwei hoch `n`, minus eins. Das `<<` schiebt die
 Binärziffern einer Zahl nach links, und jede Verschiebung verdoppelt sie, `1 << 10`
@@ -191,6 +237,14 @@ einen Cast braucht und für große `n` leicht danebenliegt. Die Verschiebung ist
 also das ehrliche Werkzeug.
 
 Gib beides aus und prüf, dass sie für jedes `n` von 1 bis 20 übereinstimmen.
+Kommentier vorher das `println` in `move` aus, sonst gehen die zwanzig
+Vergleichszeilen in zwei Millionen Zugzeilen unter.
+
+Eine Grenze, die man kennen sollte: `1 << n` ist ein `int`, und einem `int` geht
+nach 31 Verschiebungen der Platz aus. `1 << 31` ist schon negativ und `1 << 64`
+ist 0, der Trick, der bis 30 exakt ist, liegt darüber also still daneben. Für
+dieses Kapitel erledigt die Obergrenze 20 die Sache; für größere Zahlen würdest du
+zu einem Typ greifen, der mehr fasst.
 
 ## 🟡 Optional — Nach der Scheibenzahl fragen
 
@@ -208,43 +262,88 @@ Das Programm druckt Anweisungen. Es prüft sie nie, denn es hält weder Stäbe n
 Scheiben: Ein Fehler in der Rekursion würde mit vollkommener Überzeugung Unsinn
 ausgeben.
 
-Bau den Zustand und führ die Züge aus.
+Bau den Zustand und führ die Züge aus. Dafür braucht es drei Dinge, die Kurs 1
+nicht behandelt hat, und jedes bekommt deshalb einen Absatz, bevor die Übung
+losgeht.
+
+**Die Stäbe hören auf, Buchstaben zu sein.** Bisher sind `from`, `to` und `via`
+ein `char`, und das ist gut zum Ausgeben und nutzlos zum Nachschlagen: `TOWERS['A']`
+kannst du nicht schreiben. Mach aus allen vier Parametern von `move` ein `int` und
+ruf sie mit `move(DISCS, 0, 2, 1)` auf, wobei 0, 1 und 2 für A, B und C stehen. Erst
+beim Ausgeben machst du wieder einen Buchstaben daraus, mit `(char) (65 + peg)`,
+denn 65 ist der Zahlenwert von `'A'`.
+
+Überspring diese Änderung nicht und hoff auf das Beste. Java wandelt ein `char`
+stillschweigend in ein `int` um, eine Methode mit `int`-Parametern nimmt deine
+`char`-Stäbe also ohne ein Wort der Beschwerde an, und das erste Nachschlagen
+fliegt dir dann zur Laufzeit um die Ohren, mit
+`ArrayIndexOutOfBoundsException: Index 65 out of bounds for length 3`. Die 65 ist
+der Buchstabe `A`, angekommen dort, wo eine Stabnummer erwartet wurde.
+
+**Zwei Arrays nebeneinander, außerhalb jeder Methode.** Kurs 1 hat jede Variable in
+`main` gehalten. Diese beiden müssen von `move` und von der Methode erreichbar
+sein, die eine Scheibe trägt, sie kommen also in die Klasse, neben `main` statt
+hinein, und sie sind `static` aus demselben Grund, aus dem hier jede Methode es ist:
 
 ```java
-static final int[][] TOWERS = new int[3][DISCS];
-static final int[] HEIGHTS = new int[3];
+static final int DISCS = 3;
+static final int PEGS = 3;
+static final int[][] TOWERS = new int[PEGS][DISCS];
+static final int[] HEIGHTS = new int[PEGS];
 ```
 
-`TOWERS[peg][0]` ist die unterste Scheibe dieses Stabs, und `HEIGHTS[peg]` sagt,
-wie viele Scheiben darauf liegen. Die oberste Scheibe eines Stabs liegt also bei
-`HEIGHTS[peg] - 1`. Dieses Arraypaar ist ein Stapel, gebaut aus dem, was Kurs 1 dir
-gegeben hat.
+**`int[][]` ist ein Array aus Arrays**, und das brauchte Kurs 1 nicht.
+`new int[PEGS][DISCS]` baut drei Arrays mit je `DISCS` Plätzen, eines pro Stab.
+`TOWERS[peg][0]` ist die unterste Scheibe dieses Stabs, `HEIGHTS[peg]` sagt, wie
+viele darauf liegen, die oberste sitzt also bei `TOWERS[peg][HEIGHTS[peg] - 1]`.
+Dieses Paar ist ein Stapel: ablegen heißt, bei `HEIGHTS[peg]` schreiben und eins
+dazuzählen, herunternehmen heißt, eins abziehen und lesen.
 
-Füll Stab 0 mit den Scheiben, die größte unten. Ersetz dann das `println` in der
-Mitte von `move` durch den Aufruf einer Methode, die die Arbeit macht:
+Beachte, dass `final` hier heißt, dass das Array nie gegen ein anderes getauscht
+wird. Die Zahlen darin ändern sich ständig, und das ist erlaubt.
+
+Eine Warnung vorweg: Dieser Abschnitt und der gelbe darüber vertragen sich nicht.
+Ein `static final`-Feld kann keinen Wert bekommen, den jemand tippt. Wenn du die
+Scheibenzahl also per `Scanner` erfragt hast, heb dir diese Fassung in einer
+eigenen Datei auf.
+
+Füll Stab 0 mit den Scheiben, die größte unten, und ersetz dann das `println` in
+der Mitte von `move` durch den Aufruf einer Methode, die die Arbeit macht:
 
 ```java
 static void carry(int from, int to) {
     // dein Code hier:
-    //   1. lies die oberste Scheibe vom Stab "from"
-    //   2. wenn der Stab "to" nicht leer ist und seine oberste Scheibe kleiner
-    //      ist, gib eine Beschwerde aus und kehr zurueck, ohne etwas zu bewegen
-    //   3. sonst nimm sie vom einen Stab, leg sie auf den anderen, pass beide
-    //      Hoehen an, und zeichne die Staebe
+    //   1. wenn der Stab "from" leer ist, gib eine Beschwerde aus und kehr zurück
+    //   2. lies die oberste Scheibe vom Stab "from"
+    //   3. wenn der Stab "to" nicht leer ist und seine oberste Scheibe kleiner
+    //      ist, gib eine Beschwerde aus und kehr zurück, ohne etwas zu bewegen
+    //   4. sonst nimm sie vom einen Stab, leg sie auf den anderen, pass beide
+    //      Höhen an, und zeichne die Stäbe
 }
 ```
 
-Schritt 2 ist die eigentliche Übung. Es ist eine Prüfung, die nie auslösen sollte:
-Wenn die Rekursion stimmt, wird nie ein illegaler Zug versucht. Einen Test für
-etwas zu schreiben, von dem du glaubst, dass es nicht passieren kann, fühlt sich
-sinnlos an, bis er das erste Mal auslöst.
+Schritt 1 und 3 sind die eigentliche Übung. Es sind Prüfungen, die nie auslösen
+sollten: Wenn die Rekursion stimmt, wird nie ein illegaler Zug versucht. Einen Test
+für etwas zu schreiben, von dem du glaubst, dass es nicht passieren kann, fühlt
+sich sinnlos an, bis er das erste Mal auslöst.
 
-Damit du ihn auslösen siehst, mach die Rekursion absichtlich kaputt. Vertausch zwei
-Argumente in einem der rekursiven Aufrufe und führ es noch einmal aus.
+Schritt 1 sieht neben Schritt 3 überflüssig aus und ist es nicht. Ist ein Zug erst
+einmal abgelehnt, läuft die Folge trotzdem weiter und will früher oder später eine
+Scheibe von einem leeren Stab heben, und das ist ohne die Prüfung ein
+`HEIGHTS[from] - 1` von `-1` und ein Absturz. Die Prüfung macht aus dem Absturz
+eine zweite Beschwerde, und genau das will man von etwas, dessen Aufgabe das
+Berichten ist.
+
+Damit du sie auslösen siehst, mach die Rekursion absichtlich kaputt. Vertausch
+zwei Argumente in einem der rekursiven Aufrufe und führ es noch einmal aus. Du
+solltest eine Handvoll Beschwerden bekommen und ein Programm, das trotzdem bis zum
+Ende läuft.
 
 Zum Zeichnen hält `printf` mit einer Breite aus Kurs 1 die drei Stäbe in Spalten.
 Eine Scheibe der Größe 3 kann aus drei `#` bestehen, eine leere Ebene aus einem
-einzelnen `|`.
+einzelnen `|`. Bau die Zeile mit den Stabbuchstaben aus `PEGS` und derselben
+Breite, statt `A    B    C` hinzuschreiben, sonst steht sie schief, sobald sich
+`DISCS` ändert.
 
 ```
   |    |    |
@@ -270,8 +369,11 @@ funktionierende Fassung.
 - *(optional)* Aus einer rekursiven Methode eine Anzahl zurückgeben, indem man die
   Teile zusammenzählt
 - *(optional)* `1 << n` als den ganzzahligen Weg, zwei hoch n zu sagen
-- *(optional)* Zwei parallele Arrays als Stapel, und eine Prüfung, die nie auslösen
-  sollte
+- *(optional)* Stäbe als Zahlen statt als Buchstaben, und die stille Umwandlung von
+  `char` zu `int`, die den Fehler bis zum Absturz verdeckt
+- *(optional)* Felder außerhalb einer Methode, und `int[][]` als Array aus Arrays
+- *(optional)* Zwei parallele Arrays als Stapel, und Prüfungen, die nie auslösen
+  sollten
 
 ## Weiter
 

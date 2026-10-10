@@ -1,7 +1,7 @@
 // Course 2 - Tic-Tac-Toe.
-// A finished version of everything the chapter builds, including the
-// optional sections marked yellow. The red challenge lives in its own
-// file, TicTacToeComputer.java, so it is not in the way here.
+// A finished version of the green path. The yellow sections are practice
+// and are not solved here; the red challenge lives in its own file,
+// TicTacToeComputer.java, so it is not in the way.
 //
 // Compile with:  javac TicTacToe.java
 // Run with:      java TicTacToe

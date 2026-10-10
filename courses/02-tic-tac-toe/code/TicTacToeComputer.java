@@ -94,14 +94,19 @@ public class TicTacToeComputer {
 
     static int randomFreeCell(char[][] board) {
         while (true) {
-            int cell = (int) (Math.random() * SIZE * SIZE) + 1;
+            int cell = (int) (Math.random() * (SIZE * SIZE)) + 1;
             if (isFree(board, cell)) {
                 return cell;
             }
         }
     }
 
-    // --- Everything below is the same as in TicTacToe.java ---
+    // --- Below here, the same as in TicTacToe.java, with two differences ---
+    //
+    // clear() is new: the two rules above try a move and take it back, and
+    // the chapter's version never had to empty a square.
+    //
+    // askForCell() has no player parameter, because only one human plays.
 
     static char[][] newBoard() {
         char[][] board = new char[SIZE][SIZE];
@@ -136,15 +141,22 @@ public class TicTacToeComputer {
     }
 
     static void place(char[][] board, int cell, char player) {
-        board[(cell - 1) / SIZE][(cell - 1) % SIZE] = player;
+        int row = (cell - 1) / SIZE;
+        int col = (cell - 1) % SIZE;
+        board[row][col] = player;
     }
 
+    // Puts a square back to empty, so a trial move can be undone.
     static void clear(char[][] board, int cell) {
-        board[(cell - 1) / SIZE][(cell - 1) % SIZE] = ' ';
+        int row = (cell - 1) / SIZE;
+        int col = (cell - 1) % SIZE;
+        board[row][col] = ' ';
     }
 
     static boolean isFree(char[][] board, int cell) {
-        return board[(cell - 1) / SIZE][(cell - 1) % SIZE] == ' ';
+        int row = (cell - 1) / SIZE;
+        int col = (cell - 1) % SIZE;
+        return board[row][col] == ' ';
     }
 
     static int askForCell(Scanner in, char[][] board) {

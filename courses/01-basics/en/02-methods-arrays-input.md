@@ -445,7 +445,8 @@ way to write it.
 - `import`, `Scanner`, and reading with `nextLine()`
 - Checking a line before `Integer.parseInt` rather than after
 - Why a `Scanner` on `System.in` is never closed
-- *(optional)* `trim`, `length`, `charAt`, `toLowerCase`, `contains`
+- `trim`, `length` and `charAt`, which the input check needed
+- *(optional)* `toLowerCase` and `contains`
 
 ## Next
 

@@ -46,6 +46,15 @@ public class TowersOfHanoiTowers {
     // Takes the top disc off one peg and puts it on another, complaining
     // loudly if that would break the rule.
     static void carry(int from, int to) {
+        // Both refusals should never fire. They exist so that a broken
+        // recursion says so instead of printing confident nonsense -- and
+        // so that it keeps going afterwards instead of crashing on the
+        // next move.
+        if (HEIGHTS[from] == 0) {
+            System.out.println("ILLEGAL: peg " + (char) (65 + from) + " is empty.");
+            return;
+        }
+
         int disc = TOWERS[from][HEIGHTS[from] - 1];
 
         if (HEIGHTS[to] > 0 && TOWERS[to][HEIGHTS[to] - 1] < disc) {
@@ -75,7 +84,10 @@ public class TowersOfHanoiTowers {
             }
             System.out.println();
         }
-        System.out.println("  A    B    C");
+        for (int peg = 0; peg < PEGS; peg++) {
+            System.out.printf("  %-" + DISCS + "s", (char) (65 + peg));
+        }
+        System.out.println();
         System.out.println();
     }
 

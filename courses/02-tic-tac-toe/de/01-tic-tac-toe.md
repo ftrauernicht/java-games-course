@@ -51,6 +51,11 @@ Spalte.
 `char` ist der Typ, weil ein Feld eines von drei Dingen enthält: ein `X`, ein `O`,
 oder nichts. Für nichts steht ein Leerzeichen.
 
+Eines hat Kurs 1 nicht ausdrücklich gesagt: Ein `char` wird mit `==` verglichen,
+nicht mit `.equals`. Die Regel von dort gilt für `String`, also Text beliebiger
+Länge, der sich anders verhält. Ein `char` ist ein einzelner Wert wie ein `int`,
+also ist `mark == ' '` genau richtig, und `.equals` gibt es darauf gar nicht.
+
 Ein frisches `char`-Array ist voll von einem Zeichen, das als gar nichts gedruckt
 wird und kein Leerzeichen ist. Füll das Feld also selbst. Schreib diese Methode
 neben `main`:
@@ -118,6 +123,8 @@ zählen und Arrays nicht.
 Die beiden `if` mit `SIZE - 1` sind der Grund, warum rechts kein `|` übersteht und
 unter der letzten Zeile keine Strichlinie kommt. Ein Trenner steht *zwischen*
 Dingen, also gibt es immer einen weniger als Dinge.
+
+`%c` ist ein einzelnes Zeichen, das `char`-Gegenstück zu `%d` und `%s` aus Kurs 1.
 
 Auf den Bildschirm kommt nur reines ASCII. Java kann hübschere Rahmenzeichen
 erzeugen, aber eine Windows-Konsole macht Fragezeichen daraus, und ein Spiel, das
@@ -318,7 +325,7 @@ Die Methode gibt zurück, wer gewonnen hat, wobei ein Leerzeichen das Unentschie
 meint. Ein `char` reicht dafür; ein Leerzeichen ist kein Spieler und lässt sich
 also nicht mit einem verwechseln.
 
-Jetzt kommt `main` mit drei Zeilen aus:
+Jetzt hat `main` zwei Zeilen:
 
 ```java
 public static void main(String[] args) {
@@ -374,6 +381,11 @@ genau in diesem Fall lügt `==`.
 `return` aus `main` beendet das Programm. Die Zähler stehen außerhalb der Schleife,
 und deshalb überleben sie von einer Runde zur nächsten.
 
+Beachte, was die Prüfung tatsächlich tut: Alles, was nicht genau `y` ist, beendet
+das Spiel, auch `ja` und eine Zeile aus Leerzeichen. Das ist eine bewusste
+Vereinfachung und kein Fehler, aber die Frage verspricht eine Wahl, die sie nicht
+wirklich anbietet. Sie zu erweitern ist ein `||` entfernt.
+
 Das ist das Spiel. Spiel ein paar Runden.
 
 ## 🟡 Optional — Eine Siegprüfung, der die Feldgröße egal ist
@@ -388,7 +400,7 @@ die an einem Feld startet und `SIZE` Schritte in eine Richtung geht.
 ```java
 static boolean allMatch(char[][] board, char player, int row, int col,
                         int rowStep, int colStep) {
-    // dein Code hier -- geh SIZE Felder weit von (row, col) aus, zaehl dabei
+    // dein Code hier -- geh SIZE Felder weit von (row, col) aus, zähl dabei
     // jedes Mal rowStep auf die Zeile und colStep auf die Spalte, und
     // antworte, ob in jedem Feld player stand
 }
@@ -399,9 +411,23 @@ in Schritten von `(0, 1)`. Die absteigende Diagonale beginnt bei `(0, 0)` und ge
 `(1, 1)`. Die anderen beiden Formen findest du selbst heraus, und denk daran, dass
 eine der Diagonalen rückwärts läuft.
 
-Setz danach `SIZE` auf 4 und prüf, dass jetzt vier in einer Reihe gewinnen. Die
-Ausgabe und `place` kommen schon damit klar, und genau das hat dir `SIZE`
-eingebracht.
+Setz danach `SIZE` auf 4 und prüf, dass jetzt vier in einer Reihe gewinnen. `place`
+und `isFree` kommen ohne Änderung damit klar, und genau das hat es dir gebracht,
+überall `SIZE` zu schreiben.
+
+Zwei Dinge kommen nicht damit klar, und zu wissen welche ist der Sinn der Übung.
+In `printBoard` steht `"---+---+---"` fest eingetippt für genau drei Spalten, und
+`printf(" %d ", ...)` gibt einer zweistelligen Zahl vier Zeichen statt drei, das
+Brett kommt also schief heraus. Und `askForCell` nimmt eine einzelne Ziffer von 1
+bis 9 an, die Felder 10 bis 16 sind damit unerreichbar: Das Brett kann nie voll
+werden, und nach neun Zügen hängt das Spiel fest.
+
+Auf einem vier Felder breiten Brett kannst du also nur die obere Reihe testen, die
+Felder 1 bis 4. Mach das, bestätige dass vier gewinnen und drei nicht mehr, und
+entscheide dann, wie weit du es treiben willst. Die Ausgabe zu reparieren heißt,
+die Trennzeile aus `SIZE` zu bauen und das Zahlenfeld zu verbreitern; die Eingabe
+zu reparieren heißt, mehr als ein Zeichen anzunehmen, und damit kommt
+`isWholeNumber` aus Kurs 1 zurück.
 
 ## 🟡 Optional — Lass den Verlierer anfangen
 
@@ -416,12 +442,19 @@ und setz `player` daraus, statt immer `'X'` zu nehmen.
 
 Ersetz Spieler O durch das Programm, damit einer allein spielen kann.
 
+Das ist ein zweites Programm und keine Änderung am ersten, fang also eine neue
+Datei an, `TicTacToeComputer.java`, und kopier die Spielfeldmethoden hinüber. Lass
+es bei einer Runde und lass den Punktestand weg; hier geht es um den Gegner, nicht
+um die Buchhaltung. In der Rundenschleife, wo `askForCell` aufgerufen wird, frag
+stattdessen das Programm, wenn O am Zug ist, und gib aus, welches Feld es genommen
+hat, damit der Spieler folgen kann.
+
 Fang mit dem einfachsten Gegner an, der nicht kaputt ist: ein zufälliges freies Feld.
 
 ```java
 static int randomFreeCell(char[][] board) {
-    // dein Code hier -- wuerfle eine Zahl von 1 bis 9, bis sie auf ein freies
-    // Feld faellt, und gib sie zurueck
+    // dein Code hier -- würfle eine Zahl von 1 bis 9, bis sie auf ein freies
+    // Feld fällt, und gib sie zurück
 }
 ```
 
@@ -438,11 +471,16 @@ freies Feld, das für dieses Zeichen eine Linie vollmacht?" Also schreib sie ein
 
 ```java
 static int findWinningCell(char[][] board, char mark) {
-    // dein Code hier -- fuer jedes freie Feld: setz mark hinein, frag hasWon,
-    // und nimm es danach wieder weg. Gib das erste Feld zurueck, das gewinnt,
+    // dein Code hier -- für jedes freie Feld: setz mark hinein, frag hasWon,
+    // und nimm es danach wieder weg. Gib das erste Feld zurück, das gewinnt,
     // oder 0, wenn es keines gibt.
 }
 ```
+
+Den Zug zurückzunehmen braucht etwas, das das Kapitel dir nicht gegeben hat.
+`place` schreibt das Zeichen, das es bekommt, also leert `place(board, cell, ' ')`
+ein Feld wieder -- oder du schreibst eine einzeilige `clear(board, cell)` daneben,
+die sich an der Aufrufstelle besser liest.
 
 Einen Zug probieren und wieder zurücknehmen ist die Idee, die du aus dieser
 Herausforderung mitnimmst. `hasWon` hast du schon, du musst also über Linien gar
@@ -450,11 +488,18 @@ nicht nachdenken; du lässt die Methode, der du ohnehin vertraust, eine hypothet
 Frage beantworten. Die 0 für „keines" funktioniert, weil die Felder ab 1 nummeriert
 sind.
 
-Teste es ordentlich. Nimm die Felder 1 und 2 und prüf, dass das Programm die 3
-nimmt, bevor du es kannst. Dann verschaff dir zwei in einer Reihe, während das
-Programm ebenfalls zwei in einer Reihe hat, und prüf, dass es seinen eigenen Sieg
-nimmt statt dich zu blocken. Regel 1 vor Regel 2 entscheidet darüber, und sie zu
-vertauschen ist der häufigste Weg, das hier falsch zu machen.
+Die erste Regel kannst du im Spiel testen: Nimm die Felder 1 und 2 und prüf, dass
+das Programm die 3 nimmt, bevor du es kannst. Das tut es, außer sein zufälliger
+Eröffnungszug lag schon auf der 3.
+
+Den zweiten Test kann man nicht spielen, und das zu wissen ist besser, als dagegen
+anzukämpfen. Du bräuchtest zwei in einer Reihe für das Programm, während du selbst
+zwei in einer Reihe hast, und seine nicht erzwungenen Züge sind zufällig, du kannst
+das also nicht herbeispielen. Bau die Stellung stattdessen direkt: Füll in einem
+Wegwerf-`main` ein Brett von Hand mit O auf 1 und 2 und X auf 4 und 5, ruf deine
+Auswahl auf und prüf, dass sie 3 antwortet, ihren eigenen Sieg, und nicht 6, den
+Block. Regel 1 vor Regel 2 entscheidet darüber, und sie zu vertauschen ist der
+häufigste Weg, das hier falsch zu machen.
 
 Ein Programm mit diesen zwei Regeln lässt sich nicht aus Versehen schlagen, nur mit
 einem Plan. Schlagbar bleibt es: Es gibt eine dritte Regel über Gabeln, und darüber
@@ -484,9 +529,11 @@ Fassung.
 
 ## Weiter
 
-Kurs 3 sind die Türme von Hanoi, das kürzeste Programm in diesem Repository und
-eines der am schwersten zu glaubenden. Er setzt Kurs 1 voraus und sonst nichts, wie
-jeder Kurs hier.
+[Kurs 3 - Türme von Hanoi](../../03-towers-of-hanoi/de/01-tuerme-von-hanoi.md) ist
+das kürzeste Programm in diesem Repository und eines der am schwersten zu
+glaubenden. Er setzt Kurs 1 voraus und sonst nichts, wie jeder Kurs hier.
 
 Die vollständige Liste steht in
 [PROJECT-IDEAS.de.md](../../../PROJECT-IDEAS.de.md).
+
+**Weiter:** [Kurs 3 - Türme von Hanoi](../../03-towers-of-hanoi/de/01-tuerme-von-hanoi.md)
