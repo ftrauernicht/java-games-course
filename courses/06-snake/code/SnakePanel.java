@@ -1,9 +1,11 @@
 // Course 6 - Snake, the game itself.
 //
-// The class is final. That is not decoration: a non-final panel whose
-// methods can be overridden from outside makes the compiler warn about
-// handing `this` out before the object is finished, and this repository
-// builds with warnings treated as errors.
+// The class is final out of caution. The constructor calls setBackground,
+// an inherited method, and the compiler warns about handing `this` out
+// before a subclass is finished -- but only when the class is non-final AND
+// the constructor is reachable from outside the package. This one is not,
+// so removing final alone changes nothing; final keeps it that way for the
+// day somebody makes the constructor public.
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -70,6 +72,14 @@ public final class SnakePanel extends JPanel {
         }
 
         if (x[0] == foodX && y[0] == foodY) {
+            // The new segment starts where the tail is now, so the tail
+            // stays put for one tick and the snake grows from behind.
+            // Without these two lines it would sit at (0, 0) for one tick
+            // -- a green block flashing in the corner -- because a fresh
+            // int[] is full of zeroes.
+            x[length] = x[length - 1];
+            y[length] = y[length - 1];
+
             length++;
             score++;
             spawnFood();

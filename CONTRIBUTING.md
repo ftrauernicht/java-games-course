@@ -98,15 +98,32 @@ additions.
   brace gives `reached end of file while parsing`, which points at the last line
   of the file instead of the cause. If a snippet needs a surrounding variable or
   method, show it.
-- **A chapter that says "work in a file called X" shows the class frame once**, at
-  the top, before the first snippet. "Where does this go" is the question a
-  beginner cannot answer alone.
+- **A chapter that builds a class prints it once as a complete skeleton** -- with
+  every import, every field and every method header that will arrive separately
+  later -- before the first piece is explained. "Where does this go" is the
+  question a beginner cannot answer alone, and a field that is used and never
+  declared holds them up longer than any explanation helps.
+- **Imports belong in the chapter, not only in `code/`.** Course 1 shows a single
+  import. That `JPanel` is in `javax.swing` and `Graphics` in `java.awt` cannot
+  be guessed.
+- **Every printed listing compiles exactly as printed.** Above all when reaching
+  for another class's constant: `COLS` inside the class, `SnakePanel.COLS` from
+  outside. A listing that forces the reader to declare the number a second time
+  teaches precisely the wrong thing.
 - **Every keyword and method is explained where it first appears**, including the
   small ones that feel invisible: `new`, `null`, `isEmpty`.
 - **The file in `code/` follows the chapter**: same order, same values, same
   variable names. Somebody who is stuck reads them side by side.
 - **Do not print a line number the reader cannot reproduce.** Either show the
   message without one, or say that it depends on where the line sits.
+- **Every claim of the form "get it wrong and you will see Y" is reproduced before
+  publishing.** That is the kind of sentence an attentive reader checks, and when
+  Y does not happen they stop trusting the explanations that are right as well.
+  The same goes for every number: frame rate, window size, drawing surface.
+- **A screenshot is generated from the shipped code**, not staged by hand. What it
+  shows has to match the caption and the chapter -- the segment count against the
+  score, the visible parts against what the drawing method really paints in that
+  situation.
 - Each course is walked by a fresh reader who knows only Course 1, who types every
   snippet and runs it. Their sticking points are the chapter's bugs.
 

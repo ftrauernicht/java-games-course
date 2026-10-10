@@ -634,8 +634,8 @@ form for "call this method", like the `event ->` further up but without a parame
 
 `setPreferredSize` plus `pack()` instead of `setSize`: the panel says how big it
 wants to be and the window lays itself around it. With `setSize` on the window, the
-panel would get that space minus the title bar and border — measured, about 18
-pixels narrower and 47 pixels shorter than asked for. Your death line at the bottom
+panel would get that space minus the title bar and border — measured, 14
+pixels narrower and 37 pixels shorter than asked for. Your death line at the bottom
 would then not be where you think it is, and the rightmost column of pipe would
 stick out of the picture.
 

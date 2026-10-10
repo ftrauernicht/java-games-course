@@ -103,15 +103,34 @@ Java-Punkte.
   öffnenden Klammer endet, liefert `reached end of file while parsing`, und das
   zeigt auf die letzte Zeile der Datei statt auf die Ursache. Braucht ein Snippet
   eine umgebende Variable oder Methode, zeig sie.
-- **Ein Kapitel, das sagt „arbeite in einer Datei namens X", zeigt den
-  Klassenrahmen einmal**, oben, vor dem ersten Snippet. „Wohin gehört das" ist die
-  Frage, die ein Anfänger allein nicht beantworten kann.
+- **Ein Kapitel, das eine Klasse aufbaut, druckt sie einmal als vollständiges
+  Gerüst** -- mit allen Importen, allen Feldern und allen Methodenköpfen, die
+  später einzeln kommen -- bevor das erste Teilstück erklärt wird. „Wohin gehört
+  das" ist die Frage, die ein Anfänger allein nicht beantworten kann, und ein
+  Feld, das benutzt und nie deklariert wird, hält ihn länger auf als jede
+  Erklärung ihm hilft.
+- **Importe gehören ins Kapitel, nicht nur nach `code/`.** Kurs 1 zeigt einen
+  einzigen Import. Dass `JPanel` in `javax.swing` liegt und `Graphics` in
+  `java.awt`, lässt sich nicht erraten.
+- **Jedes abgedruckte Listing übersetzt so, wie es dasteht.** Vor allem der
+  Zugriff auf eine Konstante einer anderen Klasse: innerhalb der Klasse `COLS`,
+  von außen `SnakePanel.COLS`. Ein Listing, das den Leser zwingt, die Zahl ein
+  zweites Mal anzulegen, lehrt genau das Falsche.
 - **Jedes Schlüsselwort und jede Methode wird dort erklärt, wo sie zuerst
   auftaucht**, auch die kleinen, die man übersieht: `new`, `null`, `isEmpty`.
 - **Die Datei in `code/` folgt dem Kapitel**: gleiche Reihenfolge, gleiche Werte,
   gleiche Variablennamen. Wer feststeckt, legt beides nebeneinander.
 - **Druck keine Zeilennummer ab, die der Leser nicht reproduzieren kann.** Entweder
   die Meldung ohne sie zeigen, oder dazusagen, dass sie von der Position abhängt.
+- **Jede Behauptung der Form „mach es falsch, und du siehst Y" wird vor der
+  Veröffentlichung nachgestellt.** Das ist die Sorte Satz, die ein aufmerksamer
+  Leser nachprüft, und wenn Y dann nicht eintritt, verliert er das Vertrauen auch
+  in die Begründungen, die stimmen. Dasselbe gilt für jede Zahl: Bildrate,
+  Fenstergröße, Zeichenfläche.
+- **Ein Screenshot wird aus dem ausgelieferten Code erzeugt**, nicht von Hand
+  gestellt. Was darauf zu sehen ist, muss zur Bildunterschrift und zum Kapitel
+  passen -- die Gliederzahl zum Punktestand, die sichtbaren Teile zu dem, was die
+  Zeichenmethode in dieser Lage wirklich malt.
 - Jeden Kurs geht ein frischer Leser durch, der nur Kurs 1 kennt, tippt jedes
   Snippet ab und führt es aus. Wo er hängenbleibt, liegen die Fehler des Kapitels.
 

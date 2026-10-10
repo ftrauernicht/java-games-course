@@ -648,7 +648,7 @@ Parameter.
 
 `setPreferredSize` plus `pack()` statt `setSize`: Das Panel sagt, wie groß es sein
 will, und das Fenster legt sich darum. Mit `setSize` am Fenster bekäme das Panel
-den Platz minus Titelleiste und Rahmen — gemessen rund 18 Pixel schmaler und 47
+den Platz minus Titelleiste und Rahmen — gemessen 14 Pixel schmaler und 37
 Pixel niedriger als verlangt. Deine Todeslinie unten wäre dann nicht dort, wo du
 sie vermutest, und die rechte Röhrenspalte ragte aus dem Bild.
 
