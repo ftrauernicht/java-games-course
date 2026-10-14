@@ -61,10 +61,13 @@ then spends an afternoon on.
   page, which on Windows is not UTF-8, so a box-drawing character arrives as `?`.
   Boards are built from `|`, `-`, `+`, `#` and `.`. Chapter markdown keeps its
   emoji section markers; `.java` files stay pure ASCII.
-- **Clearing the console is not portable.** The ANSI sequence works in Windows
-  Terminal and fails in a legacy console window. The 🟢 path prints successive
-  states under a heading instead. The ANSI variant may appear as 🟡, with the
-  caveat written out.
+- **Anything that moves belongs in a window, not in the terminal.** Clearing the
+  console is not portable: the ANSI sequence works in Windows Terminal and fails
+  in a legacy console window. A window that only displays costs seven lines and no
+  class of your own -- `BufferedImage`, `JLabel`, `JFrame`, plus `createGraphics`
+  and `repaint()`. Courses 4 and 5 do it that way. Only once a window has to take
+  **keys** do a class of your own, `extends`, overridden methods and listeners
+  arrive, and that is the step up to Courses 6 and 7.
 - **A public class lives in a file of exactly its own name**, and a class may not
   start with a digit, which is why Course 5 ships `Game2048` in `Game2048.java`.
 - **Multi-file courses compile with `javac *.java` and run with `java Main`.**

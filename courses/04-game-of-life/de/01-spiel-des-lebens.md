@@ -5,11 +5,15 @@
 # Kurs 4 – Conways Game of Life
 
 **Ziel:** ein Spiel ohne Spieler. Du setzt ein paar Zellen, vier Regeln übernehmen,
-und ein Muster wandert von allein über den Bildschirm. Unterwegs begegnest du einem
-Fehler, dessen Ursache im Code unsichtbar und auf dem Bildschirm offensichtlich
-ist, und du wirst ihn vermieden haben.
+und ein Muster entwickelt sich von allein — im Fenster, nicht im Terminal.
+Unterwegs begegnest du einem Fehler, dessen Ursache im Code unsichtbar und auf dem
+Bildschirm offensichtlich ist, und du wirst ihn vermieden haben.
 
-![Ein Gleiter, sechs Generationen auseinander: dieselben fünf Zellen, ein Feld tiefer und eines weiter rechts](../assets/glider.png)
+![Ein zufällig gestartetes Gitter nach 60 Generationen: 163 lebende Zellen, zu Ketten und Klumpen zusammengelaufen](../assets/soup.png)
+
+Das ist das erste Fenster in diesem Repository, und es kostet sieben Zeilen und
+keine einzige eigene Klasse. Dass Kurs 6 für sein Fenster erheblich mehr braucht,
+liegt nicht am Zeichnen, sondern daran, dass dort Tasten ankommen sollen.
 
 Setzt [Kurs 1](../../01-basics/de/00-einfuehrung.md) voraus und sonst nichts. Eine
 fertige Fassung liegt in [`code/GameOfLife.java`](../code/GameOfLife.java).
@@ -67,19 +71,21 @@ behandelt. Dieses Kapitel nutzt es überwiegend nicht: Jede Methode unten liest 
 Gitter und gibt ein neues zurück, statt das übergebene zu ändern. Die eine Stelle,
 an der es zählt, ist der Fehler, vor dem das Kapitel weiter unten warnt.
 
-Richte deine Datei ein. Die drei Größen kommen in die Klasse, neben `main` statt
-hinein, denn `print` und `countNeighbours` brauchen sie auch. Sie sind `static` aus
+Richte deine Datei ein. Die Größen kommen in die Klasse, neben `main` statt hinein,
+denn `draw` und `countNeighbours` brauchen sie auch. Sie sind `static` aus
 demselben Grund, aus dem hier jede Methode `static` ist: Sie gehören zur Klasse,
-und erzeugt wurde noch nichts. Schreib stattdessen `final int ROWS = 10;` in `main`,
+und erzeugt wurde noch nichts. Schreib stattdessen `final int ROWS = 30;` in `main`,
 und du bekommst `non-static variable ROWS cannot be referenced from a static
 context`, elf Mal hintereinander.
 
 ```java
 public class GameOfLife {
 
-    static final int ROWS = 10;
-    static final int COLS = 20;
-    static final int GENERATIONS = 8;
+    static final int ROWS = 30;
+    static final int COLS = 40;
+    static final int CELL = 14;
+    static final int GENERATIONS = 100;
+    static final int PAUSE_MS = 80;
 
     public static void main(String[] args) {
         boolean[][] grid = new boolean[ROWS][COLS];
@@ -87,35 +93,95 @@ public class GameOfLife {
 }
 ```
 
-## 🟢 Kern — Das Gitter zeichnen
+`CELL` ist die Kantenlänge einer Zelle in Pixeln und taucht erst beim Zeichnen auf.
+`GENERATIONS` steht auf 100, weil der Gleiter auf diesem Gitter bis Generation 104
+unversehrt bleibt und danach die untere Wand erreicht — gemessen, nicht geschätzt.
 
-Ein lebendes Feld ist ein `#`, ein totes ein `.`:
+## 🟢 Kern — Ein Fenster, das ein Bild zeigt
+
+*(Kurs 5 benutzt dasselbe Fenster. Wer von dort kommt, kann springen.)*
+
+Ein Gitter aus `#` und `.` im Terminal wäre möglich, und für ein paar Zellen reicht
+es auch. Nur erkennt man darin schlecht, ob ein Muster wandert, kippt oder
+zerfällt, und genau das ist hier die ganze Frage. Also ein Fenster.
+
+Das kostet weniger, als du vermutest. Es braucht **keine eigene Klasse**, nichts
+wird überschrieben, niemand horcht auf irgendetwas. Drei Dinge genügen:
 
 ```java
-static void print(boolean[][] grid, int generation) {
-    System.out.println("Generation " + generation);
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+```
+
+Ein `BufferedImage` ist ein Bild im Arbeitsspeicher, auf das du malen darfst. Ein
+`JLabel` ist ein Anzeigeelement, dem man ein Bild geben kann. Und ein `JFrame` ist
+das Fenster drumherum. Diese sieben Zeilen kommen an den Anfang von `main`:
+
+```java
+BufferedImage picture =
+        new BufferedImage(COLS * CELL, ROWS * CELL, BufferedImage.TYPE_INT_RGB);
+JLabel label = new JLabel(new ImageIcon(picture));
+JFrame window = new JFrame("Game of Life");
+window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+window.add(label);
+window.pack();
+window.setVisible(true);
+```
+
+`CELL` ist die Kantenlänge einer Zelle in Pixeln, hier 14. Das Gitter ist 30 mal 40
+Zellen, das Bild also 560 mal 420 Pixel. `pack()` legt das Fenster um das Bild
+herum, statt dass du die Fenstergröße rätst.
+
+`setDefaultCloseOperation` sagt, was das Schließkreuz tun soll. Ohne diese Zeile
+verschwindet das Fenster und das Programm läuft weiter — du siehst nichts mehr und
+musst es im Terminal abwürgen.
+
+Gemalt wird mit `Graphics`, und das holst du dir aus dem Bild:
+
+```java
+static void draw(BufferedImage picture, boolean[][] grid) {
+    Graphics g = picture.createGraphics();
+
     for (int row = 0; row < ROWS; row++) {
         for (int col = 0; col < COLS; col++) {
-            System.out.print(grid[row][col] ? '#' : '.');
+            g.setColor(grid[row][col] ? ALIVE : DEAD);
+            g.fillRect(col * CELL, row * CELL, CELL - 1, CELL - 1);
         }
-        System.out.println();
     }
-    System.out.println();
 }
 ```
 
-Das `? :` aus Kurs 1 wählt das Zeichen. Die innere Schleife druckt eine Zeile ohne
-Umbrüche, und das `println` danach beendet die Zeile. Deshalb kommt das Gitter als
-Gitter heraus und nicht als eine lange Zeichenkette.
+Dieselbe Doppelschleife wie beim Drucken, und das `? :` aus Kurs 1 wählt wieder,
+nur diesmal eine Farbe statt eines Zeichens:
 
-Die Generationen werden untereinander gedruckt, mit Überschrift, statt an Ort und
-Stelle neu gezeichnet. Ein Terminal zu löschen braucht Steuerzeichen, die das
-Windows Terminal versteht und ein altes Konsolenfenster als Buchstabensalat
-ausgibt. Die portable Wahl ist also zu scrollen. Außerdem kannst du so noch einmal
-auf Generation 3 zurückschauen, und das wirst du wollen.
+```java
+static final Color DEAD = new Color(24, 26, 30);
+static final Color ALIVE = new Color(90, 200, 110);
+```
 
-Jetzt etwas zum Anschauen. Ein **Gleiter** sind fünf Zellen, die ewig diagonal
-wandern:
+Drei Zahlen von 0 bis 255 für Rot, Grün und Blau. Aus Zellen werden Pixel durch die
+Multiplikation mit `CELL`. Das `- 1` bei Breite und Höhe lässt einen Pixel Luft, und
+genau das macht die Zellen einzeln erkennbar statt als zusammenhängende Fläche.
+
+Eine Zeile fehlt noch, und sie ist die, die man vergisst:
+
+```java
+label.repaint();
+```
+
+In das Bild zu malen ändert nichts am Bildschirm. `repaint()` bittet das Fenster,
+sich das Bild noch einmal anzusehen. Also: erst malen, dann `repaint`.
+
+Ein Hinweis darauf, warum Kurs 6 für sein Fenster deutlich mehr Aufwand treibt:
+Dieses Fenster **zeigt** nur. Es nimmt nichts entgegen. Sobald ein Fenster auf
+Tasten reagieren soll, brauchst du eine eigene Klasse, überschriebene Methoden und
+Horcher — und das ist der Preis für Eingabe, nicht für Ausgabe.
+
+Jetzt etwas zum Anschauen. Ein **Gleiter** sind fünf Zellen, die diagonal wandern:
 
 ```java
 grid[1][2] = true;
@@ -125,21 +191,12 @@ grid[3][2] = true;
 grid[3][3] = true;
 ```
 
-```java
-print(grid, 0);
-```
+![Der Gleiter nach 48 Generationen: fünf Zellen, diagonal gewandert](../assets/glider.png)
 
-```
-Generation 0
-....................
-..#.................
-...#................
-.###................
-....................
-```
-
-Das sind die ersten fünf von zehn Zeilen. Der Rest ist leer und hier weggelassen,
-damit die Seite kurz bleibt, zähl also nicht deine eigene Ausgabe dagegen.
+Fünf grüne Quadrate auf einem großen dunklen Feld sind nicht viel. Genau das ist
+ihr Wert: Der Gleiter ist das Muster, an dem du prüfen kannst, ob deine Regeln
+stimmen, weil man bei fünf Zellen jede einzelne nachzählen kann. Was die Regeln
+wirklich können, siehst du weiter unten unter „Die Suppe".
 
 ## 🟢 Kernübung — Nachbarn zählen
 
@@ -205,31 +262,44 @@ Jetzt die Schleife in `main`:
 
 ```java
 for (int generation = 0; generation <= GENERATIONS; generation++) {
-    print(grid, generation);
+    draw(picture, grid);
+    label.repaint();
+
+    System.out.println("Generation " + generation + ": "
+            + countAlive(grid) + " live cells");
+
     grid = nextGeneration(grid);
 }
 ```
 
 `grid = nextGeneration(grid)` richtet die Variable auf das neue Gitter, und das
-alte wird schlicht vergessen. Führ es aus und zähl die `#` in jeder Generation:
-fünf, jedes Mal. Vergleich Generation 0 und Generation 4, und du solltest dieselbe
-Form sehen, ein Feld tiefer und eines weiter rechts.
+alte wird schlicht vergessen.
+
+Die Zeile in die Konsole ist kein Rest aus der alten Fassung. Ein Fenster zeigt
+immer nur die Gegenwart, und sobald etwas schiefläuft, willst du Generation 3 mit
+Generation 7 vergleichen können. Die Konsole behält die Spur, das Fenster zeigt das
+Bild. `countAlive` ist eine Doppelschleife, die `true` zählt, und sie zu schreiben
+dauert eine Minute.
+
+Genau diese Zeile ist die Probe für den Gleiter: In jeder Generation stehen dort
+fünf lebende Zellen, und zwar jedes Mal. Vergleich dazu im Fenster Generation 0 und
+Generation 4 — dieselbe Form, ein Feld tiefer und eines weiter rechts.
 
 ## 🟢 Kern — Eine Pause zwischen den Generationen
 
-Acht Generationen kommen schneller, als du lesen kannst. Java kann warten:
+Hundert Generationen kommen schneller, als du zusehen kannst. Java kann warten:
 
 ```java
-Thread.sleep(300);
+Thread.sleep(PAUSE_MS);
 ```
 
-Dreihundert Millisekunden. Setz das zwischen `print` und `nextGeneration`, und der
-Compiler weigert sich, dein Programm zu bauen:
+Achtzig Millisekunden. Setz das ans Ende der Schleife, und der Compiler weigert
+sich, dein Programm zu bauen:
 
 ```
 GameOfLife.java:17: error: unreported exception InterruptedException; must be caught or declared to be thrown
-            Thread.sleep(300);
-                       ^
+            Thread.sleep(PAUSE_MS);
+                        ^
 1 error
 ```
 
@@ -305,29 +375,70 @@ Zeile `r` und eine Spalte `c` in der Mitte des Gitters sind das `(r, c)`,
 
 Es ist berühmt dafür, aus fast nichts sehr lange in Bewegung zu bleiben, aber wie
 lange, hängt stark davon ab, wie viel Platz es hat, denn die Wände töten, was sie
-erreicht. Hier gemessen, gezählt bis zur Ruhe oder bis es sich wiederholt: 135 auf
-einem Gitter von 20 mal 40, 435 auf 30 mal 60, 653 auf 60 mal 120, und 1104 auf 80
-mal 160, worüber hinaus mehr Platz nichts mehr ändert. „Über tausend" braucht also
-ungefähr 80 mal 160, und ein Gitter dieser Größe passt in kein Terminalfenster --
-zähl lieber die lebenden Zellen pro Generation, statt es zu zeichnen.
+erreicht. Hier gemessen, gezählt bis sich der Zustand des ganzen Gitters wiederholt:
+80 Generationen auf 20 mal 40, 434 auf 30 mal 60, 652 auf 60 mal 120 und 1103 auf
+80 mal 160. Darüber hinaus ändert mehr Platz nichts mehr; bei 100 mal 200 und bei
+120 mal 240 kam dieselbe 1103 heraus.
 
-## 🟡 Optional — An Ort und Stelle animieren
+Nimm die Zahlen als Größenordnung und nicht als Eigenschaft des Musters. Sie hängen
+davon ab, wo genau du es hinsetzt, weil jede Wand, die es früher erreicht, einen
+anderen Teil davon tötet.
 
-Wenn dein Terminal es kann, darfst du über das vorige Bild zeichnen, statt zu
-scrollen. Gib das vor jeder Generation aus:
+Für „über tausend" brauchst du also ungefähr 80 mal 160 Zellen. Setz `CELL` dafür
+auf 6, dann ist das Fenster 960 mal 480 Pixel groß und passt auf jeden Bildschirm.
+In einem Terminal wäre dieses Gitter nicht darstellbar gewesen, und das ist der
+handfeste Gewinn des Fensters: nicht, dass es hübscher ist, sondern dass es Größen
+zulässt, bei denen die interessanten Muster überhaupt erst Platz haben.
+
+## 🟡 Optional — Die Suppe
+
+Ein Gleiter zeigt, dass deine Regeln stimmen. Was sie wert sind, zeigt er nicht.
+
+Füll das Gitter stattdessen zufällig, etwa drei Zellen von zehn:
 
 ```java
-System.out.print("\u001B[H\u001B[2J");
-System.out.flush();
+static boolean[][] randomGrid() {
+    boolean[][] grid = new boolean[ROWS][COLS];
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLS; col++) {
+            grid[row][col] = Math.random() < 0.3;
+        }
+    }
+    return grid;
+}
 ```
 
-Zwei Steuersequenzen: Cursor nach links oben, dann Bildschirm löschen. Sie
-funktionieren im Windows Terminal, im Terminal der meisten Editoren, und unter
-macOS und Linux. Sie funktionieren **nicht** in einem alten Windows-Konsolenfenster,
-wo stattdessen `[2J` als Text erscheint, und genau deshalb nutzt der grüne Pfad sie
-nicht.
+Das Bild oben am Kapitel ist genau das, nach sechzig Generationen. Aus dem Rauschen
+werden in wenigen Dutzend Generationen Blöcke, die liegenbleiben, Blinker, die
+kippen, und gelegentlich ein Gleiter, der sich loslöst und davonzieht. Niemand hat
+das hineinprogrammiert; es sind dieselben vier Regeln.
 
-Probier es aus und behalt die Fassung, die sich auf deinem Rechner besser liest.
+Die fertige Fassung hat beide Starts drin und wählt über ein Argument aus:
+
+```java
+boolean soup = args.length > 0 && "soup".equals(args[0]);
+boolean[][] grid = soup ? randomGrid() : glider();
+```
+
+```
+java GameOfLife        der Gleiter
+java GameOfLife soup   das Zufallsgitter
+```
+
+`args` ist der Parameter, den `main` seit Kurs 1 mitschleppt, ohne je gebraucht zu
+werden. Hier verdient er sich sein Dasein.
+
+Die Reihenfolge in der Bedingung ist nicht beliebig. `args.length > 0` muss
+**vorn** stehen, denn `&&` wertet die rechte Seite gar nicht erst aus, wenn die
+linke schon falsch ist. Dreh es um, und ein Start ohne Argument endet mit
+`ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0`. Dass hier
+`"soup".equals(args[0])` steht und nicht `args[0].equals("soup")`, ändert daran
+übrigens nichts — gemessen fliegen beide. Diese Schreibweise hilft gegen `null`,
+und ein Kommandozeilenargument ist nie `null`.
+
+Lass die Zahl 0.3 nicht stehen. Bei 0.05 passiert fast nichts, bei 0.6 stirbt fast
+alles sofort an Überbevölkerung. Irgendwo dazwischen liegt das Interessante, und das
+selbst zu finden ist die eigentliche Übung.
 
 ## 🔴 Optional, echte Herausforderung — Merken, wenn sich nichts mehr tut
 
@@ -383,9 +494,18 @@ Prüfung verfehlt, ist mehr wert als eine Prüfung, die behauptet, alles zu fang
   bekanntes Muster der Weg ist, sie zu überführen
 - `Thread.sleep`, und was eine geprüfte Ausnahme ist
 - `throws` an `main` als die ehrliche kleine Antwort darauf
+- Ein Fenster, das etwas zeigt: `BufferedImage` zum Bemalen, `JLabel` zum Anzeigen,
+  `JFrame` als Rahmen, `pack` statt geratener Größen
+- `createGraphics`, `setColor` und `fillRect`, und Farben als drei Zahlen
+- Dass Malen allein nichts bewirkt und erst `repaint()` das Bild auf den Schirm holt
+- Dass ein Fenster zum Zeigen keine eigene Klasse braucht, eines für Tastendrücke
+  dagegen schon
+- Dass ein Fenster nur die Gegenwart kennt, und warum die Spur trotzdem in die
+  Konsole gehört
 - *(optional)* `(x + SIZE) % SIZE` zum Umlaufen eines Index, und warum das
   `+ SIZE` nötig ist
-- *(optional)* Warum Terminal-Steuerzeichen nicht portabel sind
+- *(optional)* `args` endlich benutzt, und warum `args.length > 0` vor dem Zugriff
+  stehen muss
 - *(optional)* Zwei Gitter Feld für Feld vergleichen, und wissen, was die Prüfung
   verfehlt
 - *(optional)* `null` in einer Array-Variablen, und mit `&&` absichern, bevor man

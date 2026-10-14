@@ -53,6 +53,27 @@ for f in "${chapters[@]}"; do
         ;;
     esac
   done < <(grep -n '^## ' "$f")
+
+  # A code fence that carries text after it. An opening fence may name a
+  # language, a closing one may not -- CommonMark then does not treat it as a
+  # close, and the rest of the chapter silently renders as code. This went
+  # unnoticed in Course 5 in both languages until somebody read the raw file.
+  while IFS=: read -r line text; do
+    case "$text" in
+      '```'|'```java'|'```text') ;;
+      *)
+        echo "::error file=$f,line=$line::code fence with trailing text: $text"
+        fail=1
+        ;;
+    esac
+  done < <(grep -n '^```' "$f")
+
+  # An odd number of fences means one block never closes.
+  fences=$(grep -c '^```' "$f")
+  if [ $((fences % 2)) -ne 0 ]; then
+    echo "::error file=$f::odd number of code fences ($fences); one block is unclosed"
+    fail=1
+  fi
 done
 
 if [ "$fail" -eq 0 ]; then

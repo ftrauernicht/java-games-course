@@ -62,10 +62,14 @@ und verliert danach einen Nachmittag.
   Konsole, und die ist unter Windows nicht UTF-8, ein Rahmenzeichen kommt also als
   `?` an. Spielfelder bestehen aus `|`, `-`, `+`, `#` und `.`. Die Kapitel behalten
   ihre Emoji-Marker, die `.java`-Dateien bleiben reines ASCII.
-- **Den Bildschirm zu löschen ist nicht portabel.** Die ANSI-Sequenz funktioniert im
-  Windows Terminal und scheitert im alten Konsolenfenster. Der 🟢-Pfad druckt die
-  Zustände stattdessen nacheinander unter je einer Überschrift. Die ANSI-Variante
-  darf als 🟡 auftauchen, mit ausgeschriebenem Vorbehalt.
+- **Etwas, das sich bewegt, gehört in ein Fenster, nicht ins Terminal.** Den
+  Bildschirm zu löschen ist nicht portabel: Die ANSI-Sequenz funktioniert im
+  Windows Terminal und scheitert im alten Konsolenfenster. Ein Fenster, das nur
+  anzeigt, kostet sieben Zeilen und keine eigene Klasse -- `BufferedImage`,
+  `JLabel`, `JFrame`, dazu `createGraphics` und `repaint()`. Die Kurse 4 und 5
+  machen es so. Erst wenn ein Fenster **Tasten** entgegennehmen soll, kommen
+  eigene Klasse, `extends`, überschriebene Methoden und Horcher dazu, und das ist
+  der Sprung zu den Kursen 6 und 7.
 - **Eine öffentliche Klasse liegt in einer Datei mit genau ihrem Namen**, und eine
   Klasse darf nicht mit einer Ziffer beginnen. Deshalb liefert Kurs 5 `Game2048` in
   `Game2048.java` aus.

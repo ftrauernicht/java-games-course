@@ -3,23 +3,54 @@
 //
 // The class cannot be called 2048: a Java name may not start with a digit.
 //
+// The board is shown in a window, the move is still typed into the console
+// and confirmed with Enter. That split is deliberate, and it is the whole
+// argument for Course 6: a window can show anything, but reading a single
+// key press the moment it happens needs more than this.
+//
 // Compile with:  javac Game2048.java
 // Run with:      java Game2048
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.Scanner;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Game2048 {
 
     static final int SIZE = 4;
 
+    static final int TILE = 90;
+    static final int GAP = 8;
+    static final int BOARD = SIZE * TILE + (SIZE + 1) * GAP;
+
+    static final Color BACKDROP = new Color(187, 173, 160);
+    static final Color EMPTY = new Color(205, 193, 180);
+    static final Color DARK_TEXT = new Color(119, 110, 101);
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int[][] board = new int[SIZE][SIZE];
+
+        BufferedImage picture = new BufferedImage(BOARD, BOARD, BufferedImage.TYPE_INT_RGB);
+        JLabel label = new JLabel(new ImageIcon(picture));
+        JFrame window = new JFrame("2048");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.add(label);
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
 
         spawn(board);
         spawn(board);
 
         while (true) {
-            print(board);
+            draw(picture, board);
+            label.repaint();
 
             System.out.print("Move (w/a/s/d, q to quit): ");
             String line = in.nextLine().trim().toLowerCase();
@@ -55,11 +86,76 @@ public class Game2048 {
             spawn(board);
 
             if (isFull(board)) {
-                print(board);
+                draw(picture, board);
+                label.repaint();
                 System.out.println("Board full. Game over.");
                 return;
             }
         }
+    }
+
+    // --- Drawing ---
+
+    // Paints the whole board into the picture. Nothing reaches the screen
+    // until repaint() asks the window to look at the picture again.
+    static void draw(BufferedImage picture, int[][] board) {
+        Graphics g = picture.createGraphics();
+
+        g.setColor(BACKDROP);
+        g.fillRect(0, 0, BOARD, BOARD);
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                int x = GAP + col * (TILE + GAP);
+                int y = GAP + row * (TILE + GAP);
+                int value = board[row][col];
+
+                g.setColor(value == 0 ? EMPTY : tileColor(value));
+                g.fillRect(x, y, TILE, TILE);
+
+                if (value != 0) {
+                    drawNumber(g, value, x, y);
+                }
+            }
+        }
+    }
+
+    // Centres the number on its tile. The font shrinks as the number grows,
+    // otherwise 1024 runs off the edge.
+    static void drawNumber(Graphics g, int value, int x, int y) {
+        String text = String.valueOf(value);
+
+        int size = switch (text.length()) {
+            case 1, 2 -> 38;
+            case 3 -> 32;
+            default -> 26;
+        };
+
+        g.setFont(new Font("SansSerif", Font.BOLD, size));
+        g.setColor(value <= 4 ? DARK_TEXT : Color.WHITE);
+
+        FontMetrics metrics = g.getFontMetrics();
+        int textX = x + (TILE - metrics.stringWidth(text)) / 2;
+        int textY = y + (TILE + metrics.getAscent() - metrics.getDescent()) / 2;
+        g.drawString(text, textX, textY);
+    }
+
+    // Pale for the small tiles, hot for the large ones, so that progress is
+    // visible without reading a single number.
+    static Color tileColor(int value) {
+        return switch (value) {
+            case 2 -> new Color(238, 228, 218);
+            case 4 -> new Color(237, 224, 200);
+            case 8 -> new Color(242, 177, 121);
+            case 16 -> new Color(245, 149, 99);
+            case 32 -> new Color(246, 124, 95);
+            case 64 -> new Color(246, 94, 59);
+            case 128 -> new Color(237, 207, 114);
+            case 256 -> new Color(237, 204, 97);
+            case 512 -> new Color(237, 200, 80);
+            case 1024 -> new Color(237, 197, 63);
+            default -> new Color(237, 194, 46);
+        };
     }
 
     // --- Moving ---
@@ -174,22 +270,5 @@ public class Game2048 {
             }
         }
         return true;
-    }
-
-    // %5d gives every number the same width, so the columns line up however
-    // large the tiles get.
-    static void print(int[][] board) {
-        System.out.println();
-        for (int row = 0; row < SIZE; row++) {
-            for (int col = 0; col < SIZE; col++) {
-                if (board[row][col] == 0) {
-                    System.out.printf("%5s", ".");
-                } else {
-                    System.out.printf("%5d", board[row][col]);
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 }

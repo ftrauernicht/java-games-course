@@ -5,11 +5,15 @@
 # Course 4 – Conway's Game of Life
 
 **Goal:** a game with no players. You place a few cells, four rules take over, and
-a pattern walks across the screen on its own. On the way you will meet a mistake
-whose cause is invisible in the code and obvious on the screen, and you will have
-avoided it.
+a pattern develops on its own — in a window, not in the terminal. On the way you
+will meet a mistake whose cause is invisible in the code and obvious on the screen,
+and you will have avoided it.
 
-![A glider, six generations apart: the same five cells, one square down and one to the right](../assets/glider.png)
+![A randomly seeded grid after 60 generations: 163 live cells, run together into chains and clumps](../assets/soup.png)
+
+This is the first window in this repository, and it costs seven lines and not one
+class of your own. Course 6 needs considerably more for its window, and that is not
+because of the drawing. It is because keys have to arrive there.
 
 Assumes [Course 1](../../01-basics/en/00-introduction.md) and nothing else. A
 finished version lives in [`code/GameOfLife.java`](../code/GameOfLife.java).
@@ -67,18 +71,20 @@ rather than changing what it was given. The one place it matters is the mistake
 the chapter warns about, further down.
 
 Set up your file. The three sizes go in the class, next to `main` rather than
-inside it, because `print` and `countNeighbours` need them too. They are `static`
+inside it, because `draw` and `countNeighbours` need them too. They are `static`
 for the same reason every method here is `static`: they belong to the class, and
-nothing has been created yet. Write `final int ROWS = 10;` inside `main` instead
+nothing has been created yet. Write `final int ROWS = 30;` inside `main` instead
 and you get `non-static variable ROWS cannot be referenced from a static context`,
 eleven times over.
 
 ```java
 public class GameOfLife {
 
-    static final int ROWS = 10;
-    static final int COLS = 20;
-    static final int GENERATIONS = 8;
+    static final int ROWS = 30;
+    static final int COLS = 40;
+    static final int CELL = 14;
+    static final int GENERATIONS = 100;
+    static final int PAUSE_MS = 80;
 
     public static void main(String[] args) {
         boolean[][] grid = new boolean[ROWS][COLS];
@@ -86,33 +92,95 @@ public class GameOfLife {
 }
 ```
 
-## 🟢 Core — Drawing the grid
+`CELL` is the side of one cell in pixels and does not appear until the drawing.
+`GENERATIONS` is 100 because the glider stays intact on this grid until generation
+104 and then reaches the bottom wall — measured, not guessed.
 
-A live square is a `#`, a dead one is a `.`:
+## 🟢 Core — A window that shows a picture
+
+*(Course 5 uses the same window. If you came from there, skip ahead.)*
+
+A grid of `#` and `.` in the terminal would work, and for a handful of cells it is
+enough. It just makes it hard to tell whether a pattern is travelling, flipping or
+falling apart, and that is the entire question here. So: a window.
+
+It costs less than you would think. It needs **no class of your own**, nothing is
+overridden, nobody listens for anything. Three things are enough:
 
 ```java
-static void print(boolean[][] grid, int generation) {
-    System.out.println("Generation " + generation);
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+```
+
+A `BufferedImage` is a picture in memory that you are allowed to paint on. A
+`JLabel` is a component you can hand a picture to. And a `JFrame` is the window
+around it. These seven lines go at the top of `main`:
+
+```java
+BufferedImage picture =
+        new BufferedImage(COLS * CELL, ROWS * CELL, BufferedImage.TYPE_INT_RGB);
+JLabel label = new JLabel(new ImageIcon(picture));
+JFrame window = new JFrame("Game of Life");
+window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+window.add(label);
+window.pack();
+window.setVisible(true);
+```
+
+`CELL` is the side of a cell in pixels, 14 here. The grid is 30 by 40 cells, so the
+picture is 560 by 420 pixels. `pack()` lays the window around the picture instead
+of leaving you to guess a window size.
+
+`setDefaultCloseOperation` says what the close button should do. Without that line
+the window disappears and the program keeps running — you see nothing and have to
+kill it from the terminal.
+
+You paint with `Graphics`, and you get one from the picture:
+
+```java
+static void draw(BufferedImage picture, boolean[][] grid) {
+    Graphics g = picture.createGraphics();
+
     for (int row = 0; row < ROWS; row++) {
         for (int col = 0; col < COLS; col++) {
-            System.out.print(grid[row][col] ? '#' : '.');
+            g.setColor(grid[row][col] ? ALIVE : DEAD);
+            g.fillRect(col * CELL, row * CELL, CELL - 1, CELL - 1);
         }
-        System.out.println();
     }
-    System.out.println();
 }
 ```
 
-The `? :` from Course 1 picks the character. The inner loop prints one row with no
-line breaks, and the `println` after it ends the line, which is why the grid comes
-out as a grid rather than one long string.
+The same double loop as printing, and the `? :` from Course 1 picks again, only now
+a colour rather than a character:
 
-Generations print one under another, with a heading, rather than redrawing in
-place. Clearing a terminal needs escape codes that Windows Terminal understands and
-a plain console window prints as garbage, so the portable choice is to scroll. It
-also lets you look back at generation 3, which you will want to do.
+```java
+static final Color DEAD = new Color(24, 26, 30);
+static final Color ALIVE = new Color(90, 200, 110);
+```
 
-Now something to look at. A **glider** is five cells that walk diagonally forever:
+Three numbers from 0 to 255 for red, green and blue. Cells become pixels by
+multiplying with `CELL`. The `- 1` on width and height leaves a pixel of air, and
+that is what makes the cells readable one by one rather than as a solid field.
+
+One line is still missing, and it is the one people forget:
+
+```java
+label.repaint();
+```
+
+Painting into the picture changes nothing on screen. `repaint()` asks the window to
+look at the picture again. So: paint first, then `repaint`.
+
+A hint about why Course 6 works much harder for its window: this one only **shows**
+things. It takes nothing in. The moment a window has to react to keys you need a
+class of your own, overridden methods and listeners — and that is the price of
+input, not of output.
+
+Now something to look at. A **glider** is five cells that travel diagonally:
 
 ```java
 grid[1][2] = true;
@@ -122,21 +190,12 @@ grid[3][2] = true;
 grid[3][3] = true;
 ```
 
-```java
-print(grid, 0);
-```
+![The glider after 48 generations: five cells, travelled diagonally](../assets/glider.png)
 
-```
-Generation 0
-....................
-..#.................
-...#................
-.###................
-....................
-```
-
-That is the first five of ten rows. The rest are empty and are left out here to
-keep the page short, so do not count lines against your own output.
+Five green squares on a large dark field are not much. That is exactly their worth:
+the glider is the pattern you can check your rules against, because with five cells
+you can count every one of them. What the rules can really do is further down,
+under "The soup".
 
 ## 🟢 Core exercise — Counting neighbours
 
@@ -202,31 +261,44 @@ Now the loop in `main`:
 
 ```java
 for (int generation = 0; generation <= GENERATIONS; generation++) {
-    print(grid, generation);
+    draw(picture, grid);
+    label.repaint();
+
+    System.out.println("Generation " + generation + ": "
+            + countAlive(grid) + " live cells");
+
     grid = nextGeneration(grid);
 }
 ```
 
 `grid = nextGeneration(grid)` points the variable at the new grid, and the old one
-is simply forgotten. Run it and count the `#` in each generation: five, every time.
-Compare generation 0 and generation 4, and you should see the same shape, moved one
-down and one right.
+is simply forgotten.
+
+The line going to the console is not a leftover from an older version. A window
+only ever shows the present, and the moment something goes wrong you will want to
+compare generation 3 against generation 7. The console keeps the trace, the window
+shows the picture. `countAlive` is a double loop that counts `true`, and writing it
+takes a minute.
+
+That line is also the test for the glider: it reads five live cells in every
+generation, every time. Alongside it, compare generation 0 and generation 4 in the
+window — the same shape, one square down and one to the right.
 
 ## 🟢 Core — A pause between generations
 
-Eight generations arrive faster than you can read them. Java can wait:
+A hundred generations arrive faster than you can watch them. Java can wait:
 
 ```java
-Thread.sleep(300);
+Thread.sleep(PAUSE_MS);
 ```
 
-Three hundred milliseconds. Put it between the `print` and the `nextGeneration`,
-and the compiler refuses to build your program:
+Eighty milliseconds. Put it at the end of the loop, and the compiler refuses to
+build your program:
 
 ```
 GameOfLife.java:17: error: unreported exception InterruptedException; must be caught or declared to be thrown
-            Thread.sleep(300);
-                       ^
+            Thread.sleep(PAUSE_MS);
+                        ^
 1 error
 ```
 
@@ -303,28 +375,70 @@ column `c` in the middle of the grid, it is `(r, c)`, `(r, c+1)`, `(r+1, c-1)`,
 
 It is famous for staying busy for a very long time from almost nothing, but how
 long depends sharply on how much room it has, because the walls kill what reaches
-them. Measured here, counting generations until it settles or starts repeating:
-135 on a 20 by 40 grid, 435 on 30 by 60, 653 on 60 by 120, and 1104 on 80 by 160,
-after which more room changes nothing. So "over a thousand" needs roughly 80 by
-160, and a grid that size does not fit in a terminal window -- count live cells
-per generation instead of drawing it.
+them. Measured here, counting generations until the state of the whole grid
+repeats: 80 generations on 20 by 40, 434 on 30 by 60, 652 on 60 by 120 and 1103 on
+80 by 160. Beyond that more room changes nothing; 100 by 200 and 120 by 240 both
+came out at the same 1103.
 
-## 🟡 Optional — Animating in place
+Take the numbers as an order of magnitude and not as a property of the pattern.
+They depend on exactly where you place it, because every wall it reaches sooner
+kills a different part of it.
 
-If your terminal supports it, you can redraw over the previous frame instead of
-scrolling. Print this before each generation:
+So "over a thousand" needs roughly 80 by 160 cells. Set `CELL` to 6 for that and
+the window is 960 by 480 pixels, which fits on any screen. A grid that size could
+not have been shown in a terminal, and that is the concrete gain from the window:
+not that it looks nicer, but that it allows sizes at which the interesting patterns
+have room in the first place.
+
+## 🟡 Optional — The soup
+
+A glider shows that your rules are right. It does not show what they are worth.
+
+Fill the grid at random instead, about three cells in ten:
 
 ```java
-System.out.print("\u001B[H\u001B[2J");
-System.out.flush();
+static boolean[][] randomGrid() {
+    boolean[][] grid = new boolean[ROWS][COLS];
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLS; col++) {
+            grid[row][col] = Math.random() < 0.3;
+        }
+    }
+    return grid;
+}
 ```
 
-Two escape sequences: move the cursor to the top left, then clear the screen. They
-work in Windows Terminal, in the terminal inside most editors, and on macOS and
-Linux. They do **not** work in an old Windows console window, where you get `[2J`
-printed as text, which is why the green path does not use them.
+The picture at the top of this chapter is exactly that, after sixty generations.
+Within a few dozen generations the noise turns into blocks that sit still, blinkers
+that flip, and now and then a glider that breaks loose and sails away. Nobody
+programmed any of it in; they are the same four rules.
 
-Try it, and keep whichever version reads better on your machine.
+The finished version has both starts in it and picks one from an argument:
+
+```java
+boolean soup = args.length > 0 && "soup".equals(args[0]);
+boolean[][] grid = soup ? randomGrid() : glider();
+```
+
+```
+java GameOfLife        the glider
+java GameOfLife soup   the random grid
+```
+
+`args` is the parameter `main` has been carrying since Course 1 without ever being
+used. Here it earns its place.
+
+The order inside the condition is not free. `args.length > 0` has to come **first**,
+because `&&` does not evaluate its right-hand side at all once the left is false.
+Turn it around and a start without an argument ends in
+`ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0`. Writing
+`"soup".equals(args[0])` rather than `args[0].equals("soup")` makes no difference to
+that — measured, both throw. That form guards against `null`, and a command-line
+argument is never `null`.
+
+Do not leave the 0.3 alone. At 0.05 almost nothing happens, at 0.6 almost everything
+dies of overcrowding at once. The interesting range is somewhere between, and
+finding it yourself is the real exercise.
 
 ## 🔴 Optional, genuine challenge — Notice when nothing changes
 
@@ -380,8 +494,17 @@ more than a check that claims to catch everything.
   how you catch it
 - `Thread.sleep`, and what a checked exception is
 - `throws` on `main` as the honest small answer to one
+- A window that shows something: `BufferedImage` to paint on, `JLabel` to display
+  it, `JFrame` as the frame, `pack` instead of guessed sizes
+- `createGraphics`, `setColor` and `fillRect`, and colours as three numbers
+- That painting alone does nothing, and that `repaint()` is what puts it on screen
+- That a window which only shows needs no class of your own, while one that takes
+  key presses does
+- That a window knows only the present, and why the trace still belongs in the
+  console
 - *(optional)* `(x + SIZE) % SIZE` to wrap an index, and why the `+ SIZE` is needed
-- *(optional)* Why terminal escape codes are not portable
+- *(optional)* `args` finally used, and why `args.length > 0` has to come before the
+  access
 - *(optional)* Comparing two grids square by square, and knowing what the check
   misses
 - *(optional)* `null` in an array variable, and guarding with `&&` before asking

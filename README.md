@@ -87,10 +87,11 @@ that explains the idea in full and leaves the writing to you.
 
 ### Course 4 – Conway's Game of Life (`courses/04-game-of-life/`)
 
-A game with no players: four rules, a grid, and a pattern that walks across the
-screen on its own. Home of the most instructive bug in this repository.
+A game with no players: four rules, a grid, and a pattern that develops on its
+own. The first window in the repository, and it costs seven lines and no class of
+your own. Home of the most instructive bug in this repository.
 
-<img src="courses/04-game-of-life/assets/glider.png" width="300" alt="A glider six generations apart" />
+<img src="courses/04-game-of-life/assets/soup.png" width="300" alt="A randomly seeded grid after 60 generations" />
 
 | # | Chapter | What you'll learn |
 |---|---|---|
@@ -99,9 +100,11 @@ screen on its own. Home of the most instructive bug in this repository.
 ### Course 5 – 2048 (`courses/05-2048/`)
 
 Slide, merge, repeat. Four directions that turn out to be one operation on a
-turned board, and the merge rule nearly everybody gets wrong first time.
+turned board, and the merge rule nearly everybody gets wrong first time. The board
+is in a window and you still type the move -- exactly the contradiction Course 6
+resolves.
 
-<img src="courses/05-2048/assets/gameplay.png" width="280" alt="A 2048 board with a 128 tile" />
+<img src="courses/05-2048/assets/gameplay.png" width="280" alt="A 2048 board in a window with a red 64 tile" />
 
 | # | Chapter | What you'll learn |
 |---|---|---|
@@ -163,7 +166,7 @@ courses/
   03-towers-of-hanoi/
   04-game-of-life/
   05-2048/
-  06-snake/                  adds assets/ for screenshots, since it has a window
+  06-snake/                  every course has assets/; 4 to 7 show a window
   07-flappy-bird/
   08-.../                    future courses, same pattern
 scripts/                     the checks CI runs

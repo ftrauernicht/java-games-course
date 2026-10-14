@@ -89,10 +89,11 @@ Kapitel, das die Idee vollständig erklärt und dir das Schreiben überlässt.
 
 ### Kurs 4 – Conways Game of Life (`courses/04-game-of-life/`)
 
-Ein Spiel ohne Spieler: vier Regeln, ein Gitter, und ein Muster, das von allein
-über den Bildschirm wandert. Heimat des lehrreichsten Fehlers in diesem Repository.
+Ein Spiel ohne Spieler: vier Regeln, ein Gitter, und ein Muster, das sich von
+allein entwickelt. Das erste Fenster im Repository, und es kostet sieben Zeilen und
+keine eigene Klasse. Heimat des lehrreichsten Fehlers in diesem Repository.
 
-<img src="courses/04-game-of-life/assets/glider.png" width="300" alt="Ein Gleiter sechs Generationen auseinander" />
+<img src="courses/04-game-of-life/assets/soup.png" width="300" alt="Ein zufällig gestartetes Gitter nach 60 Generationen" />
 
 | # | Kapitel | Was du lernst |
 |---|---|---|
@@ -102,9 +103,10 @@ Ein Spiel ohne Spieler: vier Regeln, ein Gitter, und ein Muster, das von allein
 
 Schieben, verschmelzen, von vorn. Vier Richtungen, die sich als eine Operation auf
 einem gedrehten Feld entpuppen, und die Verschmelzungsregel, die fast jeder im
-ersten Anlauf falsch macht.
+ersten Anlauf falsch macht. Das Feld steht im Fenster, getippt wird trotzdem noch --
+genau der Widerspruch, den Kurs 6 auflöst.
 
-<img src="courses/05-2048/assets/gameplay.png" width="280" alt="Ein 2048-Feld mit einem 128er-Plättchen" />
+<img src="courses/05-2048/assets/gameplay.png" width="280" alt="Ein 2048-Feld im Fenster mit einem roten 64er-Plättchen" />
 
 | # | Kapitel | Was du lernst |
 |---|---|---|
@@ -166,7 +168,7 @@ courses/
   03-towers-of-hanoi/
   04-game-of-life/
   05-2048/
-  06-snake/                  bekommt assets/ fuer Screenshots, weil es ein Fenster hat
+  06-snake/                  jeder Kurs hat assets/; 4 bis 7 zeigen ein Fenster
   07-flappy-bird/
   08-.../                    kuenftige Kurse, gleiches Muster
 scripts/                     die Pruefungen, die die CI ausfuehrt
