@@ -106,6 +106,18 @@ additions.
   later -- before the first piece is explained. "Where does this go" is the
   question a beginner cannot answer alone, and a field that is used and never
   declared holds them up longer than any explanation helps.
+- **Every method the chapter calls also appears in the chapter** -- as a skeleton
+  with `// your code here` if nothing else. A call to `glider()` or
+  `countAlive(...)` the reader cannot find anywhere costs them more time than the
+  three lines would have. Two junior walkthroughs got stuck on exactly this kind of
+  gap.
+- **A screenshot sits where the reader can produce it themselves.** A picture under
+  a section whose code does not draw anything yet promises something that only
+  works seventy lines later.
+- **A program that opens a window ends with `System.exit(0)`.** Swing's thread is
+  not a background thread: returning from `main` does not end the program, the
+  prompt never comes back, and the reader looks for the fault in their own code.
+  `setDefaultCloseOperation` governs only the close button.
 - **Imports belong in the chapter, not only in `code/`.** Course 1 shows a single
   import. That `JPanel` is in `javax.swing` and `Graphics` in `java.awt` cannot
   be guessed.

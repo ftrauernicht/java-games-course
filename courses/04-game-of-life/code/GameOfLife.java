@@ -57,6 +57,11 @@ public class GameOfLife {
             Thread.sleep(PAUSE_MS);
             grid = nextGeneration(grid);
         }
+
+        // A visible window keeps the JVM alive on its own thread, so falling
+        // off the end of main is not enough to end the program.
+        System.out.println("Done.");
+        System.exit(0);
     }
 
     // Five live cells that walk diagonally across the grid, keeping their
@@ -93,6 +98,10 @@ public class GameOfLife {
                 g.fillRect(col * CELL, row * CELL, CELL - 1, CELL - 1);
             }
         }
+
+        // Every createGraphics hands out a resource. Giving it back costs one
+        // line and matters once draw runs a few hundred times.
+        g.dispose();
     }
 
     static int countAlive(boolean[][] grid) {

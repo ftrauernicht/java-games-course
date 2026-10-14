@@ -72,11 +72,18 @@ Gitter und gibt ein neues zurück, statt das übergebene zu ändern. Die eine St
 an der es zählt, ist der Fehler, vor dem das Kapitel weiter unten warnt.
 
 Richte deine Datei ein. Die Größen kommen in die Klasse, neben `main` statt hinein,
-denn `draw` und `countNeighbours` brauchen sie auch. Sie sind `static` aus
-demselben Grund, aus dem hier jede Methode `static` ist: Sie gehören zur Klasse,
-und erzeugt wurde noch nichts. Schreib stattdessen `final int ROWS = 30;` in `main`,
-und du bekommst `non-static variable ROWS cannot be referenced from a static
-context`, elf Mal hintereinander.
+denn `draw` und `countNeighbours` brauchen sie auch.
+
+Zwei Fehler liegen hier nahe, und sie geben verschiedene Meldungen. Schreib
+`final int ROWS = 30;` **in** `main`, und die anderen Methoden sehen die Variable
+gar nicht: `cannot find symbol`, achtmal. Lass sie oben stehen, streich aber das
+`static`, und sie gehört ab da einem Objekt, das es nicht gibt:
+`non-static variable ROWS cannot be referenced from a static context`, neunmal.
+Beide Zahlen hier gemessen; bei dir hängen sie davon ab, wie viel du schon
+geschrieben hast.
+
+`static` heißt aus demselben Grund `static`, aus dem hier jede Methode `static` ist:
+Die Zahl gehört zur Klasse, und erzeugt wurde noch nichts.
 
 ```java
 public class GameOfLife {
@@ -106,7 +113,8 @@ es auch. Nur erkennt man darin schlecht, ob ein Muster wandert, kippt oder
 zerfällt, und genau das ist hier die ganze Frage. Also ein Fenster.
 
 Das kostet weniger, als du vermutest. Es braucht **keine eigene Klasse**, nichts
-wird überschrieben, niemand horcht auf irgendetwas. Drei Dinge genügen:
+wird überschrieben, niemand horcht auf irgendetwas. Vier Klassen genügen, und drei
+davon machen die Arbeit:
 
 ```java
 import java.awt.Color;
@@ -119,7 +127,7 @@ import javax.swing.JLabel;
 
 Ein `BufferedImage` ist ein Bild im Arbeitsspeicher, auf das du malen darfst. Ein
 `JLabel` ist ein Anzeigeelement, dem man ein Bild geben kann. Und ein `JFrame` ist
-das Fenster drumherum. Diese sieben Zeilen kommen an den Anfang von `main`:
+das Fenster drumherum. Diese acht Zeilen kommen an den Anfang von `main`:
 
 ```java
 BufferedImage picture =
@@ -129,12 +137,20 @@ JFrame window = new JFrame("Game of Life");
 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 window.add(label);
 window.pack();
+window.setLocationRelativeTo(null);
 window.setVisible(true);
 ```
 
 `CELL` ist die Kantenlänge einer Zelle in Pixeln, hier 14. Das Gitter ist 30 mal 40
 Zellen, das Bild also 560 mal 420 Pixel. `pack()` legt das Fenster um das Bild
-herum, statt dass du die Fenstergröße rätst.
+herum, statt dass du die Fenstergröße rätst, `setLocationRelativeTo(null)` setzt es
+mittig auf den Bildschirm statt in die linke obere Ecke, und erst `setVisible(true)`
+zeigt es an.
+
+Eine vierte Klasse steckt versteckt darin: `ImageIcon`. Ein `JLabel` nimmt ein
+`BufferedImage` nicht direkt entgegen, und ein `ImageIcon` tut nichts weiter, als
+ein Bild in die Form zu bringen, die Swing dafür erwartet. Daher die Verschachtelung
+in `new JLabel(new ImageIcon(picture))`.
 
 `setDefaultCloseOperation` sagt, was das Schließkreuz tun soll. Ohne diese Zeile
 verschwindet das Fenster und das Programm läuft weiter — du siehst nichts mehr und
@@ -152,6 +168,8 @@ static void draw(BufferedImage picture, boolean[][] grid) {
             g.fillRect(col * CELL, row * CELL, CELL - 1, CELL - 1);
         }
     }
+
+    g.dispose();
 }
 ```
 
@@ -163,33 +181,65 @@ static final Color DEAD = new Color(24, 26, 30);
 static final Color ALIVE = new Color(90, 200, 110);
 ```
 
-Drei Zahlen von 0 bis 255 für Rot, Grün und Blau. Aus Zellen werden Pixel durch die
-Multiplikation mit `CELL`. Das `- 1` bei Breite und Höhe lässt einen Pixel Luft, und
-genau das macht die Zellen einzeln erkennbar statt als zusammenhängende Fläche.
+Drei Zahlen von 0 bis 255 für Rot, Grün und Blau.
 
-Eine Zeile fehlt noch, und sie ist die, die man vergisst:
+**Achte auf die Reihenfolge in `fillRect`.** Sie ist `(x, y, breite, höhe)`, und x
+ist die **Spalte**, y die **Zeile** — also `col` zuerst, obwohl im ganzen übrigen
+Kapitel `row` vorne steht. Vertauschst du die beiden, bekommst du ein an der
+Diagonale gespiegeltes Gitter und keine einzige Fehlermeldung. Das `- 1` bei Breite
+und Höhe lässt einen Pixel Luft und macht die Zellen einzeln erkennbar statt als
+zusammenhängende Fläche.
+
+`g.dispose()` gibt das Zeichenwerkzeug zurück, das `createGraphics()` herausgegeben
+hat. Bei einem Bild ist das folgenlos, bei hundert Generationen nicht mehr.
+
+Zwei Zeilen fehlen noch, und sie gehören **nicht** in `draw`, sondern dorthin, wo
+`label` zu Hause ist, also nach `main`:
 
 ```java
+draw(picture, grid);
 label.repaint();
 ```
 
 In das Bild zu malen ändert nichts am Bildschirm. `repaint()` bittet das Fenster,
-sich das Bild noch einmal anzusehen. Also: erst malen, dann `repaint`.
+sich das Bild noch einmal anzusehen. Also: erst malen, dann `repaint`. Schreibst du
+`label.repaint()` ans Ende von `draw`, bekommst du `cannot find symbol: variable
+label` — `label` ist eine lokale Variable von `main` und existiert anderswo nicht.
 
 Ein Hinweis darauf, warum Kurs 6 für sein Fenster deutlich mehr Aufwand treibt:
 Dieses Fenster **zeigt** nur. Es nimmt nichts entgegen. Sobald ein Fenster auf
 Tasten reagieren soll, brauchst du eine eigene Klasse, überschriebene Methoden und
 Horcher — und das ist der Preis für Eingabe, nicht für Ausgabe.
 
-Jetzt etwas zum Anschauen. Ein **Gleiter** sind fünf Zellen, die diagonal wandern:
+Jetzt etwas zum Anschauen. Ein **Gleiter** sind fünf Zellen, die diagonal wandern.
+Pack sie gleich in eine Methode, denn weiter unten gibt es einen zweiten Start zur
+Auswahl:
 
 ```java
-grid[1][2] = true;
-grid[2][3] = true;
-grid[3][1] = true;
-grid[3][2] = true;
-grid[3][3] = true;
+static boolean[][] glider() {
+    boolean[][] grid = new boolean[ROWS][COLS];
+    grid[1][2] = true;
+    grid[2][3] = true;
+    grid[3][1] = true;
+    grid[3][2] = true;
+    grid[3][3] = true;
+    return grid;
+}
 ```
+
+Damit hast du zum ersten Mal eine Methode, die ein zweidimensionales Array
+**zurückgibt**. Der Rückgabetyp ist genau der Typ der Variablen: `boolean[][]`.
+
+Jetzt reicht es für ein erstes Bild. In `main`, nach den acht Fensterzeilen:
+
+```java
+boolean[][] grid = glider();
+draw(picture, grid);
+label.repaint();
+```
+
+Übersetzen, starten, und die fünf Zellen stehen links oben im Fenster. Bewegen wird
+sich noch nichts — die Regeln kommen erst.
 
 ![Der Gleiter nach 48 Generationen: fünf Zellen, diagonal gewandert](../assets/glider.png)
 
@@ -215,7 +265,9 @@ static int countNeighbours(boolean[][] grid, int row, int col) {
 3. Überspring zwei Arten von Feldern: das in der Mitte, wo beide Versätze 0 sind,
    denn ein Feld ist nicht sein eigener Nachbar; und jedes Feld außerhalb des
    Gitters, wo die Zeile unter 0 oder mindestens `ROWS` ist, oder die Spalte unter
-   0 oder mindestens `COLS`. `continue` ist für beides das Werkzeug.
+   0 oder mindestens `COLS`. `continue` ist für beides ein Werkzeug; die fertige
+   Fassung in `code/` benutzt es nur für die Mitte und erledigt die Grenzen in
+   einer zusammengesetzten Bedingung. Beides ist richtig.
 4. Für den Rest zähl 1 dazu, wenn das Feld lebt, und gib am Ende den Zähler zurück.
 
 Schritt 3 ist die eigentliche Übung. Eine Zelle in der Mitte hat acht Nachbarn,
@@ -278,8 +330,13 @@ alte wird schlicht vergessen.
 Die Zeile in die Konsole ist kein Rest aus der alten Fassung. Ein Fenster zeigt
 immer nur die Gegenwart, und sobald etwas schiefläuft, willst du Generation 3 mit
 Generation 7 vergleichen können. Die Konsole behält die Spur, das Fenster zeigt das
-Bild. `countAlive` ist eine Doppelschleife, die `true` zählt, und sie zu schreiben
-dauert eine Minute.
+Bild. `countAlive` musst du noch schreiben; eine Doppelschleife, die `true` zählt:
+
+```java
+static int countAlive(boolean[][] grid) {
+    // dein Code hier
+}
+```
 
 Genau diese Zeile ist die Probe für den Gleiter: In jeder Generation stehen dort
 fünf lebende Zellen, und zwar jedes Mal. Vergleich dazu im Fenster Generation 0 und
@@ -327,6 +384,20 @@ wird ohnehin niemand unterbrechen.
 Den anderen Weg, `try` und `catch`, lernst du in einem späteren Kurs kennen, wo er
 sich lohnt. Hier wären es vier Zeilen Zeremonie um etwas, das nicht passieren kann.
 
+Und eine Zeile hinter die Schleife, sonst kommt dein Terminal nie zurück:
+
+```java
+System.out.println("Done.");
+System.exit(0);
+```
+
+Ein sichtbares Fenster hält das Programm am Leben, auch wenn `main` zu Ende ist:
+Swing führt einen eigenen Thread, und der zählt nicht als Hintergrund-Thread. Ohne
+`System.exit(0)` läuft die JVM nach der letzten Generation weiter, der Prompt kommt
+nicht zurück, und du musst abwürgen oder das Fenster schließen. Die Null heißt „ohne
+Fehler". Das `setDefaultCloseOperation` von oben regelt nur das Schließkreuz, nicht
+diesen Fall.
+
 ## 🟡 Optional — Eine Welt ohne Ränder
 
 Der Gleiter wandert, bis er an eine Wand kommt, und zerfällt dann, weil Felder
@@ -349,8 +420,11 @@ der linken Seite, `-1 % 10` ist also `-1` und nicht `9`. Das `ROWS` vorher dazu 
 addieren macht die Zahl positiv, bevor der Rest gebildet wird, und über den oberen
 Rand schieben kann es nichts, weil `dRow` nie größer als 1 ist.
 
-Lass den Gleiter vierzig Generationen laufen -- erhöh dafür `GENERATIONS` -- und
-schau zu, wie er wieder hereinkommt.
+Lass den Gleiter lange genug laufen, um das zu sehen. Gemessen auf dem Gitter
+dieses Kapitels: Er verlässt den Rand bei Generation 105, kommt oben bei 112 wieder
+herein und steht bei 480 wieder auf seinem Startfeld. Mit den eingestellten 100
+Generationen siehst du also noch gar nichts -- setz `GENERATIONS` auf mindestens
+120.
 
 Eine Sache, bei der du danach aufpassen musst: Der Prüfwert aus der Kernübung,
 `countNeighbours(grid, 0, 0)` gleich 0, ist mit Umlaufen weiterhin 0, aber nicht
@@ -379,6 +453,11 @@ erreicht. Hier gemessen, gezählt bis sich der Zustand des ganzen Gitters wieder
 80 Generationen auf 20 mal 40, 434 auf 30 mal 60, 652 auf 60 mal 120 und 1103 auf
 80 mal 160. Darüber hinaus ändert mehr Platz nichts mehr; bei 100 mal 200 und bei
 120 mal 240 kam dieselbe 1103 heraus.
+
+Gezählt ist dabei die Generation, in der der Endzyklus **beginnt**. Ein Erkenner,
+wie ihn die rote Herausforderung unten baut, schlägt zwei Generationen später an,
+weil er den Zustand erst wiedersehen muss, um ihn als Wiederholung zu erkennen. Wer
+80 erwartet und 82 abliest, hat also nichts falsch gemacht.
 
 Nimm die Zahlen als Größenordnung und nicht als Eigenschaft des Musters. Sie hängen
 davon ab, wo genau du es hinsetzt, weil jede Wand, die es früher erreicht, einen
@@ -479,8 +558,16 @@ für Arrays nicht. Hier prüfst du, bevor du fragst:
 `if (twoAgo != null && same(next, twoAgo))`. Das `&&` hört auf, sobald die linke
 Hälfte falsch ist, `same` wird also nie mit leeren Händen erreicht.
 
-Überleg dir danach, was ein Muster mit Periode drei mit deinem Programm machen
-würde, und entscheide, ob dich das stört. Genau zu wissen, welche Fälle deine
+Sei genau dabei, was „vorletzte Generation" heißt, denn hier steckt eine zweite
+Falle ohne Fehlermeldung. Gemeint ist zwei Schritte hinter **`next`**, nicht hinter
+dem aktuellen Gitter. Am Ende der Schleife schiebst du also weiter:
+`twoAgo = grid;` und danach `grid = next;`. Liest du es als zwei Schritte hinter
+`grid`, baust du einen Erkenner für Periode **drei**: Der Blinker läuft dann
+durch, bis die Generationen ausgehen, und ein Muster mit Periode drei bricht ab.
+Genau andersherum als gewollt, und nichts sagt dir etwas.
+
+Überleg dir danach, was ein Muster mit Periode drei mit deinem fertigen Programm
+machen würde, und entscheide, ob dich das stört. Genau zu wissen, welche Fälle deine
 Prüfung verfehlt, ist mehr wert als eine Prüfung, die behauptet, alles zu fangen.
 
 ## Was du gelernt hast

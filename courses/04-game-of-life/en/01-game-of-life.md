@@ -71,11 +71,18 @@ rather than changing what it was given. The one place it matters is the mistake
 the chapter warns about, further down.
 
 Set up your file. The three sizes go in the class, next to `main` rather than
-inside it, because `draw` and `countNeighbours` need them too. They are `static`
-for the same reason every method here is `static`: they belong to the class, and
-nothing has been created yet. Write `final int ROWS = 30;` inside `main` instead
-and you get `non-static variable ROWS cannot be referenced from a static context`,
-eleven times over.
+inside it, because `draw` and `countNeighbours` need them too.
+
+Two mistakes are easy to make here, and they give different messages. Write
+`final int ROWS = 30;` **inside** `main` and the other methods cannot see the
+variable at all: `cannot find symbol`, eight times. Leave it at the top but drop
+the `static`, and it belongs to an object that does not exist:
+`non-static variable ROWS cannot be referenced from a static context`, nine times.
+Both counts measured here; on your machine they depend on how much you have
+written.
+
+`static` is there for the same reason every method here is `static`: the number
+belongs to the class, and nothing has been created yet.
 
 ```java
 public class GameOfLife {
@@ -105,7 +112,8 @@ enough. It just makes it hard to tell whether a pattern is travelling, flipping 
 falling apart, and that is the entire question here. So: a window.
 
 It costs less than you would think. It needs **no class of your own**, nothing is
-overridden, nobody listens for anything. Three things are enough:
+overridden, nobody listens for anything. Four classes are enough, and three of them
+do the work:
 
 ```java
 import java.awt.Color;
@@ -118,7 +126,7 @@ import javax.swing.JLabel;
 
 A `BufferedImage` is a picture in memory that you are allowed to paint on. A
 `JLabel` is a component you can hand a picture to. And a `JFrame` is the window
-around it. These seven lines go at the top of `main`:
+around it. These eight lines go at the top of `main`:
 
 ```java
 BufferedImage picture =
@@ -128,12 +136,20 @@ JFrame window = new JFrame("Game of Life");
 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 window.add(label);
 window.pack();
+window.setLocationRelativeTo(null);
 window.setVisible(true);
 ```
 
 `CELL` is the side of a cell in pixels, 14 here. The grid is 30 by 40 cells, so the
 picture is 560 by 420 pixels. `pack()` lays the window around the picture instead
-of leaving you to guess a window size.
+of leaving you to guess a window size, `setLocationRelativeTo(null)` puts it in the
+middle of the screen rather than the top left corner, and only `setVisible(true)`
+puts it on screen.
+
+A fourth class is hiding in there: `ImageIcon`. A `JLabel` does not take a
+`BufferedImage` directly, and an `ImageIcon` does nothing but wrap a picture in the
+form Swing expects for that. Hence the nesting in
+`new JLabel(new ImageIcon(picture))`.
 
 `setDefaultCloseOperation` says what the close button should do. Without that line
 the window disappears and the program keeps running — you see nothing and have to
@@ -151,6 +167,8 @@ static void draw(BufferedImage picture, boolean[][] grid) {
             g.fillRect(col * CELL, row * CELL, CELL - 1, CELL - 1);
         }
     }
+
+    g.dispose();
 }
 ```
 
@@ -162,33 +180,65 @@ static final Color DEAD = new Color(24, 26, 30);
 static final Color ALIVE = new Color(90, 200, 110);
 ```
 
-Three numbers from 0 to 255 for red, green and blue. Cells become pixels by
-multiplying with `CELL`. The `- 1` on width and height leaves a pixel of air, and
-that is what makes the cells readable one by one rather than as a solid field.
+Three numbers from 0 to 255 for red, green and blue.
 
-One line is still missing, and it is the one people forget:
+**Watch the order of the arguments to `fillRect`.** It is `(x, y, width, height)`,
+and x is the **column**, y the **row** -- so `col` comes first, although `row` leads
+everywhere else in this chapter. Swap the two and you get a grid mirrored along the
+diagonal, and not a single error message. The `- 1` on width and height leaves a
+pixel of air and is what makes the cells readable one by one rather than as a solid
+field.
+
+`g.dispose()` gives back the drawing tool that `createGraphics()` handed out. With
+one picture that is of no consequence; over a hundred generations it is.
+
+Two lines are still missing, and they do **not** go in `draw` but where `label`
+lives, which is `main`:
 
 ```java
+draw(picture, grid);
 label.repaint();
 ```
 
 Painting into the picture changes nothing on screen. `repaint()` asks the window to
-look at the picture again. So: paint first, then `repaint`.
+look at the picture again. So: paint first, then `repaint`. Put `label.repaint()` at
+the end of `draw` and you get `cannot find symbol: variable label` -- `label` is a
+local variable of `main` and does not exist anywhere else.
 
 A hint about why Course 6 works much harder for its window: this one only **shows**
 things. It takes nothing in. The moment a window has to react to keys you need a
 class of your own, overridden methods and listeners — and that is the price of
 input, not of output.
 
-Now something to look at. A **glider** is five cells that travel diagonally:
+Now something to look at. A **glider** is five cells that travel diagonally. Put
+them in a method straight away, because there is a second starting pattern to
+choose from further down:
 
 ```java
-grid[1][2] = true;
-grid[2][3] = true;
-grid[3][1] = true;
-grid[3][2] = true;
-grid[3][3] = true;
+static boolean[][] glider() {
+    boolean[][] grid = new boolean[ROWS][COLS];
+    grid[1][2] = true;
+    grid[2][3] = true;
+    grid[3][1] = true;
+    grid[3][2] = true;
+    grid[3][3] = true;
+    return grid;
+}
 ```
+
+That gives you your first method that **returns** a two-dimensional array. The
+return type is exactly the type of the variable: `boolean[][]`.
+
+That is enough for a first picture. In `main`, after the eight window lines:
+
+```java
+boolean[][] grid = glider();
+draw(picture, grid);
+label.repaint();
+```
+
+Compile, run, and the five cells sit in the top left of the window. Nothing will
+move yet -- the rules come next.
 
 ![The glider after 48 generations: five cells, travelled diagonally](../assets/glider.png)
 
@@ -215,7 +265,9 @@ static int countNeighbours(boolean[][] grid, int row, int col) {
 3. Skip two kinds of square: the one in the middle, where both offsets are 0,
    because a square is not its own neighbour; and any square outside the grid,
    where the row is below 0 or at least `ROWS`, or the column is below 0 or at
-   least `COLS`. `continue` is the tool for both.
+   least `COLS`. `continue` is a tool for both; the finished version in `code/`
+   uses it only for the centre and handles the bounds in one combined condition.
+   Either is right.
 4. For the rest, add 1 to the counter if that square is alive, then return the
    counter.
 
@@ -277,8 +329,14 @@ is simply forgotten.
 The line going to the console is not a leftover from an older version. A window
 only ever shows the present, and the moment something goes wrong you will want to
 compare generation 3 against generation 7. The console keeps the trace, the window
-shows the picture. `countAlive` is a double loop that counts `true`, and writing it
-takes a minute.
+shows the picture. `countAlive` you still have to write, a double loop that counts
+`true`:
+
+```java
+static int countAlive(boolean[][] grid) {
+    // your code here
+}
+```
 
 That line is also the test for the glider: it reads five live cells in every
 generation, every time. Alongside it, compare generation 0 and generation 4 in the
@@ -327,6 +385,19 @@ You will meet the other way of dealing with it, `try` and `catch`, in a later
 course where it earns its place. Here it would be four lines of ceremony around a
 thing that cannot happen.
 
+And one line after the loop, or your terminal never comes back:
+
+```java
+System.out.println("Done.");
+System.exit(0);
+```
+
+A visible window keeps the program alive even once `main` has finished: Swing runs
+a thread of its own, and it does not count as a background thread. Without
+`System.exit(0)` the JVM carries on after the last generation, the prompt does not
+return, and you have to kill it or close the window. The zero means "no error". The
+`setDefaultCloseOperation` above governs only the close button, not this case.
+
 ## 🟡 Optional — A world without edges
 
 The glider walks until it reaches a wall and then falls apart, because squares
@@ -349,8 +420,10 @@ of the left-hand side, so `-1 % 10` is `-1` and not `9`. Adding `ROWS` first mak
 the number positive before the remainder is taken, and it cannot push anything past
 the top because `dRow` is never more than 1.
 
-Run the glider for forty generations -- raise `GENERATIONS` -- and watch it come
-back around.
+Run the glider long enough to see it. Measured on this chapter's grid: it leaves
+the edge at generation 105, comes back in at the top at 112, and is back on its
+starting square at 480. With the 100 generations as set you therefore see nothing
+at all -- put `GENERATIONS` up to at least 120.
 
 One thing to be careful of afterwards: the check value from the core exercise,
 `countNeighbours(grid, 0, 0)` being 0, is still 0 with wrapping, but no longer for
@@ -379,6 +452,11 @@ them. Measured here, counting generations until the state of the whole grid
 repeats: 80 generations on 20 by 40, 434 on 30 by 60, 652 on 60 by 120 and 1103 on
 80 by 160. Beyond that more room changes nothing; 100 by 200 and 120 by 240 both
 came out at the same 1103.
+
+What is counted is the generation in which the final cycle **begins**. A detector
+like the one the red challenge below builds fires two generations later, because it
+has to see the state again before it can call it a repeat. So if you expect 80 and
+read 82, you have not done anything wrong.
 
 Take the numbers as an order of magnitude and not as a property of the pattern.
 They depend on exactly where you place it, because every wall it reaches sooner
@@ -480,8 +558,16 @@ for arrays. Here you check before you ask: `if (twoAgo != null && same(next, two
 The `&&` stops as soon as the left half is false, so `same` is never reached with
 nothing in hand.
 
-Then ask yourself what a pattern with a period of three would do to your program,
-and decide whether you care. Knowing exactly which cases your check misses is worth
+Be precise about what "the generation before last" means, because a second trap
+with no error message is hiding here. It means two steps behind **`next`**, not
+behind the current grid. So at the end of the loop you shift along: `twoAgo = grid;`
+and then `grid = next;`. Read it as two steps behind `grid` and you have built a
+detector for period **three**: the blinker then runs until the generations are used
+up, while a pattern of period three stops. Exactly the wrong way round, and nothing
+tells you.
+
+Then ask yourself what a pattern with a period of three would do to your finished
+program, and decide whether you care. Knowing exactly which cases your check misses is worth
 more than a check that claims to catch everything.
 
 ## What you learned

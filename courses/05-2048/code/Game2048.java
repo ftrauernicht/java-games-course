@@ -57,7 +57,7 @@ public class Game2048 {
 
             if ("q".equals(line)) {
                 System.out.println("Bye.");
-                return;
+                System.exit(0);
             }
 
             int rotations = switch (line) {
@@ -89,7 +89,7 @@ public class Game2048 {
                 draw(picture, board);
                 label.repaint();
                 System.out.println("Board full. Game over.");
-                return;
+                System.exit(0);
             }
         }
     }
@@ -118,6 +118,10 @@ public class Game2048 {
                 }
             }
         }
+
+        // Every createGraphics hands out a resource. Giving it back costs one
+        // line and matters once draw runs a few hundred times.
+        g.dispose();
     }
 
     // Centres the number on its tile. The font shrinks as the number grows,

@@ -113,6 +113,17 @@ Java-Punkte.
   das" ist die Frage, die ein Anfänger allein nicht beantworten kann, und ein
   Feld, das benutzt und nie deklariert wird, hält ihn länger auf als jede
   Erklärung ihm hilft.
+- **Jede Methode, die das Kapitel aufruft, steht auch im Kapitel** -- notfalls als
+  Rumpf mit `// dein Code hier`. Ein Aufruf von `glider()` oder `countAlive(...)`,
+  den der Leser nirgends findet, kostet ihn mehr Zeit als die drei Zeilen gekostet
+  hätten. Zwei Junior-Durchläufe sind an genau dieser Sorte Lücke hängengeblieben.
+- **Ein Screenshot steht an der Stelle, an der der Leser ihn selbst erzeugen kann.**
+  Ein Bild unter einem Abschnitt, dessen Code noch gar nichts zeichnet, verspricht
+  etwas, das erst siebzig Zeilen später geht.
+- **Ein Programm, das ein Fenster öffnet, endet mit `System.exit(0)`.** Swings
+  Thread ist kein Hintergrund-Thread: Aus `main` zurückzukehren beendet das
+  Programm nicht, der Prompt kommt nie zurück, und der Leser sucht den Fehler bei
+  sich. `setDefaultCloseOperation` regelt nur das Schließkreuz.
 - **Importe gehören ins Kapitel, nicht nur nach `code/`.** Kurs 1 zeigt einen
   einzigen Import. Dass `JPanel` in `javax.swing` liegt und `Graphics` in
   `java.awt`, lässt sich nicht erraten.
