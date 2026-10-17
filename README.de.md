@@ -50,6 +50,21 @@ etwas braucht, das Kurs 1 nicht behandelt hat, erklärt das Kapitel es in ein pa
 Absätzen noch einmal und sagt dir, dass du weiterspringen kannst, wenn du es schon
 kennst.
 
+### Auf einen Blick
+
+Die Zeitangaben sind grob. Ein Abend meint zwei bis drei Stunden, in denen du alles
+selbst tippst. Wer nur liest, ist deutlich schneller und lernt deutlich weniger.
+
+| # | Kurs | Was dazukommt | Setzt voraus | Dauer |
+|---|---|---|---|---|
+| 1 | Grundlagen | Die Sprache selbst, in drei Kapiteln und ohne Spiel | nichts | ein Wochenende, oder ein Abend je Kapitel |
+| 2 | Tic-Tac-Toe | Ein Raster als `char[][]`, verschachtelte Schleifen, und die Reihenfolge einer Spielschleife | Kurs 1 | drei Abende |
+| 3 | Türme von Hanoi | Rekursion, Basisfall und der Aufrufstapel | Kurs 1 | zwei Abende |
+| 4 | Conways Game of Life | Nachbarn in einen zweiten Puffer zählen, und das erste Fenster | Kurs 1 | drei Abende |
+| 5 | 2048 | Vier Richtungen, die sich als eine Operation auf einem gedrehten Brett entpuppen | Kurs 1 | drei Abende |
+| 6 | Snake | Swing vollständig: Timer, Tastenereignisse und eine Spielschleife | Kurs 1 | drei Abende |
+| 7 | Flappy Bird | Bewegung als Geschwindigkeit statt als Schritt, dazu Kollisionen | Kurs 1 | ein Wochenende |
+
 ### Kurs 1 – Grundlagen (`courses/01-basics/`)
 
 Die Sprache selbst, in drei Kapiteln und ohne Spiel. Er ist der einzige Kurs, den

@@ -49,6 +49,21 @@ assume Course 4, and Course 7 does not assume Course 6. Where a game needs somet
 Course 1 did not cover, that chapter explains it again in a few paragraphs and tells
 you to skip ahead if you already know it.
 
+### At a glance
+
+The times are rough. An evening means two to three hours in which you type everything
+yourself; reading a course without typing is a lot faster and teaches a lot less.
+
+| # | Course | What it adds | Requires | Time |
+|---|---|---|---|---|
+| 1 | Basics | The language itself, in three chapters and without a game | nothing | a weekend, or an evening per chapter |
+| 2 | Tic-Tac-Toe | A grid as `char[][]`, nested loops, and the order a game loop needs | Course 1 | three evenings |
+| 3 | Towers of Hanoi | Recursion, a base case, and the call stack | Course 1 | two evenings |
+| 4 | Conway’s Game of Life | Counting neighbours into a second buffer, and the first window | Course 1 | three evenings |
+| 5 | 2048 | Four directions that turn out to be one operation on a rotated board | Course 1 | three evenings |
+| 6 | Snake | Swing in full: a timer, key events, and a game loop | Course 1 | three evenings |
+| 7 | Flappy Bird | Movement as a speed rather than a step, and collisions | Course 1 | a weekend |
+
 ### Course 1 – Basics (`courses/01-basics/`)
 
 The language itself, in three chapters and without a game. It is the only course
